@@ -3,7 +3,7 @@ document.write("<script src='https://cdn.bootcss.com/bluebird/3.5.1/bluebird.cor
 document.write("<script src='https://cdn.bootcss.com/fetch/2.0.3/fetch.min.js'></script>");
 {
     var a_idx = 0;
-    var text;
+    var text = '中国万岁！！！';
     window.onclick = function (event) {
         var a = new Array("❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法治❤", "❤爱国❤",
             "❤敬业❤", "❤诚信❤", "❤友善❤");
@@ -33,15 +33,16 @@ document.write("<script src='https://cdn.bootcss.com/fetch/2.0.3/fetch.min.js'><
             c = randomColor(), // 随机颜色
             a = 1, // 透明度
             s = 1.2; // 放大缩小
+            z=100;
 
         var timer = setInterval(function () { //添加定时器
             if (a <= 0) {
                 document.body.removeChild(heart);
                 clearInterval(timer);
             } else {
-                heart.style.cssText = "font-size:16px;cursor: default;position: fixed;color:" +
+                heart.style.cssText = "font-size:"+f+"px;cursor: default;position: fixed;color:" +
                     c + ";left:" + x + "px;top:" + y + "px;opacity:" + a + ";transform:scale(" +
-                    s + ");";
+                    s + ");"+"z-index:"+z;
 
                 y--;
                 a -= 0.016;
