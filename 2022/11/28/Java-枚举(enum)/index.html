@@ -1,0 +1,980 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Java 枚举(enum)Java 枚举是一个特殊的类，一般表示一组常量，比如一年的 4 个季节，一个年的 12 个月份，一个星期的 7 天，方向有东南西北等。 Java 枚举类使用 enum 关键字来定义，各个常量使用逗号 , 来分割。 定义一个枚举例如定义一个颜色的枚举类。 1234enum Color &amp;#123;     RED, GREEN, BLUE; &amp;#125;   以上枚举类 C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java-枚举(enum)">
+<meta property="og:url" content="http://xtwoy.github.io/2022/11/28/Java-%E6%9E%9A%E4%B8%BE(enum)/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="Java 枚举(enum)Java 枚举是一个特殊的类，一般表示一组常量，比如一年的 4 个季节，一个年的 12 个月份，一个星期的 7 天，方向有东南西北等。 Java 枚举类使用 enum 关键字来定义，各个常量使用逗号 , 来分割。 定义一个枚举例如定义一个颜色的枚举类。 1234enum Color &amp;#123;     RED, GREEN, BLUE; &amp;#125;   以上枚举类 C">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-28T14:13:29.000Z">
+<meta property="article:modified_time" content="2022-11-28T14:42:28.648Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="basis">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Java-枚举(enum) - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java-枚举(enum)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-28 22:13" pubdate>
+          November 28, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          56 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java-枚举(enum)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Java-枚举-enum"><a href="#Java-枚举-enum" class="headerlink" title="Java 枚举(enum)"></a>Java 枚举(enum)</h1><p>Java 枚举是一个特殊的类，一般表示一组常量，比如一年的 4 个季节，一个年的 12 个月份，一个星期的 7 天，方向有东南西北等。</p>
+<p>Java 枚举类使用 enum 关键字来定义，各个常量使用逗号 <strong>,</strong> 来分割。</p>
+<h2 id="定义一个枚举"><a href="#定义一个枚举" class="headerlink" title="定义一个枚举"></a>定义一个枚举</h2><p>例如定义一个颜色的枚举类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span> <br>&#123; <br>    RED, GREEN, BLUE; <br>&#125; <br></code></pre></td></tr></table></figure>
+
+<p>以上枚举类 Color 颜色常量有 RED, GREEN, BLUE，分别表示红色，绿色，蓝色。</p>
+<p>使用实例：</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span><br>&#123;<br>    <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span><br>    &#123;<br>        RED, GREEN, BLUE;<br>    &#125;<br> <br>    <span class="hljs-comment">// 执行输出结果</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br>    &#123;<br>        <span class="hljs-type">Color</span> <span class="hljs-variable">c1</span> <span class="hljs-operator">=</span> Color.RED;<br>        System.out.println(c1);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">RED</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="内部类中使用枚举"><a href="#内部类中使用枚举" class="headerlink" title="内部类中使用枚举"></a>内部类中使用枚举</h2><p>枚举类也可以声明在内部类中：</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span><br>&#123;<br>    <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span><br>    &#123;<br>        RED, GREEN, BLUE;<br>    &#125;<br> <br>    <span class="hljs-comment">// 执行输出结果</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br>    &#123;<br>        <span class="hljs-type">Color</span> <span class="hljs-variable">c1</span> <span class="hljs-operator">=</span> Color.RED;<br>        System.out.println(c1);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">RED</span><br></code></pre></td></tr></table></figure>
+
+<p>每个枚举都是通过 Class 在内部实现的，且所有的枚举值都是 public static final 的。</p>
+<p>以上的枚举类 Color 转化在内部类实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Color</span><br>&#123;<br>     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Color</span> <span class="hljs-variable">RED</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Color</span>();<br>     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Color</span> <span class="hljs-variable">BLUE</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Color</span>();<br>     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Color</span> <span class="hljs-variable">GREEN</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Color</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="迭代枚举元素"><a href="#迭代枚举元素" class="headerlink" title="迭代枚举元素"></a>迭代枚举元素</h2><p>可以使用 for 语句来迭代枚举元素：</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span><br>&#123;<br>    RED, GREEN, BLUE;<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-keyword">for</span> (Color myVar : Color.values()) &#123;<br>      System.out.println(myVar);<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">RED</span><br><span class="hljs-attribute">GREEN</span><br><span class="hljs-attribute">BLUE</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="在-switch-中使用枚举类"><a href="#在-switch-中使用枚举类" class="headerlink" title="在 switch 中使用枚举类"></a>在 switch 中使用枚举类</h2><p>枚举类常应用于 switch 语句中：</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span><br>&#123;<br>    RED, GREEN, BLUE;<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-type">Color</span> <span class="hljs-variable">myVar</span> <span class="hljs-operator">=</span> Color.BLUE;<br><br>    <span class="hljs-keyword">switch</span>(myVar) &#123;<br>      <span class="hljs-keyword">case</span> RED:<br>        System.out.println(<span class="hljs-string">&quot;红色&quot;</span>);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> GREEN:<br>         System.out.println(<span class="hljs-string">&quot;绿色&quot;</span>);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> BLUE:<br>        System.out.println(<span class="hljs-string">&quot;蓝色&quot;</span>);<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">蓝色<br></code></pre></td></tr></table></figure>
+
+<h2 id="values-ordinal-valueOf-和compareTo-方法"><a href="#values-ordinal-valueOf-和compareTo-方法" class="headerlink" title="values(), ordinal() , valueOf()和compareTo() 方法"></a>values(), ordinal() , valueOf()和compareTo() 方法</h2><p>enum 定义的枚举类默认继承了 java.lang.Enum 类，并实现了 java.lang.Serializable 和 java.lang.Comparable 两个接口。</p>
+<p>Java 中的每一个枚举都继承自 java.lang.Enum 类。当定义一个枚举类型时，每一个枚举类型成员都可以看作是 Enum 类的实例，这些枚举成员默认都被 final、public, static 修饰，当使用枚举类型成员时，直接使用枚举名称调用成员即可。</p>
+<p>所有枚举实例都可以调用 Enum 类的方法，常用方法如表 1 所示。</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>values()</td>
+<td>以数组形式返回枚举类型的所有成员</td>
+</tr>
+<tr>
+<td>valueOf()</td>
+<td>将普通字符串转换为枚举实例</td>
+</tr>
+<tr>
+<td>compareTo()</td>
+<td>比较两个枚举成员在定义时的顺序</td>
+</tr>
+<tr>
+<td>ordinal()</td>
+<td>获取枚举成员的索引位置</td>
+</tr>
+</tbody></table>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestEnum</span> &#123;<br>    <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span> &#123;<br>        <span class="hljs-comment">//定义一个枚举</span><br>        RED, GREEN, BLUE;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">// 调用 values()</span><br>        Color[] arr = Color.values();<br><br>        <span class="hljs-comment">// 迭代枚举</span><br>        <span class="hljs-keyword">for</span> (Color col : arr) &#123;<br>            <span class="hljs-comment">// 查看索引</span><br>            System.out.println(col + <span class="hljs-string">&quot; at index &quot;</span> + col.ordinal());<br>        &#125;<br><br>        <span class="hljs-comment">// 使用 valueOf() 返回枚举常量，不存在的会报错 IllegalArgumentException</span><br>        System.out.println(Color.valueOf(<span class="hljs-string">&quot;RED&quot;</span>));<br>        System.out.println(Color.valueOf(<span class="hljs-string">&quot;BLUE&quot;</span>));<br>        compare(Color.valueOf(<span class="hljs-string">&quot;GREEN&quot;</span>));<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">compare</span><span class="hljs-params">(Color s)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; Color.values().length; i++) &#123;<br>            <span class="hljs-comment">//调用compareTo()比较</span><br>            System.out.println(s + <span class="hljs-string">&quot;与&quot;</span> + Color.values()[i] + <span class="hljs-string">&quot;的比较结果是：&quot;</span> + s.compareTo(Color.values()[i]));<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>果为：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">RED</span> at index <span class="hljs-number">0</span><br><span class="hljs-attribute">GREEN</span> at index <span class="hljs-number">1</span><br><span class="hljs-attribute">BLUE</span> at index <span class="hljs-number">2</span><br><span class="hljs-attribute">RED</span><br><span class="hljs-attribute">BLUE</span><br><span class="hljs-attribute">GREEN</span>与RED的比较结果是：<span class="hljs-number">1</span><br><span class="hljs-attribute">GREEN</span>与GREEN的比较结果是：<span class="hljs-number">0</span><br><span class="hljs-attribute">GREEN</span>与BLUE的比较结果是：-<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="枚举类成员"><a href="#枚举类成员" class="headerlink" title="枚举类成员"></a>枚举类成员</h2><p>枚举跟普通类一样可以用自己的变量、方法和构造函数，构造函数只能使用 private 访问修饰符，所以外部无法调用。</p>
+<p>枚举既可以包含具体方法，也可以包含抽象方法。 如果枚举类具有抽象方法，则枚举类的每个实例都必须实现它。</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span><br>&#123;<br>    RED, GREEN, BLUE;<br> <br>    <span class="hljs-comment">// 构造函数</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-title function_">Color</span><span class="hljs-params">()</span><br>    &#123;<br>        System.out.println(<span class="hljs-string">&quot;Constructor called for : &quot;</span> + <span class="hljs-built_in">this</span>.toString());<br>    &#125;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">colorInfo</span><span class="hljs-params">()</span><br>    &#123;<br>        System.out.println(<span class="hljs-string">&quot;Universal Color&quot;</span>);<br>    &#125;<br>&#125;<br> <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span><br>&#123;    <br>    <span class="hljs-comment">// 输出</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br>    &#123;<br>        <span class="hljs-type">Color</span> <span class="hljs-variable">c1</span> <span class="hljs-operator">=</span> Color.RED;<br>        System.out.println(c1);<br>        c1.colorInfo();<br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs delphi"><span class="hljs-function"><span class="hljs-keyword">Constructor</span> <span class="hljs-title">called</span> <span class="hljs-title">for</span> :</span> RED<br><span class="hljs-function"><span class="hljs-keyword">Constructor</span> <span class="hljs-title">called</span> <span class="hljs-title">for</span> :</span> GREEN<br><span class="hljs-function"><span class="hljs-keyword">Constructor</span> <span class="hljs-title">called</span> <span class="hljs-title">for</span> :</span> BLUE<br>RED<br>Universal Color<br></code></pre></td></tr></table></figure>
+
+<h2 id="为枚举添加方法"><a href="#为枚举添加方法" class="headerlink" title="为枚举添加方法"></a>为枚举添加方法</h2><p>Java 为枚举类型提供了一些内置的方法，同时枚举常量也可以有自己的方法。此时要注意必须在枚举实例的最后一个成员后添加分号，而且必须先定义枚举实例。</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">WeekDay</span> &#123;<br>    <span class="hljs-comment">//以上是枚举的成员，必须先定义，而且使用分号结束</span><br>    Mon(<span class="hljs-string">&quot;Monday&quot;</span>), Tue(<span class="hljs-string">&quot;Tuesday&quot;</span>), Wed(<span class="hljs-string">&quot;Wednesday&quot;</span>), Thu(<span class="hljs-string">&quot;Thursday&quot;</span>), Fri(<span class="hljs-string">&quot;Friday&quot;</span>), Sat(<span class="hljs-string">&quot;Saturday&quot;</span>), Sun(<span class="hljs-string">&quot;Sunday&quot;</span>);<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String day;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-title function_">WeekDay</span><span class="hljs-params">(String day)</span> &#123;<br>        <span class="hljs-built_in">this</span>.day = day;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printDay</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (i) &#123;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>                System.out.println(WeekDay.Mon);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>                System.out.println(WeekDay.Tue);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:<br>                System.out.println(WeekDay.Wed);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">4</span>:<br>                System.out.println(WeekDay.Thu);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">5</span>:<br>                System.out.println(WeekDay.Fri);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">6</span>:<br>                System.out.println(WeekDay.Sat);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">7</span>:<br>                System.out.println(WeekDay.Sun);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">default</span>:<br>                System.out.println(<span class="hljs-string">&quot;wrong number!&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getDay</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> day;<br>    &#125;<br>&#125;<br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test1</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">for</span> (WeekDay day : WeekDay.values()) &#123;<br>        System.out.println(day + <span class="hljs-string">&quot;====&gt;&quot;</span> + day.getDay());<br>    &#125;<br>    WeekDay.printDay(<span class="hljs-number">5</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">Mon</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Monday<br><span class="hljs-attribute">Tue</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Tuesday<br><span class="hljs-attribute">Wed</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Wednesday<br><span class="hljs-attribute">Thu</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Thursday<br><span class="hljs-attribute">Fri</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Friday<br><span class="hljs-attribute">Sat</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Saturday<br><span class="hljs-attribute">Sun</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span>&gt;Sunday<br>Fri<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Java 中的 enum 还可以跟 Class 类一样覆盖基类的方法。</p>
+</blockquote>
+<h2 id="EnumMap-与-EnumSet"><a href="#EnumMap-与-EnumSet" class="headerlink" title="EnumMap 与 EnumSet"></a>EnumMap 与 EnumSet</h2><p>为了更好地支持枚举类型，java.util 中添加了两个新类：EnumMap 和 EnumSet。使用它们可以更高效地操作枚举类型。</p>
+<h3 id="EnumMap-类"><a href="#EnumMap-类" class="headerlink" title="EnumMap 类"></a>EnumMap 类</h3><p>EnumMap 是专门为枚举类型量身定做的 Map 实现。虽然使用其他的 Map（如 HashMap）实现也能完成枚举类型实例到值的映射，但是使用 EnumMap 会更加高效。</p>
+<p>HashMap 只能接收同一枚举类型的实例作为键值，并且由于枚举类型实例的数量相对固定并且有限，所以 EnumMap 使用数组来存放与枚举类型对应的值，使得 EnumMap 的效率非常高。</p>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">DataBaseType</span> &#123;<br>    <span class="hljs-comment">//定义数据库类型枚举</span><br>    DB2,MYSQL,ORACLE,SQLSERVER<br>&#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test3</span><span class="hljs-params">()</span> &#123;<br>         EnumMap&lt;DataBaseType,String&gt; urls=<span class="hljs-keyword">new</span> <span class="hljs-title class_">EnumMap</span>&lt;DataBaseType,String&gt;(DataBaseType.class);<br>        urls.put(DataBaseType.DB2,<span class="hljs-string">&quot;jdbc:db2://localhost:5000/sample&quot;</span>);<br>        urls.put(DataBaseType.MYSQL,<span class="hljs-string">&quot;jdbc:mysql://localhost/mydb&quot;</span>);<br>        urls.put(DataBaseType.ORACLE,<span class="hljs-string">&quot;jdbc:oracle:thin:@localhost:1521:sample&quot;</span>);<br>        urls.put(DataBaseType.SQLSERVER,<span class="hljs-string">&quot;jdbc:microsoft:sqlserver://sql:1433;Database=mydb&quot;</span>);<br>        System.out.println(urls.get(DataBaseType.DB2));<br>        System.out.println(urls.get(DataBaseType.SQLSERVER));<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">jdbc:db2:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">5000</span>/sample<br>jdbc:microsoft:sqlserver:<span class="hljs-regexp">//</span>sql:<span class="hljs-number">1433</span>;Database=mydb<br></code></pre></td></tr></table></figure>
+
+<h3 id="EnumSet-类"><a href="#EnumSet-类" class="headerlink" title="EnumSet 类"></a>EnumSet 类</h3><p>EnumSet 是枚举类型的高性能 Set 实现，它要求放入它的枚举常量必须属于同一枚举类型。EnumSet 提供了许多工厂方法以便于初始化。</p>
+<p>EnumSet 类的常用方法</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>allOf(Class element type)</td>
+<td>创建一个包含指定枚举类型中所有枚举成员的 EnumSet 对象</td>
+</tr>
+<tr>
+<td>complementOf(EnumSet s)</td>
+<td>创建一个与指定 EnumSet 对象 s 相同的枚举类型 EnumSet 对象，并包含所有 s 中未包含的枚举成员</td>
+</tr>
+<tr>
+<td>copyOf(EnumSet s)</td>
+<td>创建一个与指定 EnumSet 对象 s 相同的枚举类型 EnumSet 对象，并与 s 包含相同的枚举成员</td>
+</tr>
+<tr>
+<td>noneOf(&lt;Class elementType)</td>
+<td>创建指定枚举类型的空 EnumSet 对象</td>
+</tr>
+<tr>
+<td>of(E first,e…rest)</td>
+<td>创建包含指定枚举成员的 EnumSet 对象</td>
+</tr>
+<tr>
+<td>range(E from ,E to)</td>
+<td>创建一个 EnumSet 对象，该对象包含了 from 到 to 之间的所有枚举成员</td>
+</tr>
+</tbody></table>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test4</span><span class="hljs-params">()</span> &#123;<br>       EnumMap&lt;DataBaseType,String&gt; urls=<span class="hljs-keyword">new</span> <span class="hljs-title class_">EnumMap</span>&lt;DataBaseType,String&gt;(DataBaseType.class);<br>       urls.put(DataBaseType.DB2,<span class="hljs-string">&quot;jdbc:db2://localhost:5000/sample&quot;</span>);<br>       urls.put(DataBaseType.MYSQL,<span class="hljs-string">&quot;jdbc:mysql://localhost/mysql&quot;</span>);<br>       urls.put(DataBaseType.ORACLE,<span class="hljs-string">&quot;jdbc:oracle:thin:@localhost:1521:sample&quot;</span>);<br>       urls.put(DataBaseType.SQLSERVER,<span class="hljs-string">&quot;jdbc:microsoft:sqlserver://sql:1433;Database=mydb&quot;</span>);<br><br>       <span class="hljs-keyword">for</span> (DataBaseType baseType : EnumSet.range(DataBaseType.MYSQL, DataBaseType.ORACLE)) &#123;<br>           System.out.println(urls.get(baseType));<br>       &#125;<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行以上代码输出结果为：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">jdbc:</span>mysql:<span class="hljs-comment">//localhost/mysql</span><br><span class="hljs-symbol">jdbc:</span>oracle:thin:@localhost:<span class="hljs-number">1521</span>:sample<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/basis/">#basis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java-枚举(enum)</div>
+      <div>http://xtwoy.github.io/2022/11/28/Java-枚举(enum)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 28, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/27/%E9%80%9A%E8%BF%87docker%E5%AE%9E%E7%8E%B0MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="从零开始，通过docker实现MySQL主从复制">
+                        <span class="hidden-mobile">从零开始，通过docker实现MySQL主从复制</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Java"
+        id="heading-d52387880e1ea22817a72d3759213819" role="tab" data-toggle="collapse" href="#collapse-d52387880e1ea22817a72d3759213819"
+        aria-expanded="true"
+      >
+        Java
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-d52387880e1ea22817a72d3759213819"
+           role="tabpanel" aria-labelledby="heading-d52387880e1ea22817a72d3759213819">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2022/11/28/Java-%E6%9E%9A%E4%B8%BE(enum)/" title="Java-枚举(enum)"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Java-枚举(enum)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2022/11/23/Nacos%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" title="Nacos使用指南"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Nacos使用指南</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="SpringBoot"
+        id="heading-c8428a45869e78fb361ed20b9c23b0a8" role="tab" data-toggle="collapse" href="#collapse-c8428a45869e78fb361ed20b9c23b0a8"
+        aria-expanded="false"
+      >
+        SpringBoot
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-c8428a45869e78fb361ed20b9c23b0a8"
+           role="tabpanel" aria-labelledby="heading-c8428a45869e78fb361ed20b9c23b0a8">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2022/11/22/SpringBoot2_%E5%B0%9A%E7%A1%85%E8%B0%B7/" title="SpringBoot2_尚硅谷"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot2_尚硅谷</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2022/11/25/SpringBoot%E5%B0%86%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A0%B9%E8%B7%AF%E5%BE%84%E4%B8%AD%EF%BC%8C%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/" title="SpringBoot将文件上传到项目的根路径中，使用相对路径"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot将文件上传到项目的根路径中，使用相对路径</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Web项目"
+        id="heading-96d02027b93a9139af747685241288e5" role="tab" data-toggle="collapse" href="#collapse-96d02027b93a9139af747685241288e5"
+        aria-expanded="false"
+      >
+        Web项目
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-96d02027b93a9139af747685241288e5"
+           role="tabpanel" aria-labelledby="heading-96d02027b93a9139af747685241288e5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2022/11/25/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96%E7%AC%94%E8%AE%B0/" title="瑞吉外卖"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">瑞吉外卖</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
