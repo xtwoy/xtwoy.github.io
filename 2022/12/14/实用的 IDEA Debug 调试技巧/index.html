@@ -1,0 +1,1010 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="[toc]  实用的 IDEA Debug 调试技巧  前言 Debug 是程序员的开发神器，使用好了可以帮助我们非常高效的工作、学习、排查问题等。毫不客气的说，是决定我们进阶到更高层级的一个重要技能。  神秘大佬A：调试技巧比编码技巧更为重要，因为花费在调试上的时间往往比编码还多，学到的东西比编码中学到的更丰富 神秘大佬B：调试技能重要性甚⾄超过学习⼀门语⾔ 神秘大佬C：不会调试的程序员，肯定编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实用的 IDEA Debug 调试技巧">
+<meta property="og:url" content="http://xtwoy.github.io/2022/12/14/%E5%AE%9E%E7%94%A8%E7%9A%84%20IDEA%20Debug%20%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="[toc]  实用的 IDEA Debug 调试技巧  前言 Debug 是程序员的开发神器，使用好了可以帮助我们非常高效的工作、学习、排查问题等。毫不客气的说，是决定我们进阶到更高层级的一个重要技能。  神秘大佬A：调试技巧比编码技巧更为重要，因为花费在调试上的时间往往比编码还多，学到的东西比编码中学到的更丰富 神秘大佬B：调试技能重要性甚⾄超过学习⼀门语⾔ 神秘大佬C：不会调试的程序员，肯定编">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214193202245.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160315800.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214175428616.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160648099.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160754572.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160825610.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214162657053.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214162758993.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214163305235.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214171751405.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214171801643.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172440724.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172653364.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172626920.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172951359.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214173011724.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214173059173.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214173612204.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214174624265.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214174538052.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214174552746.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214192846353.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214192924566.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214185633384.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214190206459.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184803359.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184637000.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184506838.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184408221.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184115097.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184206110.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214191658181.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214191655321.png">
+<meta property="article:published_time" content="2022-12-14T11:37:00.000Z">
+<meta property="article:modified_time" content="2022-12-14T11:41:02.057Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="idea">
+<meta property="article:tag" content="debug">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214193202245.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>实用的 IDEA Debug 调试技巧 - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="实用的 IDEA Debug 调试技巧"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-14 19:37" pubdate>
+          December 14, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">实用的 IDEA Debug 调试技巧</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>[toc]</p>
+<h1 id="实用的-idea-debug-调试技巧"><a class="markdownIt-Anchor" href="#实用的-idea-debug-调试技巧"></a> 实用的 IDEA Debug 调试技巧</h1>
+<h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>Debug 是程序员的开发神器，使用好了可以帮助我们非常高效的工作、学习、排查问题等。毫不客气的说，是决定我们进阶到更高层级的一个重要技能。</p>
+<ol>
+<li><code>神秘大佬A</code>：调试技巧比编码技巧<strong>更为重要</strong>，因为花费在调试上的时间往往比编码还多，学到的东西比编码中学到的更丰富</li>
+<li><code>神秘大佬B</code>：调试技能重要性甚⾄<strong>超过</strong>学习⼀门语⾔</li>
+<li><code>神秘大佬C</code>：不会调试的程序员，<strong>肯定</strong>编制不出任何好的软件</li>
+</ol>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<h2 id="debug-的常见使用场景"><a class="markdownIt-Anchor" href="#debug-的常见使用场景"></a> Debug 的常见使用场景</h2>
+<ul>
+<li>需求代码测试：通过debug你才能知道你的代码究竟是怎么运行的，更容易发现问题</li>
+<li>问题排查：只要能进入到问题流程的debug，就没有排查不了的问题</li>
+<li>源码学习：源码通常很庞大，通过Debug 我们能更清晰的知道执行到哪个地方，执行时的各个变量数据</li>
+</ul>
+<h3 id="基本界面"><a class="markdownIt-Anchor" href="#基本界面"></a> <strong>基本界面</strong></h3>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214193202245.png" srcset="/img/loading.gif" lazyload alt="image-20221214193202245" /></p>
+<p>① 以Debug模式启动服务，左边的一个按钮则是以Run模式启动。在开发中，我一般会直接启动Debug模式，方便随时调试代码。</p>
+<p>② 断点：在左边行号栏单击左键，或者快捷键Ctrl+F8 打上/取消断点，断点行的颜色可自己去设置。</p>
+<p>③ Debug窗口：访问请求到达第一个断点后，会自动激活Debug窗口。如果没有自动激活，可以去设置里设置。</p>
+<p>④ 调试按钮：一共有8个按钮，调试的主要功能就对应着这几个按钮，鼠标悬停在按钮上可以查看对应的快捷键。</p>
+<p>⑤ 服务按钮：可以在这里关闭/启动服务，设置断点等。</p>
+<p>⑥ 方法调用栈：这里显示了该线程调试所经过的所有方法，勾选右上角的[Show All Frames]按钮，就不会显示其它类库的方法了，否则这里会有一大堆的方法。</p>
+<p>⑦ Variables：在变量区可以查看当前断点之前的当前方法内的变量。</p>
+<p>⑧  Watches：查看变量，可以将Variables区中的变量拖到Watches中查看。</p>
+<h3 id="基础操作"><a class="markdownIt-Anchor" href="#基础操作"></a> 基础操作</h3>
+<pre><code class="hljs">1. Step over(F8)：程序往下执行一行
+2. Step into(F7)：进入方法内，可以进入自定义方法或三方库方法，JDK方法无法进入
+3. Force step into(Alt+Shift+F7)：强制进入方法内，一般 Step into 进不去时可以使用
+4. Step out(Shift+F8)：退出方法，跟（force）step into 配合使用
+5. Resume Program(F9)：恢复运行程序，运行到下一个断点的地方  
+6. 5个操作从上往下分别对应下图的1-5，这也是 Debug 最常用的几个基础操作。  
+</code></pre>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160315800.png" srcset="/img/loading.gif" lazyload alt="image-20221214160315800" /></p>
+<ol>
+<li><strong>Line breakpoint（行断点）</strong>：在指定代码行设置断点，属于行级别的断点</li>
+<li><strong>Temporary line breakpoint（临时行断点）</strong>：与行断点类似，不同之处在于该类型的断点在被激活之后会被立即删除</li>
+<li><strong>Field watchpoint（属性断点）</strong>：读取或者修改属性时会激活属性断点</li>
+<li><strong>Method breakpoint（方法断点）</strong>：它是标记在方法那一行的断点，有自己特有的属性参数</li>
+<li><strong>Exception breakpoint（异常断点）</strong>：当程序抛出指定异常时会激活异常断点。与行断点不同，异常断点不需要与源代码映射（不需要打在具体某一行代码上），因为异常断点应用程序级别的</li>
+</ol>
+<p>​	<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214175428616.png" srcset="/img/loading.gif" lazyload alt="image-20221214175428616" /></p>
+<p>Suspend：有没有让你诧异到，它竟然是个复选框并且还可以不被选中。若它不被选中的话断点的相关动作依然激活执行，只是线程不会被组塞了而已。它的两种阻塞策略如下：</p>
+<p><strong>All</strong>：阻塞该程序内所有线程（默认）</p>
+<p><strong>Thread</strong>：只阻塞当前断点所在线程（在多线程调试、远程调试中强烈建议使用这种方式）<br />
+<strong>Condition</strong>：这就是所谓的条件断点，只有书写的表达式返回true时候断点才会被激活</p>
+<p><strong>Log</strong>：</p>
+<ul>
+<li>勾选&quot;Breakpoint hit message&quot;：断点激活时输出提示日志</li>
+<li>勾选&quot;Stack trace&quot;：断点激活时输出程序调用栈信息</li>
+<li>勾选&quot;Evaluate and log&quot;：并在下面的输入框中输入&quot;args&quot;，断点激活时会计算并输出变量 args 的值</li>
+<li>他哥三是可以同时被勾选的（因为都是复选框~）</li>
+</ul>
+<h2 id="行断点line-breakpoints"><a class="markdownIt-Anchor" href="#行断点line-breakpoints"></a> 行断点（Line Breakpoints）</h2>
+<p>图标：红色圆形</p>
+<p>功能：最常用的断点，在断点所在行进行暂停。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160648099.png" srcset="/img/loading.gif" lazyload alt="image-20221214160648099" /><br />
+理论上只要有行断点和上面的基本操作，就可以完成大部分的 Debug<br />
+调试了，但是很多场景下只使用这些功能，调试是很低效了，接下来我们将依次介绍各种好用的调试技巧。</p>
+<h2 id="方法断点method-breakpoint"><a class="markdownIt-Anchor" href="#方法断点method-breakpoint"></a> 方法断点（Method Breakpoint）</h2>
+<p>图标：红色菱形</p>
+<p>功能：在方法入口（entry）和出口（exit）都会自动暂停，Emulated，目前没有发现有啥卵用（菜逼的忧伤😓😓😓）。在方法入口暂停可以让我们从头调试整个方法，而在方法出口处暂停可以让我们看到方法执行完毕时，方法内各个变量的数据情况。</p>
+<p>有时候我们的一个接口会存在很多实现类，我们短时间内难以分析究竟是运行到了哪个实现类中，这个时候就可以使用方法断点，我们将断点打在接口方法上，运行到该方法时，会自动跳到实际执行的实现类，无需通过上下文环境去分析是哪个实现类。</p>
+<p>缺点：可能会大大降低debug速度<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160754572.png" srcset="/img/loading.gif" lazyload alt="image-20221214160754572" /></p>
+<h2 id="字段断点field-watchpoints"><a class="markdownIt-Anchor" href="#字段断点field-watchpoints"></a> 字段断点（Field Watchpoints）</h2>
+<p>图标：红色眼睛</p>
+<p>功能：在字段发生变更（默认）或者被访问（需要额外设置）时暂停。</p>
+<p>如果我们想知道某个属性在什么时候被修改，从入口处开始调试太麻烦，我们可以直接在字段上打上字段断点，这样字段被修改的时候就会自动暂停。</p>
+<p>而如果我们想在字段被访问时也暂停，则可以右键字段断点，将【Field access】勾选上即可。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214160825610.png" srcset="/img/loading.gif" lazyload alt="image-20221214160825610" /></p>
+<h2 id="异常断点exception-breakpoints"><a class="markdownIt-Anchor" href="#异常断点exception-breakpoints"></a> 异常断点（Exception Breakpoints）</h2>
+<p>图标：红色闪电</p>
+<p>功能：可以在抛出异常的地方进行暂停</p>
+<p>异常断点是无需在具体的代码上打断点的，而是在断点详情页中直接添加，后续在执行时，如果抛出我们监听的异常，则会自动暂停在抛出异常的地方。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214162657053.png" srcset="/img/loading.gif" lazyload alt="image-20221214162657053" /><br />
+这个<code>Any exception</code></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214162758993.png" srcset="/img/loading.gif" lazyload alt="image-20221214162758993" /></p>
+<p>捕获的异常不太对啊 ，用<strong>Resume Program</strong>跳了很多步。都没有找到<code>java.lang.ArithmeticException</code></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214163305235.png" srcset="/img/loading.gif" lazyload alt="image-20221214163305235" /></p>
+<p>还是直接指定异常使用比较好。</p>
+<p>但是同理，它也提供一个特有的断点参数：</p>
+<ul>
+<li><code>Notification</code>：<br />
+- “Catch excetion”：程序在捕获（Try Catch）这个异常时激活断点<br />
+- “Uncatch excetion”：不catch捕获异常时激活断点</li>
+</ul>
+<h2 id="主动抛异常throw-exception"><a class="markdownIt-Anchor" href="#主动抛异常throw-exception"></a> 主动抛异常（Throw Exception）</h2>
+<p>图标：无，Frames 堆栈中右键显示</p>
+<p>功能：主动抛出指定异常</p>
+<p>在上面的例子中，我们通过代码构造了一个异常，但是这种方式其实是不太方便的，特别是如果我们想在远程环境抛出一个异常，需要修改代码重新部署，测试完后还要修改回来再次部署。而</p>
+<p>Throw Exception 则可以直接抛出一个异常，避免了这些繁琐的流程。  （感觉没啥用）</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214171751405.png" srcset="/img/loading.gif" lazyload alt="image-20221214171751405" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214171801643.png" srcset="/img/loading.gif" lazyload alt="image-20221214171801643" /></p>
+<h2 id="降帧drop-frame"><a class="markdownIt-Anchor" href="#降帧drop-frame"></a> 降帧（Drop Frame）</h2>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172440724.png" srcset="/img/loading.gif" lazyload alt="image-20221214172440724" /><br />
+功能：当我们 Debug 从 A 方法进入 B 方法时，通过降帧（退帧）可以返回到调用 B 方法前，这样我们就可以再一次调用 B 方法。</p>
+<p>通常用于当我们快执行完 B 方法后，发现某个重要流程被我们跳过了，想再看一下，则此时可以先回退到 A 方法，然后再次进入 B 方法。</p>
+<p>我们知道方法的执行和结束在 JVM 中对应的是栈帧的入栈和出栈，因此栈帧描述的就是方法对应的模型，而降帧（退帧）则对应的就是回退到上一个方法。</p>
+<h2 id="断点条件condition"><a class="markdownIt-Anchor" href="#断点条件condition"></a> 断点条件（Condition）</h2>
+<p>功能：当程序执行到断点位置时，需要 Condition 中的表达式返回 true，才会暂停，否则会直接跳过。</p>
+<p>用于断点所在的地方执行次数过多时，避免浪费时间在不想关注的流程上。例如我们有一个 Spring bean 的初始化存在问题，我们想跳过其他 bean的初始化流程，则可以在初始化的入口设置 beanName.equals(“”) 表达式，来达到只在我们关注的 bean 执行时才暂停。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172653364.png" srcset="/img/loading.gif" lazyload alt="image-20221214172653364" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172626920.png" srcset="/img/loading.gif" lazyload alt="image-20221214172626920" /></p>
+<h2 id="强制返回force-return"><a class="markdownIt-Anchor" href="#强制返回force-return"></a> 强制返回（Force Return）</h2>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214172951359.png" srcset="/img/loading.gif" lazyload alt="image-20221214172951359" /><br />
+功能：强制结束当前程序运行流程，直接返回。</p>
+<p>当我们调试时，发现继续往下执行就要将错误的数据写入数据库时，我们可以通过 Force Return 来强行结束当前流程。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214173011724.png" srcset="/img/loading.gif" lazyload alt="image-20221214173011724" /><br />
+而如果我们是通过 Stop 按钮来结束，此时结束的是 Debug 流程，而程序流程还是会往下执行，从而将错误数据写入数据库。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214173059173.png" srcset="/img/loading.gif" lazyload alt="image-20221214173059173" /></p>
+<h2 id="stream-调试trace-current-stream-chain"><a class="markdownIt-Anchor" href="#stream-调试trace-current-stream-chain"></a> Stream 调试（Trace Current Stream Chain）</h2>
+<p>功能：当我们暂停在 Stream 的处理代码行时，可以将 Stream 的整个处理流程以图形化界面的形式展示。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214173612204.png" srcset="/img/loading.gif" lazyload alt="image-20221214173612204" /><br />
+合理的使用 Stream 会让我们的代码更加简洁，但是现在存在大量滥用 Stream 的情况，Stream 本身就比较抽象，大量滥用会使得 Stream的代码难以理解和调试。</p>
+<p>当我们发现问题出在 Stream 的处理流程中时，我们可以通过该功能来看到每个步骤处理前和处理后的数据，方便我们定位排查是哪一步出了问题。</p>
+<h2 id="执行表达式evaluate-expression"><a class="markdownIt-Anchor" href="#执行表达式evaluate-expression"></a> 执行表达式（Evaluate Expression）</h2>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214174624265.png" srcset="/img/loading.gif" lazyload alt="image-20221214174624265" /><br />
+功能：用于执行一段我们实时写的代码，例如查看数据、修改数据。<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214174538052.png" srcset="/img/loading.gif" lazyload alt="image-20221214174538052" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214174552746.png" srcset="/img/loading.gif" lazyload alt="image-20221214174552746" /></p>
+<p>当我们在测试时，发现某段代码逻辑很难有符合条件的数据时，可以通过该功能直接修改数据，来加快我们的测试。</p>
+<h3 id="变量查看"><a class="markdownIt-Anchor" href="#变量查看"></a> <strong>变量查看</strong></h3>
+<p>在调试过程中往往需要观察变量的变化来判断业务逻辑，我们可以在以下的四个地方观察。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214192846353.png" srcset="/img/loading.gif" lazyload alt="image-20221214192846353" /></p>
+<p><strong>①</strong> 最常用的变量的观察区域variables</p>
+<p><strong>②</strong> IDEA中最人性化的地方之一，会将变量的值阴影显示在变量的后面。</p>
+<p><strong>③</strong> watch区域，眼镜的形状，一般不会展开。如下图：</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214192924566.png" srcset="/img/loading.gif" lazyload alt="image-20221214192924566" /></p>
+<p>点击’+‘号可以新增需要观察的变量，点击’-'号可以删除。</p>
+<p><strong>④</strong> 鼠标悬停在变量上也会出现变量的值，点击展开即可查看。</p>
+<h2 id="让断点处的代码再加一行代码"><a class="markdownIt-Anchor" href="#让断点处的代码再加一行代码"></a> 让断点处的代码再加一行代码</h2>
+<ul>
+<li>点击下图的加号，可以在断点处加一行代码，比如下图中的count++即为新添加的代码</li>
+<li><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214185633384.png" srcset="/img/loading.gif" lazyload alt="image-20221214185633384" />
+<ul>
+<li>选中count++，右键点击Edit可以编辑该代码</li>
+<li>选中该行代码（count++），点击加号下面的减号，可以删除该行代码</li>
+</ul>
+</li>
+<li>我猜想是
+<ul>
+<li><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214190206459.png" srcset="/img/loading.gif" lazyload alt="image-20221214190206459" /></li>
+</ul>
+</li>
+</ul>
+<h2 id="让程序执行到下一次断点后暂停"><a class="markdownIt-Anchor" href="#让程序执行到下一次断点后暂停"></a> 让程序执行到下一次断点后暂停</h2>
+<ul>
+<li>点击下图的按钮，debug会继续运行程序，直到遇到下一次断点后暂停</li>
+<li><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184803359.png" srcset="/img/loading.gif" lazyload alt="image-20221214184803359" /></li>
+</ul>
+<h2 id="停止debug程序"><a class="markdownIt-Anchor" href="#停止debug程序"></a> 停止debug程序</h2>
+<ul>
+<li>
+<p>点击下图按钮停止debug程序</p>
+</li>
+<li>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184637000.png" srcset="/img/loading.gif" lazyload alt="image-20221214184637000" /></p>
+</li>
+<li>
+<p>注意</p>
+<ul>
+<li>运行的如果是javaSE项目，点一下就停止(程序会执行完成)</li>
+<li>运行的如果是javaWeb项目，需要点两下
+<ul>
+<li>第一下停止代码的当前线程</li>
+<li>第二下停止服务器</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="屏蔽所有断点"><a class="markdownIt-Anchor" href="#屏蔽所有断点"></a> 屏蔽所有断点</h2>
+<ul>
+<li>
+<p>点击下图按钮，可以屏蔽所有断点</p>
+</li>
+<li>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184506838.png" srcset="/img/loading.gif" lazyload alt="image-20221214184506838" /></p>
+<p>屏蔽的断点在debug的时候不会运行</p>
+<ul>
+<li>如果程序调试后觉得没问题了，可以屏蔽掉所有断点继续运行程序查看效果</li>
+</ul>
+</li>
+</ul>
+<h2 id="把光标移到当前程序运行位置"><a class="markdownIt-Anchor" href="#把光标移到当前程序运行位置"></a> 把<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%85%89%E6%A0%87&amp;spm=1001.2101.3001.7020">光标</a>移到当前程序运行位置</h2>
+<ul>
+<li>点击下图按钮后，会把鼠标光标移动到当前程序运行位置
+<ul>
+<li>当程序代码量很大的时候，可以通过该按钮快速定位到程序运行位置</li>
+<li><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184408221.png" srcset="/img/loading.gif" lazyload alt="image-20221214184408221" /></li>
+</ul>
+</li>
+</ul>
+<h2 id="直接执行到光标所在位置"><a class="markdownIt-Anchor" href="#直接执行到光标所在位置"></a> 直接执行到光标所在位置</h2>
+<p>点击下图的按钮，程序会执行到光标所在的位置</p>
+<ul>
+<li>前提是光标前面没有断点，否则程序还是会在光标前面的断点处暂停</li>
+</ul>
+<p>该功能非常强大，我们可以在这边执行任何逻辑。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184115097.png" srcset="/img/loading.gif" lazyload alt="image-20221214184115097" /></p>
+<h2 id="在控制台改变正在debug的数据"><a class="markdownIt-Anchor" href="#在控制台改变正在debug的数据"></a> 在控制台改变正在debug的数据</h2>
+<ul>
+<li>在控制台选中某个变量，右键点击Set Value可以改变该变量的值
+<ul>
+<li>如果想测试某个地方的数据如果是正确的会是什么效果，可以手动更改该处变量的值<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214184206110.png" srcset="/img/loading.gif" lazyload alt="image-20221214184206110" /></li>
+</ul>
+</li>
+</ul>
+<h3 id=""><a class="markdownIt-Anchor" href="#"></a> </h3>
+<h2 id="多线程调试suspend"><a class="markdownIt-Anchor" href="#多线程调试suspend"></a> 多线程调试（Suspend）</h2>
+<p>Suspend 有两种模式：All 和 Thread。</p>
+<p><strong>Thread</strong>：暂停进入断点的线程，不影响其他线程执行。所有进入断电的线程依次Debug。</p>
+<p><strong>All</strong>：暂停全部线程。只能 Debug 第一个暂停线程。</p>
+<p>测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test2</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>            System.out.println(<span class="hljs-string">&quot;start1&quot;</span>);<br>            System.out.println(<span class="hljs-string">&quot;end1&quot;</span>);<br>        &#125;).start();<br><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>            System.out.println(<span class="hljs-string">&quot;start2&quot;</span>);<br>            System.out.println(<span class="hljs-string">&quot;end2&quot;</span>);<br>        &#125;).start();<br>    &#125;<br></code></pre></td></tr></table></figure>
+<h3 id="thread模式执行"><a class="markdownIt-Anchor" href="#thread模式执行"></a> Thread模式执行</h3>
+<p>通过输出内容，可以看到线程1被阻塞，线程2和主线程都已经执行结束</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214191658181.png" srcset="/img/loading.gif" lazyload alt="image-20221214191658181" /></p>
+<h3 id="all-模式执行"><a class="markdownIt-Anchor" href="#all-模式执行"></a> All 模式执行</h3>
+<p>可以看到线程2和主线程没有使用断点，但是也被暂停了，因为没有输出内容。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221214191655321.png" srcset="/img/loading.gif" lazyload alt="image-20221214191655321" /></p>
+<h3 id="还有远程debug没有条件-等以后来学习"><a class="markdownIt-Anchor" href="#还有远程debug没有条件-等以后来学习"></a> 还有远程deBug，没有条件。等以后来学习！</h3>
+<h3 id="参考文章"><a class="markdownIt-Anchor" href="#参考文章"></a> 参考文章</h3>
+<ol>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/future_god_qr/article/details/121250865?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167099915116800192291037%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=167099915116800192291037&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-121250865-null-null.142%5Ev68%5Econtrol,201%5Ev4%5Eadd_ask,213%5Ev2%5Et3_esquery_v2&amp;utm_term=ideadebug%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7&amp;spm=1018.2226.3001.4187">IDEA的debug调试技巧详解</a></p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43102730/article/details/125252811?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167099915116800192291037%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=167099915116800192291037&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-125252811-null-null.142%5Ev68%5Econtrol,201%5Ev4%5Eadd_ask,213%5Ev2%5Et3_esquery_v2&amp;utm_term=ideadebug%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7&amp;spm=1018.2226.3001.4187">实用的 IDEA Debug 调试技巧（超详细案例）</a></p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34162294/article/details/105260153?ops_request_misc=&amp;request_id=&amp;biz_id=102&amp;utm_term=idea%20Throw%20Exception&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-4-105260153.142%5Ev68%5Econtrol,201%5Ev4%5Eadd_ask,213%5Ev2%5Et3_esquery_v2&amp;spm=1018.2226.3001.4187">大牛都会用的IDEA调试技巧！！！</a></p>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/idea/" class="category-chain-item">idea</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/idea/">#idea</a>
+      
+        <a href="/tags/debug/">#debug</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>实用的 IDEA Debug 调试技巧</div>
+      <div>http://xtwoy.github.io/2022/12/14/实用的 IDEA Debug 调试技巧/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 14, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/13/Axios%E5%92%8CAjax%E5%8F%91%E9%80%81POST%E4%BD%BF%E7%94%A8/" title="Axios和Ajax发送POST使用">
+                        <span class="hidden-mobile">Axios和Ajax发送POST使用</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="idea"
+        id="heading-1cba77c39b4d0a81024a7aada3655a28" role="tab" data-toggle="collapse" href="#collapse-1cba77c39b4d0a81024a7aada3655a28"
+        aria-expanded="true"
+      >
+        idea
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-1cba77c39b4d0a81024a7aada3655a28"
+           role="tabpanel" aria-labelledby="heading-1cba77c39b4d0a81024a7aada3655a28">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2022/12/14/%E5%AE%9E%E7%94%A8%E7%9A%84%20IDEA%20Debug%20%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/" title="实用的 IDEA Debug 调试技巧"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">实用的 IDEA Debug 调试技巧</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
