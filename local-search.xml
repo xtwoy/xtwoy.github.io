@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Docker安装RabbitMQ并安装延时队列插件</title>
+    <link href="/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/"/>
+    <url>/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/</url>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="docker安装rabbitmq并安装延时队列插件"><a class="markdownIt-Anchor" href="#docker安装rabbitmq并安装延时队列插件"></a> Docker安装RabbitMQ并安装延时队列插件</h1><h1 id="一-rabbitmq简介"><a class="markdownIt-Anchor" href="#一-rabbitmq简介"></a> 一、RabbitMQ简介</h1><p>RabbitMQ是由erlang语言开发，基于AMQP（Advanced Message Queue高级消息队列协议）协议实现的消息队列，它是一种应用程序之间的通信方法，消息队列在分布式系统开发中应用非常广泛。</p><h1 id="二-docker安装rabbitmq"><a class="markdownIt-Anchor" href="#二-docker安装rabbitmq"></a> 二、docker安装RabbitMQ</h1><h2 id="下载镜像"><a class="markdownIt-Anchor" href="#下载镜像"></a> 下载镜像</h2><p>方式一：在线拉取</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">docker pull rabbitmq:3-management<br></code></pre></td></tr></table></figure><p>方式二：从本地加载</p><p>已经提供了镜像包：</p><p>链接：<a href="https://pan.baidu.com/s/1YEJE4xRLucg9JWU8lFnNrw?pwd=yyds">https://pan.baidu.com/s/1YEJE4xRLucg9JWU8lFnNrw?pwd=yyds</a><br />提取码：yyds</p><p>上传到虚拟机中后，使用命令加载镜像即可：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">docker load -i mq.tar<br></code></pre></td></tr></table></figure><h2 id="安装mq"><a class="markdownIt-Anchor" href="#安装mq"></a> 安装MQ</h2><p>执行下面的命令来运行MQ容器：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">docker run \<br> -e RABBITMQ_DEFAULT_USER=admin \<br> -e RABBITMQ_DEFAULT_PASS=admin \<br> --name Rabbit \<br> --hostname mq \<br> -p 15672:15672 \<br> -p 5672:5672 \<br> -d \<br> rabbitmq:3-management<br></code></pre></td></tr></table></figure><p>3、访问<a href="http://192.168.23.132:15672">http://192.168.23.132:15672</a></p><p>账号密码默认都是guest</p><p>这里账号密码是admin</p><h1 id="三-安装rabbitmq延时队列插件delayed_message_exchange"><a class="markdownIt-Anchor" href="#三-安装rabbitmq延时队列插件delayed_message_exchange"></a> 三、安装RabbitMQ延时队列插件（delayed_message_exchange）</h1><ol><li><p>下载rabbitmq_delayed_message_exchange-x.ez插件并上传到指定文件夹中</p><p>下载地址:<a href="https://www.rabbitmq.com/community-plugins.html">https://www.rabbitmq.com/community-plugins.html</a></p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113124427690.png" alt="image-20230113124427690" /></p><p>要下载对应版本的插件</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110106821.png" alt="image-20230113110106821" /></p></li><li><p>然后进行如下操作</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#拷贝到rabbitmq容器 Rabbit 中</span><br><br>docker <span class="hljs-built_in">cp</span> rabbitmq_delayed_message_exchange-3.9.0.ez Rabbit:/plugins<br><br><span class="hljs-comment">#进入容器</span><br><br>docker <span class="hljs-built_in">exec</span> -it Rabbit /bin/bash<br><br><span class="hljs-comment">#启用插件</span><br><br>rabbitmq-plugins <span class="hljs-built_in">enable</span> rabbitmq_delayed_message_exchange<br><br><span class="hljs-comment">#查看</span><br><br>rabbitmq-plugins list<br><br><span class="hljs-comment">#重新启动容器</span><br><br>docker restart Rabbit<br><br></code></pre></td></tr></table></figure><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110621397.png" alt="image-20230113110621397" /></p></li><li><p>在容器重启完成后，我们可以登录RabbitMQ的Web端管理界面，在Exchanges选项卡下，点击Add a newexchange，在Type里面看是否出现了x-delayed-message选项，如下图所示</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110317452.png" alt="image-20230113110317452" /></p></li></ol><p>​</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>MQ</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>MQ</tag>
+      
+      <tag>Rabbitmq</tag>
+      
+      <tag>Docker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>设计模式</title>
     <link href="/2023/01/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     <url>/2023/01/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
