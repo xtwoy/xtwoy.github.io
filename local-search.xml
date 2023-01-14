@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</title>
+    <link href="/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A&#39;hexo&#39;%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/"/>
+    <url>/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A&#39;hexo&#39;%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/</url>
+    
+    <content type="html"><![CDATA[<h2 id="hexo安装win10-64-bit-遇到cmd报错hexo-不是内部或外部命令也不是可运行的程序"><a class="markdownIt-Anchor" href="#hexo安装win10-64-bit-遇到cmd报错hexo-不是内部或外部命令也不是可运行的程序"></a> HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序</h2><p>由于使用要使用多个版本的node，下载了个<code>nvm</code>。切换了系统使用的node版本。过一段时间，使用<code>hexo</code>更新博客的时候，发出**'hexo’不是内部或外部命令，也不是可运行的程序**的报错。<code>node</code>换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。</p><p>折腾来折腾去一直不行，索性重开。😡😡😡😡</p><ol><li><p>使用nvm下载 v16.16.0的node</p></li><li><p>使用v16.16.0的node，配置淘宝镜像。啥<strong>node_cache</strong> <strong>node_global</strong>根本不用设置 方便的很</p></li><li><p>安装hexo啦</p><p>安装的2个命令</p><p>npm install hexo-cli -g</p><p>npm install hexo --save</p></li><li><p>查看版本的命令</p><p>hexo -v</p><p>然后寄了</p></li></ol><p>看别人的例子呢，到这都是一帆风顺，程序正常执行，但是到我这就，<strong>谢谢你node！！！！</strong></p><p>下面是解决之道，经过我一番搜索，实验。然后找到了解决方法。</p><p>说是要配置下环境变量。</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png" alt="image-20230114191052165" /></p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191234730.png" alt="image-20230114191234730" /></p><p>下面，咱先仔细看下，安装完成之后的，目录。</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191346874.png" alt="image-20230114191346874" /></p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191545356.png" alt="image-20230114191545356" /></p><p>之前看到好几个文章说吧hexo的bin目录添加到环境变量。但是因为啥原因<code>hexo.cmd</code>并没有放到bin目录里。导致我这一直不行。</p><p>哦，这么一看，大概就只怎么配置环境变量了吧。</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192037550.png" alt="image-20230114192037550" /></p><p>这个之后，咱再运行一次，hexo命令。</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192101364.png" alt="image-20230114192101364" /></p><p>OK，可算是成功了。</p><p>哈哈哈哈，我Windows可算是可以运行这玩意儿啦。</p><p>嗯，可以继续吐槽node，两天花六小时弄node。</p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193212943.png" alt="image-20230114193212943" /></p><p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193248213.png" alt="image-20230114193248213" /></p><p>总结出现<code>xxx不是内部或外部命令，也不是可运行的程序</code>，就把有xxx.cm的目录路径添加到环境变量去。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>node</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>node</tag>
+      
+      <tag>hexo</tag>
+      
+      <tag>cmd</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Docker安装RabbitMQ并安装延时队列插件</title>
     <link href="/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/"/>
     <url>/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/</url>

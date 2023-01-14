@@ -16,30 +16,33 @@
   <meta name="author" content="XtwoY">
   <meta name="keywords" content="">
   
-    <meta name="description" content="下载镜像 安装MQ   [toc]  Docker安装RabbitMQ并安装延时队列插件  一、RabbitMQ简介 RabbitMQ是由erlang语言开发，基于AMQP（Advanced Message Queue高级消息队列协议）协议实现的消息队列，它是一种应用程序之间的通信方法，消息队列在分布式系统开发中应用非常广泛。  二、docker安装RabbitMQ  下载镜像 方式一：在线拉取">
+    <meta name="description" content="HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序 由于使用要使用多个版本的node，下载了个nvm。切换了系统使用的node版本。过一段时间，使用hexo更新博客的时候，发出**&#39;hexo’不是内部或外部命令，也不是可运行的程序**的报错。node换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。 折腾来折">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker安装RabbitMQ并安装延时队列插件">
-<meta property="og:url" content="http://xtwoy.github.io/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/index.html">
+<meta property="og:title" content="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序">
+<meta property="og:url" content="http://xtwoy.github.io/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A'hexo'%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/index.html">
 <meta property="og:site_name" content="XtwoY">
-<meta property="og:description" content="下载镜像 安装MQ   [toc]  Docker安装RabbitMQ并安装延时队列插件  一、RabbitMQ简介 RabbitMQ是由erlang语言开发，基于AMQP（Advanced Message Queue高级消息队列协议）协议实现的消息队列，它是一种应用程序之间的通信方法，消息队列在分布式系统开发中应用非常广泛。  二、docker安装RabbitMQ  下载镜像 方式一：在线拉取">
+<meta property="og:description" content="HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序 由于使用要使用多个版本的node，下载了个nvm。切换了系统使用的node版本。过一段时间，使用hexo更新博客的时候，发出**&#39;hexo’不是内部或外部命令，也不是可运行的程序**的报错。node换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。 折腾来折">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113124427690.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110106821.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110621397.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113142540628.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110317452.png">
-<meta property="article:published_time" content="2023-01-13T06:19:31.000Z">
-<meta property="article:modified_time" content="2023-01-13T08:51:12.210Z">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191234730.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191346874.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191545356.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192037550.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192101364.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193212943.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193248213.png">
+<meta property="article:published_time" content="2023-01-14T11:34:00.000Z">
+<meta property="article:modified_time" content="2023-01-14T11:36:19.162Z">
 <meta property="article:author" content="XtwoY">
-<meta property="article:tag" content="MQ">
-<meta property="article:tag" content="Rabbitmq">
-<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="node">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="cmd">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113124427690.png">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png">
   
   
   
-  <title>Docker安装RabbitMQ并安装延时队列插件 - XtwoY</title>
+  <title>HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序 - XtwoY</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +237,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Docker安装RabbitMQ并安装延时队列插件"></span>
+            <span id="subtitle" data-typed-text="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序"></span>
           
         </div>
 
@@ -245,8 +248,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-01-13 14:19" pubdate>
-          January 13, 2023 pm
+        <time datetime="2023-01-14 19:34" pubdate>
+          January 14, 2023 pm
         </time>
       </span>
     
@@ -257,7 +260,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k words
+          679 words
         
       </span>
     
@@ -268,7 +271,7 @@
         
         
         
-          10 mins
+          6 mins
         
       </span>
     
@@ -319,57 +322,52 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Docker安装RabbitMQ并安装延时队列插件</h1>
+            <h1 style="display: none">HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</h1>
             
             
               <div class="markdown-body">
                 
-                <p><ul class="markdownIt-TOC">
-<li><a href="#%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F">下载镜像</a></li>
-<li><a href="#%E5%AE%89%E8%A3%85mq">安装MQ</a></li>
-</ul>
-</p>
-<p>[toc]</p>
-<h1 id="docker安装rabbitmq并安装延时队列插件"><a class="markdownIt-Anchor" href="#docker安装rabbitmq并安装延时队列插件"></a> Docker安装RabbitMQ并安装延时队列插件</h1>
-<h1 id="一-rabbitmq简介"><a class="markdownIt-Anchor" href="#一-rabbitmq简介"></a> 一、RabbitMQ简介</h1>
-<p>RabbitMQ是由erlang语言开发，基于AMQP（Advanced Message Queue高级消息队列协议）协议实现的消息队列，它是一种应用程序之间的通信方法，消息队列在分布式系统开发中应用非常广泛。</p>
-<h1 id="二-docker安装rabbitmq"><a class="markdownIt-Anchor" href="#二-docker安装rabbitmq"></a> 二、docker安装RabbitMQ</h1>
-<h2 id="下载镜像"><a class="markdownIt-Anchor" href="#下载镜像"></a> 下载镜像</h2>
-<p>方式一：在线拉取</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">docker pull rabbitmq:3-management<br></code></pre></td></tr></table></figure>
-<p>方式二：从本地加载</p>
-<p>已经提供了镜像包：</p>
-<p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1YEJE4xRLucg9JWU8lFnNrw?pwd=yyds">https://pan.baidu.com/s/1YEJE4xRLucg9JWU8lFnNrw?pwd=yyds</a><br />
-提取码：yyds</p>
-<p>上传到虚拟机中后，使用命令加载镜像即可：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">docker load -i mq.tar<br></code></pre></td></tr></table></figure>
-<h2 id="安装mq"><a class="markdownIt-Anchor" href="#安装mq"></a> 安装MQ</h2>
-<p>执行下面的命令来运行MQ容器：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">docker run \<br> -e RABBITMQ_DEFAULT_USER=admin \<br> -e RABBITMQ_DEFAULT_PASS=admin \<br> --name Rabbit \<br> --hostname mq \<br> -p 15672:15672 \<br> -p 5672:5672 \<br> -d \<br> rabbitmq:3-management<br></code></pre></td></tr></table></figure>
-<p>3、访问<a target="_blank" rel="noopener" href="http://192.168.23.132:15672">http://192.168.23.132:15672</a></p>
-<p>账号密码默认都是guest</p>
-<p>这里账号密码是admin</p>
-<h1 id="三-安装rabbitmq延时队列插件delayed_message_exchange"><a class="markdownIt-Anchor" href="#三-安装rabbitmq延时队列插件delayed_message_exchange"></a> 三、安装RabbitMQ延时队列插件（delayed_message_exchange）</h1>
+                <h2 id="hexo安装win10-64-bit-遇到cmd报错hexo-不是内部或外部命令也不是可运行的程序"><a class="markdownIt-Anchor" href="#hexo安装win10-64-bit-遇到cmd报错hexo-不是内部或外部命令也不是可运行的程序"></a> HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序</h2>
+<p>由于使用要使用多个版本的node，下载了个<code>nvm</code>。切换了系统使用的node版本。过一段时间，使用<code>hexo</code>更新博客的时候，发出**'hexo’不是内部或外部命令，也不是可运行的程序**的报错。<code>node</code>换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。</p>
+<p>折腾来折腾去一直不行，索性重开。😡😡😡😡</p>
 <ol>
 <li>
-<p>下载rabbitmq_delayed_message_exchange-x.ez插件并上传到指定文件夹中</p>
-<p>下载地址:<a target="_blank" rel="noopener" href="https://www.rabbitmq.com/community-plugins.html">https://www.rabbitmq.com/community-plugins.html</a></p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113124427690.png" srcset="/img/loading.gif" lazyload alt="image-20230113124427690" /></p>
-<p>要下载对应版本的插件</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110106821.png" srcset="/img/loading.gif" lazyload alt="image-20230113110106821" /></p>
+<p>使用nvm下载 v16.16.0的node</p>
 </li>
 <li>
-<p>然后进行如下操作</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#拷贝到rabbitmq容器 Rabbit 中</span><br><br>docker <span class="hljs-built_in">cp</span> rabbitmq_delayed_message_exchange-3.9.0.ez Rabbit:/plugins<br><br><span class="hljs-comment">#进入容器</span><br><br>docker <span class="hljs-built_in">exec</span> -it Rabbit /bin/bash<br><br><span class="hljs-comment">#启用插件</span><br><br>rabbitmq-plugins <span class="hljs-built_in">enable</span> rabbitmq_delayed_message_exchange<br><br><span class="hljs-comment">#查看</span><br><br>rabbitmq-plugins list<br><br><span class="hljs-comment">#重新启动容器</span><br><br>docker restart Rabbit<br><br></code></pre></td></tr></table></figure>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110621397.png" srcset="/img/loading.gif" lazyload alt="image-20230113110621397" /></p>
+<p>使用v16.16.0的node，配置淘宝镜像。啥<strong>node_cache</strong> <strong>node_global</strong>根本不用设置 方便的很</p>
 </li>
 <li>
-<p>在容器重启完成后，我们可以登录RabbitMQ的Web端管理界面，在Exchanges选项卡下，点击Add a newexchange，在Type里面看是否出现了x-delayed-message选项，如下图所示</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113142540628.png" srcset="/img/loading.gif" lazyload alt="image-20230113142540628" /></p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230113110317452.png" srcset="/img/loading.gif" lazyload alt="image-20230113110317452" /></p>
+<p>安装hexo啦</p>
+<p>安装的2个命令</p>
+<p>npm install hexo-cli -g</p>
+<p>npm install hexo --save</p>
+</li>
+<li>
+<p>查看版本的命令</p>
+<p>hexo -v</p>
+<p>然后寄了</p>
 </li>
 </ol>
-<p>​</p>
+<p>看别人的例子呢，到这都是一帆风顺，程序正常执行，但是到我这就，<strong>谢谢你node！！！！</strong></p>
+<p>下面是解决之道，经过我一番搜索，实验。然后找到了解决方法。</p>
+<p>说是要配置下环境变量。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png" srcset="/img/loading.gif" lazyload alt="image-20230114191052165" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191234730.png" srcset="/img/loading.gif" lazyload alt="image-20230114191234730" /></p>
+<p>下面，咱先仔细看下，安装完成之后的，目录。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191346874.png" srcset="/img/loading.gif" lazyload alt="image-20230114191346874" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191545356.png" srcset="/img/loading.gif" lazyload alt="image-20230114191545356" /></p>
+<p>之前看到好几个文章说吧hexo的bin目录添加到环境变量。但是因为啥原因<code>hexo.cmd</code>并没有放到bin目录里。导致我这一直不行。</p>
+<p>哦，这么一看，大概就只怎么配置环境变量了吧。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192037550.png" srcset="/img/loading.gif" lazyload alt="image-20230114192037550" /></p>
+<p>这个之后，咱再运行一次，hexo命令。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192101364.png" srcset="/img/loading.gif" lazyload alt="image-20230114192101364" /></p>
+<p>OK，可算是成功了。</p>
+<p>哈哈哈哈，我Windows可算是可以运行这玩意儿啦。</p>
+<p>嗯，可以继续吐槽node，两天花六小时弄node。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193212943.png" srcset="/img/loading.gif" lazyload alt="image-20230114193212943" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193248213.png" srcset="/img/loading.gif" lazyload alt="image-20230114193248213" /></p>
+<p>总结出现<code>xxx不是内部或外部命令，也不是可运行的程序</code>，就把有xxx.cm的目录路径添加到环境变量去。</p>
 
                 
               </div>
@@ -388,7 +386,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/MQ/" class="category-chain-item">MQ</a>
+  <a href="/categories/node/" class="category-chain-item">node</a>
   
   
 
@@ -403,11 +401,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/MQ/">#MQ</a>
+        <a href="/tags/node/">#node</a>
       
-        <a href="/tags/Rabbitmq/">#Rabbitmq</a>
+        <a href="/tags/hexo/">#hexo</a>
       
-        <a href="/tags/Docker/">#Docker</a>
+        <a href="/tags/cmd/">#cmd</a>
       
     </div>
   
@@ -419,8 +417,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker安装RabbitMQ并安装延时队列插件</div>
-      <div>http://xtwoy.github.io/2023/01/13/Docker安装RabbitMQ并安装延时队列插件/</div>
+      <div>HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</div>
+      <div>http://xtwoy.github.io/2023/01/14/HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序/</div>
     </div>
     <div class="license-meta">
       
@@ -432,7 +430,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>January 13, 2023</div>
+          <div>January 14, 2023</div>
         </div>
       
       
@@ -464,18 +462,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A&#39;hexo&#39;%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/01/13/RabbitMQ/" title="RabbitMQ">
-                        <span class="hidden-mobile">RabbitMQ</span>
+                      <a href="/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/" title="Docker安装RabbitMQ并安装延时队列插件">
+                        <span class="hidden-mobile">Docker安装RabbitMQ并安装延时队列插件</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -508,17 +500,17 @@
     
     <div class="category row nomargin-x">
       <a class="category-item 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="MQ"
-        id="heading-51f581937765890f2a706c77ea8af3cc" role="tab" data-toggle="collapse" href="#collapse-51f581937765890f2a706c77ea8af3cc"
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="node"
+        id="heading-36c4536996ca5615dcf9911f068786dc" role="tab" data-toggle="collapse" href="#collapse-36c4536996ca5615dcf9911f068786dc"
         aria-expanded="true"
       >
-        MQ
-        <span class="list-group-count">(2)</span>
+        node
+        <span class="list-group-count">(1)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse show" id="collapse-51f581937765890f2a706c77ea8af3cc"
-           role="tabpanel" aria-labelledby="heading-51f581937765890f2a706c77ea8af3cc">
+      <div class="category-collapse collapse show" id="collapse-36c4536996ca5615dcf9911f068786dc"
+           role="tabpanel" aria-labelledby="heading-36c4536996ca5615dcf9911f068786dc">
         
         
           
@@ -527,19 +519,10 @@
     
       
       
-        <a href="/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/" title="Docker安装RabbitMQ并安装延时队列插件"
+        <a href="/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A&#39;hexo&#39;%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序"
            class="list-group-item list-group-item-action
            active">
-          <span class="category-post">Docker安装RabbitMQ并安装延时队列插件</span>
-        </a>
-      
-    
-      
-      
-        <a href="/2023/01/13/RabbitMQ/" title="RabbitMQ"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">RabbitMQ</span>
+          <span class="category-post">HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</span>
         </a>
       
     
