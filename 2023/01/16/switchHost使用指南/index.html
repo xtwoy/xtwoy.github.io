@@ -16,33 +16,34 @@
   <meta name="author" content="XtwoY">
   <meta name="keywords" content="">
   
-    <meta name="description" content="HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序 由于使用要使用多个版本的node，下载了个nvm。切换了系统使用的node版本。过一段时间，使用hexo更新博客的时候，发出**&#39;hexo’不是内部或外部命令，也不是可运行的程序**的报错。node换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。 折腾来折">
+    <meta name="description" content="什么是hosts文件？ SwitchHosts   功能特性 安装  下载   数据备份 开发以及构建  开发 构建及打包   SwitchHost使用 没有权限？ 注意事项   [toc]  switchHost使用指南  什么是hosts文件？ 简单的说，hosts文件是用于本地dns服务的，采用ip域名的格式写在一个文本文件当中，Hosts是一个没有扩展名的系统文件，可以用记事本等工具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序">
-<meta property="og:url" content="http://xtwoy.github.io/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A'hexo'%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:title" content="switchHost使用指南">
+<meta property="og:url" content="http://xtwoy.github.io/2023/01/16/switchHost%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="XtwoY">
-<meta property="og:description" content="HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序 由于使用要使用多个版本的node，下载了个nvm。切换了系统使用的node版本。过一段时间，使用hexo更新博客的时候，发出**&#39;hexo’不是内部或外部命令，也不是可运行的程序**的报错。node换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。 折腾来折">
+<meta property="og:description" content="什么是hosts文件？ SwitchHosts   功能特性 安装  下载   数据备份 开发以及构建  开发 构建及打包   SwitchHost使用 没有权限？ 注意事项   [toc]  switchHost使用指南  什么是hosts文件？ 简单的说，hosts文件是用于本地dns服务的，采用ip域名的格式写在一个文本文件当中，Hosts是一个没有扩展名的系统文件，可以用记事本等工具">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191234730.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191346874.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191545356.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192037550.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192101364.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193212943.png">
-<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193248213.png">
-<meta property="article:published_time" content="2023-01-14T11:34:00.000Z">
-<meta property="article:modified_time" content="2023-01-14T11:36:19.162Z">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116195702055.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116200044914.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116195702055.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116200509366.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116200651479.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201252376.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201546086.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201046930.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201532767.png">
+<meta property="article:published_time" content="2023-01-16T12:25:37.000Z">
+<meta property="article:modified_time" content="2023-01-16T12:28:19.751Z">
 <meta property="article:author" content="XtwoY">
-<meta property="article:tag" content="node">
-<meta property="article:tag" content="hexo">
-<meta property="article:tag" content="cmd">
+<meta property="article:tag" content="Host修改">
+<meta property="article:tag" content="小工具">
+<meta property="article:tag" content="switchHost">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116195702055.png">
   
   
   
-  <title>HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序 - XtwoY</title>
+  <title>switchHost使用指南 - XtwoY</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -237,7 +238,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序"></span>
+            <span id="subtitle" data-typed-text="switchHost使用指南"></span>
           
         </div>
 
@@ -248,8 +249,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-01-14 19:34" pubdate>
-          January 14, 2023 pm
+        <time datetime="2023-01-16 20:25" pubdate>
+          January 16, 2023 pm
         </time>
       </span>
     
@@ -260,7 +261,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          679 words
+          1.7k words
         
       </span>
     
@@ -271,7 +272,7 @@
         
         
         
-          6 mins
+          15 mins
         
       </span>
     
@@ -322,52 +323,112 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</h1>
+            <h1 style="display: none">switchHost使用指南</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="hexo安装win10-64-bit-遇到cmd报错hexo-不是内部或外部命令也不是可运行的程序"><a class="markdownIt-Anchor" href="#hexo安装win10-64-bit-遇到cmd报错hexo-不是内部或外部命令也不是可运行的程序"></a> HEXO安装(Win10 64 bit )，遇到cmd报错：‘hexo’ 不是内部或外部命令，也不是可运行的程序</h2>
-<p>由于使用要使用多个版本的node，下载了个<code>nvm</code>。切换了系统使用的node版本。过一段时间，使用<code>hexo</code>更新博客的时候，发出**'hexo’不是内部或外部命令，也不是可运行的程序**的报错。<code>node</code>换回原来的版本也是不行。甚至以前下载的一系列工具都使用不了（PS：vue)。</p>
-<p>折腾来折腾去一直不行，索性重开。😡😡😡😡</p>
-<ol>
+                <p><ul class="markdownIt-TOC">
 <li>
-<p>使用nvm下载 v16.16.0的node</p>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFhosts%E6%96%87%E4%BB%B6">什么是hosts文件？</a></li>
+<li><a href="#switchhosts"><strong>SwitchHosts</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7">功能特性</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a>
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD">下载</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD">数据备份</a></li>
+<li><a href="#%E5%BC%80%E5%8F%91%E4%BB%A5%E5%8F%8A%E6%9E%84%E5%BB%BA">开发以及构建</a>
+<ul>
+<li><a href="#%E5%BC%80%E5%8F%91">开发</a></li>
+<li><a href="#%E6%9E%84%E5%BB%BA%E5%8F%8A%E6%89%93%E5%8C%85">构建及打包</a></li>
+</ul>
+</li>
+<li><a href="#switchhost%E4%BD%BF%E7%94%A8">SwitchHost使用</a></li>
+<li><a href="#%E6%B2%A1%E6%9C%89%E6%9D%83%E9%99%90">没有权限？</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">注意事项</a></li>
+</ul>
+</p>
+<p>[toc]</p>
+<h1 id="switchhost使用指南"><a class="markdownIt-Anchor" href="#switchhost使用指南"></a> switchHost使用指南</h1>
+<h3 id="什么是hosts文件"><a class="markdownIt-Anchor" href="#什么是hosts文件"></a> 什么是hosts文件？</h3>
+<p>简单的说，hosts文件是用于本地dns服务的，采用ip域名的格式写在一个文本文件当中，Hosts是一个没有扩展名的系统文件，可以用记事本等工具打开，其作用就是将一些常用的网址域名与其对应的IP地址建立一个关联“数据库”，当用户在浏览器中输入一个需要登录的网址时，系统会首先自动从Hosts文件中寻找对应的IP地址，一旦找到，系统会立即打开对应网页，如果没有找到，则系统再会将网址提交DNS域名解析服务器进行IP地址的解析。</p>
+<h3 id="switchhosts"><a class="markdownIt-Anchor" href="#switchhosts"></a> <strong>SwitchHosts</strong></h3>
+<p>项目主页：<a target="_blank" rel="noopener" href="https://switchhosts.vercel.app">https://switchhosts.vercel.app</a></p>
+<p>SwitchHosts 是一个管理 hosts 文件的应用，基于 <a target="_blank" rel="noopener" href="http://electron.atom.io/">Electron</a> 、<a target="_blank" rel="noopener" href="https://facebook.github.io/react/">React</a>、<a target="_blank" rel="noopener" href="https://umijs.org/">UmiJS</a> 、<a target="_blank" rel="noopener" href="https://chakra-ui.com/">Chakra UI</a>、<a target="_blank" rel="noopener" href="http://codemirror.net/">CodeMirror</a> 等技术开发。</p>
+<blockquote>
+<p>截图</p>
+</blockquote>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116195702055.png" srcset="/img/loading.gif" lazyload alt="image-20230116195702055" /></p>
+<h2 id="功能特性"><a class="markdownIt-Anchor" href="#功能特性"></a> 功能特性</h2>
+<ul>
+<li>快速切换 hosts 方案</li>
+<li>hosts 语法高亮</li>
+<li>支持从网络加载远程 hosts 配置</li>
+<li>可从系统菜单栏图标快速切换 hosts</li>
+</ul>
+<h2 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h2>
+<h3 id="下载"><a class="markdownIt-Anchor" href="#下载"></a> 下载</h3>
+<p>你可以下载源码并自行构建，也可以从以下地址下载已构建好的版本：</p>
+<ul>
+<li>
+<p><a target="_blank" rel="noopener" href="https://github.com/oldj/SwitchHosts/releases">SwitchHosts Download Page (GitHub release)</a></p>
 </li>
 <li>
-<p>使用v16.16.0的node，配置淘宝镜像。啥<strong>node_cache</strong> <strong>node_global</strong>根本不用设置 方便的很</p>
+<p>下载完成后，解压压缩包，会有一个exe可执行文件</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116200044914.png" srcset="/img/loading.gif" lazyload alt="image-20230116200044914" /></p>
 </li>
 <li>
-<p>安装hexo啦</p>
-<p>安装的2个命令</p>
-<p>npm install hexo-cli -g</p>
-<p>npm install hexo --save</p>
+<p>exe文件右键选择以 <strong>管理员身份运行，</strong> 并建议给全体用户安装（现在大多都是个人电脑，应该也无所谓），安装完成后页面如下（这里使用的网图，因为我已经安装过了，不是初始界面，同时因为版本问题，按钮位置和按钮形状可能会有些许不同）</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116195702055.png" srcset="/img/loading.gif" lazyload alt="image-20230116195702055" /></p>
 </li>
-<li>
-<p>查看版本的命令</p>
-<p>hexo -v</p>
-<p>然后寄了</p>
-</li>
-</ol>
-<p>看别人的例子呢，到这都是一帆风顺，程序正常执行，但是到我这就，<strong>谢谢你node！！！！</strong></p>
-<p>下面是解决之道，经过我一番搜索，实验。然后找到了解决方法。</p>
-<p>说是要配置下环境变量。</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191052165.png" srcset="/img/loading.gif" lazyload alt="image-20230114191052165" /></p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191234730.png" srcset="/img/loading.gif" lazyload alt="image-20230114191234730" /></p>
-<p>下面，咱先仔细看下，安装完成之后的，目录。</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191346874.png" srcset="/img/loading.gif" lazyload alt="image-20230114191346874" /></p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114191545356.png" srcset="/img/loading.gif" lazyload alt="image-20230114191545356" /></p>
-<p>之前看到好几个文章说吧hexo的bin目录添加到环境变量。但是因为啥原因<code>hexo.cmd</code>并没有放到bin目录里。导致我这一直不行。</p>
-<p>哦，这么一看，大概就只怎么配置环境变量了吧。</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192037550.png" srcset="/img/loading.gif" lazyload alt="image-20230114192037550" /></p>
-<p>这个之后，咱再运行一次，hexo命令。</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114192101364.png" srcset="/img/loading.gif" lazyload alt="image-20230114192101364" /></p>
-<p>OK，可算是成功了。</p>
-<p>哈哈哈哈，我Windows可算是可以运行这玩意儿啦。</p>
-<p>嗯，可以继续吐槽node，两天花六小时弄node。</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193212943.png" srcset="/img/loading.gif" lazyload alt="image-20230114193212943" /></p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230114193248213.png" srcset="/img/loading.gif" lazyload alt="image-20230114193248213" /></p>
-<p>总结出现<code>xxx不是内部或外部命令，也不是可运行的程序</code>，就把有xxx.cm的目录路径添加到环境变量去。</p>
+</ul>
+<p>你也可以通过 <a target="_blank" rel="noopener" href="https://community.chocolatey.org/packages/switchhosts">Chocolatey 包管理器</a>安装已构建好的版本：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">choco <span class="hljs-keyword">install</span> switchhosts<br></code></pre></td></tr></table></figure>
+<h2 id="数据备份"><a class="markdownIt-Anchor" href="#数据备份"></a> 数据备份</h2>
+<p>SwitchHosts 的数据文件存储于 <code>~/.SwitchHosts</code> (Windows 下存储于用户个人文件夹下的 <code>.SwitchHosts</code> 文件夹）， 其中 <code>~/.SwitchHosts/data</code> 文件夹包含数据，<code>~/.SwitchHosts/config</code> 文件夹包含各项配置信息。</p>
+<h2 id="开发以及构建"><a class="markdownIt-Anchor" href="#开发以及构建"></a> 开发以及构建</h2>
+<h3 id="开发"><a class="markdownIt-Anchor" href="#开发"></a> 开发</h3>
+<ul>
+<li>安装 <a target="_blank" rel="noopener" href="https://nodejs.org/">Node.js</a></li>
+<li>在项目根目录 <code>./</code> 下，运行 <code>npm install</code> 命令安装依赖</li>
+<li>运行 <code>npm run dev</code> 命令启动开发服务</li>
+<li>运行 <code>npm run start</code> 启动 App，即可开始开发及调试</li>
+</ul>
+<h3 id="构建及打包"><a class="markdownIt-Anchor" href="#构建及打包"></a> 构建及打包</h3>
+<ul>
+<li>推荐使用 <a target="_blank" rel="noopener" href="https://github.com/electron-userland/electron-builder">electron-builder</a> 进行打包</li>
+<li>转到项目根目录 ‘./’</li>
+<li>运行 <code>npm run build</code></li>
+<li>运行 <code>npm run make</code>，如果一切顺利，可在 <code>./dist</code> 目录下找到打包后的文件</li>
+<li>首次运行可能需要花费一些时间，因为需要下载相关依赖文件。你也可以从 <a target="_blank" rel="noopener" href="https://github.com/electron/electron/releases">这儿</a> 或者 <a target="_blank" rel="noopener" href="https://npmmirror.com/mirrors/electron/">淘宝镜像</a> 手动下载，并保存到 <code>~/.electron</code> 目录下。更多信息可访问 <a target="_blank" rel="noopener" href="http://electron.atom.io/docs/">Electron 文档</a>。</li>
+</ul>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><span class="hljs-comment"># build</span><br>npm <span class="hljs-built_in">run</span> build<br><br><span class="hljs-comment"># make</span><br>npm <span class="hljs-built_in">run</span> make <span class="hljs-comment"># the packed files will be in ./dist</span><br></code></pre></td></tr></table></figure>
+<p>我们在开发Web项目过程中，一般会部署有多套环境，网址域名都相同，部署在不同的服务器上，有开发环境、测试环境、预发布环境、生产环境。经常要切换Hosts来访问，测试以及验证bug，如果纯手工修改这会花掉不少时间。</p>
+<h2 id="switchhost使用"><a class="markdownIt-Anchor" href="#switchhost使用"></a> SwitchHost使用</h2>
+<p>新建分组，一般是正式环境一组，测试环境一组，本地开发一组</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116200509366.png" srcset="/img/loading.gif" lazyload alt="image-20230116200509366" /></p>
+<h2 id="没有权限"><a class="markdownIt-Anchor" href="#没有权限"></a> 没有权限？</h2>
+<p>当出现这个情况需要检查host的可读写情况</p>
+<p>打开host文件（C:\Windows\System32\drivers\etc\hosts）右键属性</p>
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116200651479.png" srcset="/img/loading.gif" lazyload alt="image-20230116200651479" style="zoom:50%;" />
+<p>需要保证这里未被勾选及当前有足够权限</p>
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201252376.png" srcset="/img/loading.gif" lazyload alt="image-20230116201252376" style="zoom:50%;" />
+<p>可以看到我们这里是没有权限的，需要给他权限，点击编辑，给足权限</p>
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201546086.png" srcset="/img/loading.gif" lazyload alt="image-20230116201546086" style="zoom:50%;" />
+<p>点应用，然后一直确定</p>
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201046930.png" srcset="/img/loading.gif" lazyload alt="image-20230116201046930" style="zoom:50%;" />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230116201532767.png" srcset="/img/loading.gif" lazyload alt="image-20230116201532767" style="zoom:67%;" />
+<p>成功！</p>
+<h2 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> 注意事项</h2>
+<ul>
+<li>1、如果使用了代理，修改 Hosts 也不会生效。因为浏览器会优先考虑代理工具的代理，建议调试的时候先关闭代理。</li>
+<li>2、修改了hosts不生效，一般需要重启浏览器，如果是google浏览器可以不用重启，可以借助chrome://net-internals/#dns chrome://net-internals/#sockets 清掉<code>keep-alive</code> 和清浏览器 DNS 缓存。</li>
+</ul>
 
                 
               </div>
@@ -386,7 +447,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/node/" class="category-chain-item">node</a>
+  <a href="/categories/%E5%B7%A5%E5%85%B7/" class="category-chain-item">工具</a>
   
   
 
@@ -401,11 +462,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/node/">#node</a>
+        <a href="/tags/Host%E4%BF%AE%E6%94%B9/">#Host修改</a>
       
-        <a href="/tags/hexo/">#hexo</a>
+        <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/">#小工具</a>
       
-        <a href="/tags/cmd/">#cmd</a>
+        <a href="/tags/switchHost/">#switchHost</a>
       
     </div>
   
@@ -417,8 +478,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</div>
-      <div>http://xtwoy.github.io/2023/01/14/HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序/</div>
+      <div>switchHost使用指南</div>
+      <div>http://xtwoy.github.io/2023/01/16/switchHost使用指南/</div>
     </div>
     <div class="license-meta">
       
@@ -430,7 +491,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>January 14, 2023</div>
+          <div>January 16, 2023</div>
         </div>
       
       
@@ -462,18 +523,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/01/16/switchHost%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" title="switchHost使用指南">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">switchHost使用指南</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/01/13/Docker%E5%AE%89%E8%A3%85RabbitMQ%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%8F%92%E4%BB%B6/" title="Docker安装RabbitMQ并安装延时队列插件">
-                        <span class="hidden-mobile">Docker安装RabbitMQ并安装延时队列插件</span>
+                      <a href="/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A&#39;hexo&#39;%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序">
+                        <span class="hidden-mobile">HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -506,17 +561,17 @@
     
     <div class="category row nomargin-x">
       <a class="category-item 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="node"
-        id="heading-36c4536996ca5615dcf9911f068786dc" role="tab" data-toggle="collapse" href="#collapse-36c4536996ca5615dcf9911f068786dc"
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="工具"
+        id="heading-20dce2c6fa909a5cd62526615fe2788a" role="tab" data-toggle="collapse" href="#collapse-20dce2c6fa909a5cd62526615fe2788a"
         aria-expanded="true"
       >
-        node
+        工具
         <span class="list-group-count">(1)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse show" id="collapse-36c4536996ca5615dcf9911f068786dc"
-           role="tabpanel" aria-labelledby="heading-36c4536996ca5615dcf9911f068786dc">
+      <div class="category-collapse collapse show" id="collapse-20dce2c6fa909a5cd62526615fe2788a"
+           role="tabpanel" aria-labelledby="heading-20dce2c6fa909a5cd62526615fe2788a">
         
         
           
@@ -525,10 +580,10 @@
     
       
       
-        <a href="/2023/01/14/HEXO%E5%AE%89%E8%A3%85(Win10%2064%20bit%20)%EF%BC%8C%E9%81%87%E5%88%B0cmd%E6%8A%A5%E9%94%99%EF%BC%9A&#39;hexo&#39;%20%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序"
+        <a href="/2023/01/16/switchHost%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" title="switchHost使用指南"
            class="list-group-item list-group-item-action
            active">
-          <span class="category-post">HEXO安装(Win10 64 bit )，遇到cmd报错：&#39;hexo&#39; 不是内部或外部命令，也不是可运行的程序</span>
+          <span class="category-post">switchHost使用指南</span>
         </a>
       
     
