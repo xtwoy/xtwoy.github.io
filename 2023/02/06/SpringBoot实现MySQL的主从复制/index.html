@@ -16,23 +16,31 @@
   <meta name="author" content="XtwoY">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Maven三种打包 pom jar war   &lt;packaging&gt;pom&lt;&#x2F;packaging&gt; 在父级项目中的pom.xml文件使用的packaging配置一定为pom。父级的pom文件只作项目的子模块的整合，在maveninstall时不会生成jar&#x2F;war压缩包。 可以通过标签来整合子模块的编译顺序（Maven引入依赖使用最短路径原则，例如a&lt;–b&lt;">
+    <meta name="description" content="SpringBoot实现MySQL的主从复制 从零开始，通过docker实现MySQL主从复制  概述  难么如何去确定来的SQL应该分配到哪个库上，这个就要靠Sharding-jdbc框架来读写分离的分流处理   实战 步骤如下  导入Maven坐标   123456&lt;dependency&gt;    &lt;groupId&gt;org.apache.shardingsphere&amp;l">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Maven三种打包 pom jar wardriver class">
-<meta property="og:url" content="http://xtwoy.github.io/2023/01/20/Maven%E4%B8%89%E7%A7%8D%E6%89%93%E5%8C%85%20pom%20jar%20war/index.html">
+<meta property="og:title" content="SpringBoot实现MySQL的主从复制">
+<meta property="og:url" content="http://xtwoy.github.io/2023/02/06/SpringBoot%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/index.html">
 <meta property="og:site_name" content="XtwoY">
-<meta property="og:description" content="Maven三种打包 pom jar war   &lt;packaging&gt;pom&lt;&#x2F;packaging&gt; 在父级项目中的pom.xml文件使用的packaging配置一定为pom。父级的pom文件只作项目的子模块的整合，在maveninstall时不会生成jar&#x2F;war压缩包。 可以通过标签来整合子模块的编译顺序（Maven引入依赖使用最短路径原则，例如a&lt;–b&lt;">
+<meta property="og:description" content="SpringBoot实现MySQL的主从复制 从零开始，通过docker实现MySQL主从复制  概述  难么如何去确定来的SQL应该分配到哪个库上，这个就要靠Sharding-jdbc框架来读写分离的分流处理   实战 步骤如下  导入Maven坐标   123456&lt;dependency&gt;    &lt;groupId&gt;org.apache.shardingsphere&amp;l">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-01-20T13:09:45.000Z">
-<meta property="article:modified_time" content="2023-01-20T13:10:01.017Z">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f141bcd96b9840bd8a4e1295055408a1.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/83f78cd07cd848de9c4b5abd422d4b91.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f72981dfa9204bab9545793d04bc2ed9.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/7e5c203773a04fdd9b9a096659db9749.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f647f0ab726e48f7a4ae0445970980d2.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/fd937b8b481946bba8325127319d22f9.png">
+<meta property="article:published_time" content="2023-02-06T08:41:45.000Z">
+<meta property="article:modified_time" content="2023-02-06T08:43:48.251Z">
 <meta property="article:author" content="XtwoY">
 <meta property="article:tag" content="SpringBoot">
-<meta property="article:tag" content="Maven">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f141bcd96b9840bd8a4e1295055408a1.png">
   
   
   
-  <title>Maven三种打包 pom jar wardriver class - XtwoY</title>
+  <title>SpringBoot实现MySQL的主从复制 - XtwoY</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -227,7 +235,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Maven三种打包 pom jar wardriver class"></span>
+            <span id="subtitle" data-typed-text="SpringBoot实现MySQL的主从复制"></span>
           
         </div>
 
@@ -238,8 +246,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-01-20 21:09" pubdate>
-          January 20, 2023 pm
+        <time datetime="2023-02-06 16:41" pubdate>
+          February 6, 2023 pm
         </time>
       </span>
     
@@ -250,7 +258,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          956 words
+          1.2k words
         
       </span>
     
@@ -261,7 +269,7 @@
         
         
         
-          8 mins
+          10 mins
         
       </span>
     
@@ -312,12 +320,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Maven三种打包 pom jar wardriver class</h1>
+            <h1 style="display: none">SpringBoot实现MySQL的主从复制</h1>
             
               <p class="note note-info">
                 
                   
-                    Last updated on January 20, 2023 pm
+                    Last updated on February 6, 2023 pm
                   
                 
               </p>
@@ -325,28 +333,28 @@
             
               <div class="markdown-body">
                 
-                <h1 id="maven三种打包-pom-jar-war"><a class="markdownIt-Anchor" href="#maven三种打包-pom-jar-war"></a> Maven三种打包 pom jar war</h1>
-<ol>
-<li>
-<p><code>&lt;packaging&gt;pom&lt;/packaging&gt;</code></p>
-<p>在父级项目中的pom.xml文件使用的packaging配置一定为pom。父级的pom文件只作项目的子模块的整合，在maveninstall时不会生成jar/war压缩包。</p>
-<p>可以通过标签来整合子模块的编译顺序（Maven引入依赖使用最短路径原则，例如a&lt;–b&lt;–c1.0<br />
-，d&lt;–e&lt;–f&lt;–c1.1，由于路径最短，最终引入的为c1.0；但路径长度相同时，则会引入先申明的依赖）。因此尽量将更加底层的service放在更先的位置优先加载依赖较为合适。<br />
-可以将一些子项目中共用的依赖或将其版本统一写到父级配置中，以便统一管理。<br />
-groupId, artifactId, version能直接从父级继承，减少子项目的pom配置。</p>
-<p>pom的意思是项目里没有java代码，也不执行任何代码，只是为了 <strong>聚合工程或传递依赖用</strong> 的。所以并不会寻找配置文件，若想配置文件生效，改为jar。</p>
-</li>
-<li>
-<p><code>&lt;packaging&gt;jar&lt;/packaging&gt;</code></p>
-</li>
-</ol>
-<p>Jar包是最为常见的打包方式，当pom文件中没有设置packaging参数时，默认使用jar方式打包。  这种打包方式意味着在mavenbuild时会将这个项目中的所有java文件都进行编译形成.class文件，且按照原来的java文件层级结构放置，最终压缩为一个jar文件。<br />
-当我们使用mvn install命令的时候，能够发现在项目中与src文件夹同级新生成了一个target文件夹，这个文件夹内的classes文件夹即为刚才提到的编译后形成的文件夹。如下图所示，这是我自己的项目生成的target文件夹，而最下方的jar文件即为此文件夹的压缩版本。</p>
-<ol start="3">
-<li><code>&lt;packaging&gt;war&lt;/packaging&gt;</code><br />
-war包与jar包非常相似，同样是编译后的.class文件按层级结构形成文件树后打包形成的压缩包。不同的是，它会将项目中依赖的所有jar包都放在WEB-INF/lib这个文件夹下<br />
-war包非常适合部署时使用，不再需要下载其他的依赖包，能够使用户拿到war包直接使用，因此它经常使用于微服务项目群中的入口项目的pom配置中</li>
-</ol>
+                <h1 id="springboot实现mysql的主从复制"><a class="markdownIt-Anchor" href="#springboot实现mysql的主从复制"></a> SpringBoot实现MySQL的主从复制</h1>
+<p><a href="http://xtwoy.github.io/2022/11/27/%E9%80%9A%E8%BF%87docker%E5%AE%9E%E7%8E%B0MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">从零开始，通过docker实现MySQL主从复制</a></p>
+<h3 id="概述"><a class="markdownIt-Anchor" href="#概述"></a> 概述</h3>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f141bcd96b9840bd8a4e1295055408a1.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" /><br />
+难么如何去确定来的SQL应该分配到哪个库上，这个就要靠Sharding-jdbc框架来读写分离的分流处理<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/83f78cd07cd848de9c4b5abd422d4b91.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" /></p>
+<h3 id="实战"><a class="markdownIt-Anchor" href="#实战"></a> 实战</h3>
+<p>步骤如下<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f72981dfa9204bab9545793d04bc2ed9.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" /><br />
+导入Maven坐标</p>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.shardingsphere<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>sharding-jdbc-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.0.0-RC1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+<p>配置yml文件</p>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">ccTakeOut</span><br>  <span class="hljs-attr">shardingsphere:</span><br>    <span class="hljs-attr">datasource:</span><br>      <span class="hljs-attr">names:</span><br>        <span class="hljs-string">master,slave</span><br>      <span class="hljs-comment"># 主库（增删改操作）</span><br>      <span class="hljs-attr">master:</span><br>        <span class="hljs-attr">type:</span> <span class="hljs-string">com.alibaba.druid.pool.DruidDataSource</span><br>        <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">com.mysql.jdbc.Driver</span><br>        <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:mysql://你的虚拟机IP地址:3307/reggie?characterEncoding=utf-8</span><br>        <span class="hljs-attr">username:</span> <span class="hljs-string">root</span><br>        <span class="hljs-attr">password:</span> <span class="hljs-string">root</span><br>      <span class="hljs-comment"># 从数据源（读操作）</span><br>      <span class="hljs-attr">slave:</span><br>        <span class="hljs-attr">type:</span> <span class="hljs-string">com.alibaba.druid.pool.DruidDataSource</span><br>        <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">com.mysql.jdbc.Driver</span><br>        <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:mysql://你的虚拟机IP地址:3308/reggie?characterEncoding=utf-8</span><br>        <span class="hljs-attr">username:</span> <span class="hljs-string">root</span><br>        <span class="hljs-attr">password:</span> <span class="hljs-string">root</span><br>    <span class="hljs-attr">masterslave:</span><br>      <span class="hljs-comment"># 读写分离配置</span><br>      <span class="hljs-attr">load-balance-algorithm-type:</span> <span class="hljs-string">round_robin</span> <span class="hljs-comment">#轮询（如果有多个从库会轮询着读）</span><br>      <span class="hljs-comment"># 最终的数据源名称</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">dataSource</span><br>      <span class="hljs-comment"># 主库数据源名称</span><br>      <span class="hljs-attr">master-data-source-name:</span> <span class="hljs-string">master</span><br>      <span class="hljs-comment"># 从库数据源名称列表，多个逗号分隔</span><br>      <span class="hljs-attr">slave-data-source-names:</span> <span class="hljs-string">slave</span><br>    <span class="hljs-attr">props:</span><br>      <span class="hljs-attr">sql:</span><br>        <span class="hljs-attr">show:</span> <span class="hljs-literal">true</span> <span class="hljs-comment">#开启SQL显示，默认false</span><br>  <span class="hljs-attr">main:</span><br>    <span class="hljs-attr">allow-bean-definition-overriding:</span> <span class="hljs-literal">true</span> <span class="hljs-comment">#允许bean数据源覆盖</span><br><br><br></code></pre></td></tr></table></figure>
+<p>​</p>
+<p>解读一下yml配置<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/7e5c203773a04fdd9b9a096659db9749.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" /><br />
+<strong>允许Bean定义覆盖很重要</strong></p>
+<h3 id="测试"><a class="markdownIt-Anchor" href="#测试"></a> 测试</h3>
+<p>启动项目，可以看到，读写操作分别到达了不同的主机上<br />
+读写分离测试<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/f647f0ab726e48f7a4ae0445970980d2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" /><br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/fd937b8b481946bba8325127319d22f9.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" /></p>
 
                 
               </div>
@@ -365,7 +373,7 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
     
       <span class="category-chain">
         
-  <a href="/categories/Maven/" class="category-chain-item">Maven</a>
+  <a href="/categories/SpringBoot/" class="category-chain-item">SpringBoot</a>
   
   
 
@@ -382,7 +390,9 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
       
         <a href="/tags/SpringBoot/">#SpringBoot</a>
       
-        <a href="/tags/Maven/">#Maven</a>
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+        <a href="/tags/Docker/">#Docker</a>
       
     </div>
   
@@ -394,8 +404,8 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Maven三种打包 pom jar wardriver class</div>
-      <div>http://xtwoy.github.io/2023/01/20/Maven三种打包 pom jar war/</div>
+      <div>SpringBoot实现MySQL的主从复制</div>
+      <div>http://xtwoy.github.io/2023/02/06/SpringBoot实现MySQL的主从复制/</div>
     </div>
     <div class="license-meta">
       
@@ -407,7 +417,7 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>January 20, 2023</div>
+          <div>February 6, 2023</div>
         </div>
       
       
@@ -439,18 +449,12 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/06/SpringBoot%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="SpringBoot实现MySQL的主从复制">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">SpringBoot实现MySQL的主从复制</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/01/19/Nginx/" title="Nginx">
-                        <span class="hidden-mobile">Nginx</span>
+                      <a href="/2023/01/20/Maven%E4%B8%89%E7%A7%8D%E6%89%93%E5%8C%85%20pom%20jar%20war/" title="Maven三种打包 pom jar wardriver class">
+                        <span class="hidden-mobile">Maven三种打包 pom jar wardriver class</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -483,17 +487,17 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
     
     <div class="category row nomargin-x">
       <a class="category-item 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Maven"
-        id="heading-9115c10980645c41313f244ac1a377f7" role="tab" data-toggle="collapse" href="#collapse-9115c10980645c41313f244ac1a377f7"
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="SpringBoot"
+        id="heading-c8428a45869e78fb361ed20b9c23b0a8" role="tab" data-toggle="collapse" href="#collapse-c8428a45869e78fb361ed20b9c23b0a8"
         aria-expanded="true"
       >
-        Maven
+        SpringBoot
         <span class="list-group-count">(1)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse show" id="collapse-9115c10980645c41313f244ac1a377f7"
-           role="tabpanel" aria-labelledby="heading-9115c10980645c41313f244ac1a377f7">
+      <div class="category-collapse collapse show" id="collapse-c8428a45869e78fb361ed20b9c23b0a8"
+           role="tabpanel" aria-labelledby="heading-c8428a45869e78fb361ed20b9c23b0a8">
         
         
           
@@ -502,10 +506,10 @@ war包非常适合部署时使用，不再需要下载其他的依赖包，能�
     
       
       
-        <a href="/2023/01/20/Maven%E4%B8%89%E7%A7%8D%E6%89%93%E5%8C%85%20pom%20jar%20war/" title="Maven三种打包 pom jar wardriver class"
+        <a href="/2023/02/06/SpringBoot%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="SpringBoot实现MySQL的主从复制"
            class="list-group-item list-group-item-action
            active">
-          <span class="category-post">Maven三种打包 pom jar wardriver class</span>
+          <span class="category-post">SpringBoot实现MySQL的主从复制</span>
         </a>
       
     
