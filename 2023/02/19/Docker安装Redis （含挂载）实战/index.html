@@ -1,0 +1,1040 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、Docker搜索redis镜像 二、Docker拉取镜像 三、Docker挂载配置文件 四、启动redis 容器 五、测试  1、通过docker ps指令查看启动状态 2、查看容器运行日志 3、 容器内部连接进行测试   六、配置文件 七、Docker删除Redis  6.1、删除Redis 容器 6.2、删除Redis镜像        Docker安装Redis （含挂载）实战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker安装Redis （含挂载）实战">
+<meta property="og:url" content="http://xtwoy.github.io/2023/02/19/Docker%E5%AE%89%E8%A3%85Redis%20%EF%BC%88%E5%90%AB%E6%8C%82%E8%BD%BD%EF%BC%89%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="一、Docker搜索redis镜像 二、Docker拉取镜像 三、Docker挂载配置文件 四、启动redis 容器 五、测试  1、通过docker ps指令查看启动状态 2、查看容器运行日志 3、 容器内部连接进行测试   六、配置文件 七、Docker删除Redis  6.1、删除Redis 容器 6.2、删除Redis镜像        Docker安装Redis （含挂载）实战">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219203640157.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219203940034.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204016896.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204132352.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204228201.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204322204.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204345543.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204504613.png">
+<meta property="article:published_time" content="2023-02-19T12:57:22.000Z">
+<meta property="article:modified_time" content="2023-02-19T13:10:05.813Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="挂载">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219203640157.png">
+  
+  
+  
+  <title>Docker安装Redis （含挂载）实战 - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Docker安装Redis （含挂载）实战"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-19 20:57" pubdate>
+          February 19, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker安装Redis （含挂载）实战</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on February 19, 2023 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%80-docker%E6%90%9C%E7%B4%A2redis%E9%95%9C%E5%83%8F">一、Docker搜索redis镜像</a></li>
+<li><a href="#%E4%BA%8C-docker%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F">二、Docker拉取镜像</a></li>
+<li><a href="#%E4%B8%89-docker%E6%8C%82%E8%BD%BD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">三、Docker挂载配置文件</a></li>
+<li><a href="#%E5%9B%9B-%E5%90%AF%E5%8A%A8redis-%E5%AE%B9%E5%99%A8">四、启动redis 容器</a></li>
+<li><a href="#%E4%BA%94-%E6%B5%8B%E8%AF%95">五、测试</a>
+<ul>
+<li><a href="#1-%E9%80%9A%E8%BF%87docker-ps%E6%8C%87%E4%BB%A4%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E7%8A%B6%E6%80%81">1、通过docker ps指令查看启动状态</a></li>
+<li><a href="#2-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%A5%E5%BF%97">2、查看容器运行日志</a></li>
+<li><a href="#3-%E5%AE%B9%E5%99%A8%E5%86%85%E9%83%A8%E8%BF%9E%E6%8E%A5%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95">3、 <strong>容器内部连接进行测试</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">六、配置文件</a></li>
+<li><a href="#%E4%B8%83-docker%E5%88%A0%E9%99%A4redis">七、Docker删除Redis</a>
+<ul>
+<li><a href="#61-%E5%88%A0%E9%99%A4redis-%E5%AE%B9%E5%99%A8">6.1、删除Redis 容器</a></li>
+<li><a href="#62-%E5%88%A0%E9%99%A4redis%E9%95%9C%E5%83%8F">6.2、删除Redis镜像</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="docker安装redis-含挂载实战"><a class="markdownIt-Anchor" href="#docker安装redis-含挂载实战"></a> Docker安装Redis （含挂载）实战</h1>
+<blockquote>
+<p>不仅教你安装，还教你删除。</p>
+<p>每一行命令都带图解，绝对能懂。</p>
+<p>搭建Redis Clustr (Redis 集群)感兴趣的，可以看看这篇文章<br />
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45821811/article/details/119421774">Docker搭建Redis<br />
+Cluster集群环境</a></p>
+</blockquote>
+<h3 id="一-docker搜索redis镜像"><a class="markdownIt-Anchor" href="#一-docker搜索redis镜像"></a> 一、Docker搜索redis镜像</h3>
+<blockquote>
+<p>命令：docker search &lt;镜像名称&gt;</p>
+</blockquote>
+<pre><code class="hljs">docker search redis
+</code></pre>
+<p>可以看到有很多redis的镜像，此处因没有指定版本，所以下载的就是默认的最新版本 。 <strong>redis latest.</strong></p>
+<h3 id="二-docker拉取镜像"><a class="markdownIt-Anchor" href="#二-docker拉取镜像"></a> 二、Docker拉取镜像</h3>
+<blockquote>
+<p>命令：：docker pull &lt;镜像名称&gt;:&lt;版本号&gt;</p>
+</blockquote>
+<pre><code class="hljs">docker pull redis
+</code></pre>
+<h3 id="三-docker挂载配置文件"><a class="markdownIt-Anchor" href="#三-docker挂载配置文件"></a> 三、Docker挂载配置文件</h3>
+<p>接下来就是要将redis 的配置文件进行挂载，以 <strong>配置文件方式启动redis 容器</strong>。（挂载：即将宿主的文件和容器内部目录相关联，相互绑定，在宿主机内修改文件的话也随之修改容器内部文件）</p>
+<ol>
+<li>
+<p>挂载 redis 的配置文件</p>
+</li>
+<li>
+<p>挂载 redis 的持久化文件（为了数据的持久化）。</p>
+<p>本人的配置文件是放在</p>
+<p><code>liunx</code> 下redis.conf文件位置：<code>/usr/local/volumes-docker/redis/conf/myredis.conf</code></p>
+<p><code>liunx</code> 下redis的data文件位置 ： <code>/usr/local/volumes-docker/redis/data</code></p>
+<p>位置可以自己随便选择哈</p>
+</li>
+</ol>
+<p><strong>mkdir -p</strong> <code>/usr/local/volumes-docker/redis/data</code> 命令 是不存在就直接创建<code>/usr/local/volumes-docker/redis/data</code>文件夹</p>
+<p>查看<code>/usr/local/volumes-docker/redis/conf/myredis.conf</code>，会发现该文件并不是myredis.conf配置文件，只有myredis.conf文件夹，这时候需要我们删除，myredis.conf文件夹，去redis github下载一个标准格式的myredis.conf文件复制到<code>/usr/local/volumes-docker/redis/conf/myredis.conf</code>目录下，并更改配置文件(这个是因为docker挂载的是目录，并且docker的redi也不自带redis.conf配置文件)</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> exec -it redis redis-server -v 查看docker中redis版本<br><span class="hljs-attribute">1</span>.将redis.conf配置文件中的protected-mode yes 改为protected-mode no<br><span class="hljs-attribute">2</span>.将redis.conf配置bind <span class="hljs-number">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">01</span> 改为 # bind <span class="hljs-number">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">01</span><br><br></code></pre></td></tr></table></figure>
+<p>当protected-mode保护模式关闭时，外部网络可以直接访问；当protected-mode保护模式开启时，需配置bind ip或者设置访问密码才可以访问；如果不更改配置文件，项目使用redis的时候可能会遇到如下错误：org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis；</p>
+<p>下载地址https://github.com/redis/redis/releases<br />
+找到自己对应的版本，下载源代码，在源代码中找到redis.conf文件</p>
+<p><code>myredis.conf</code> 是我手动上传的。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219203640157.png" srcset="/img/loading.gif" lazyload alt="image-20230219203640157" /></p>
+<h3 id="四-启动redis-容器"><a class="markdownIt-Anchor" href="#四-启动redis-容器"></a> 四、启动redis 容器</h3>
+<p>​<br />
+​    docker run --restart=always --log-opt max-size=100m --log-opt max-file=2 -p 6379:6379 --name redis -v /usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis/redis.conf -v /usr/local/volumes-docker/redis/data:/data -d redis:alpine3.17 redis-server /etc/redis/redis.conf  --appendonly yes  --requirepass root</p>
+<ol>
+<li>
+<p><code>--restart=always</code> 总是开机启动</p>
+</li>
+<li>
+<p><code>--log</code>是日志方面的</p>
+</li>
+<li>
+<p><code>-p 6379:6379</code> 将6379端口挂载出去</p>
+</li>
+<li>
+<p><code>--name</code> 给这个容器取一个名字</p>
+</li>
+<li>
+<p><code>-v</code> 数据卷挂载<br />
+<code>/usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis/redis.conf</code> 这里是将 liunx<br />
+路径下的myredis.conf 和redis下的redis.conf 挂载在一起。</p>
+</li>
+</ol>
+<blockquote>
+<p>注意</p>
+<p>千万不要  -v /usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis</p>
+<p>想着把redis容器整个redis目录进行挂载，一但这样做。虽然容器可以创建成功。但是使用docker images命令发现 redis 容器的PORTS这一栏为空。即映射端口没有。</p>
+<p>google一下，貌似启动容器可以指定映射端口。没有试过</p>
+</blockquote>
+<p><code>/usr/local/volumes-docker/redis/data:/data</code> 这个同上</p>
+<ol start="6">
+<li>
+<p><code>-d redis</code> 表示后台启动redis</p>
+</li>
+<li>
+<p><code>redis-server /etc/redis/redis.conf</code> 以配置文件启动redis，加载容器内的conf文件，最终找到的是挂载的目录 <code>/etc/redis/redis.conf</code> 也 就是liunx下的**/usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis/redis.conf**</p>
+</li>
+<li>
+<p><strong>–appendonly yes 开启redis 持久化</strong></p>
+</li>
+<li>
+<p>–requirepass root设置密码 （如果你是通过docker 容器内部连接的话，就随意，可设可不设。但是如果想向外开放的话，一定要设置，可以看这篇文章“<a target="_blank" rel="noopener" href="https://editor.csdn.net/md/?articleId=118061056">阿里云服务器中毒‘Kirito666’经历</a>”）</p>
+</li>
+<li>
+<p>成功界面</p>
+</li>
+</ol>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219203940034.png" srcset="/img/loading.gif" lazyload alt="image-20230219203940034" /></p>
+<h3 id="五-测试"><a class="markdownIt-Anchor" href="#五-测试"></a> 五、测试</h3>
+<h4 id="1-通过docker-ps指令查看启动状态"><a class="markdownIt-Anchor" href="#1-通过docker-ps指令查看启动状态"></a> 1、通过docker ps指令查看启动状态</h4>
+<p>​<br />
+​    docker ps -a |grep redis # 通过docker ps指令查看启动状态，是否成功.</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204016896.png" srcset="/img/loading.gif" lazyload alt="image-20230219204016896" /></p>
+<h4 id="2-查看容器运行日志"><a class="markdownIt-Anchor" href="#2-查看容器运行日志"></a> 2、查看容器运行日志</h4>
+<blockquote>
+<p>命令：docker logs --since 30m &lt;容器名&gt;</p>
+</blockquote>
+<p>此处 <code>--since 30m</code> 是查看此容器10分钟之内的日志情况。</p>
+<p>​<br />
+​    docker logs --since 10m redis</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204132352.png" srcset="/img/loading.gif" lazyload alt="image-20230219204132352" /></p>
+<h4 id="3-容器内部连接进行测试"><a class="markdownIt-Anchor" href="#3-容器内部连接进行测试"></a> 3、 <strong>容器内部连接进行测试</strong></h4>
+<p><strong>进入容器</strong></p>
+<blockquote>
+<p>命令：docker exec -it &lt;容器名&gt; /bin/bash</p>
+</blockquote>
+<p>此处跟着的 redis-cli 是直接将命令输在上面了。</p>
+<p>​<br />
+​    docker exec -it redis redis-cli</p>
+<p>进入之后，我直接输入查看命令：</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204228201.png" srcset="/img/loading.gif" lazyload alt="image-20230219204228201" /><br />
+error是没有权限验证。 <s>（因为设置了密码的。）</s></p>
+<p><strong>验证密码：</strong></p>
+<p>​<br />
+​    auth 密码</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204322204.png" srcset="/img/loading.gif" lazyload alt="image-20230219204322204" /></p>
+<p><strong>查看当前redis有没有设置密码：</strong> <s>（得验证通过了才能输入的）</s></p>
+<p>​<br />
+​    config get requirepass</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204345543.png" srcset="/img/loading.gif" lazyload alt="image-20230219204345543" /></p>
+<h3 id="六-配置文件"><a class="markdownIt-Anchor" href="#六-配置文件"></a> 六、配置文件</h3>
+<p><strong>myredis.conf</strong></p>
+<p>​<br />
+​    # bind 192.168.1.100 10.0.0.1<br />
+​    # bind 127.0.0.1 ::1<br />
+​    #bind 127.0.0.1<br />
+​<br />
+protected-mode no<br />
+port 6379<br />
+tcp-backlog 511<br />
+requirepass root<br />
+timeout 0<br />
+tcp-keepalive 300<br />
+daemonize no<br />
+supervised no<br />
+pidfile /var/run/redis_6379.pid<br />
+loglevel notice<br />
+logfile “”<br />
+databases 30<br />
+always-show-logo yes<br />
+save 900 1<br />
+save 300 10<br />
+save 60 10000<br />
+stop-writes-on-bgsave-error yes<br />
+rdbcompression yes<br />
+rdbchecksum yes<br />
+dbfilename dump.rdb<br />
+dir ./<br />
+replica-serve-stale-data yes<br />
+replica-read-only yes<br />
+repl-diskless-sync no<br />
+repl-disable-tcp-nodelay no<br />
+replica-priority 100<br />
+lazyfree-lazy-eviction no<br />
+lazyfree-lazy-expire no<br />
+lazyfree-lazy-server-del no<br />
+replica-lazy-flush no<br />
+appendonly yes<br />
+appendfilename “appendonly.aof”<br />
+no-appendfsync-on-rewrite no<br />
+auto-aof-rewrite-percentage 100<br />
+auto-aof-rewrite-min-size 64mb<br />
+aof-load-truncated yes<br />
+aof-use-rdb-preamble yes<br />
+lua-time-limit 5000<br />
+slowlog-max-len 128<br />
+notify-keyspace-events “”<br />
+hash-max-ziplist-entries 512<br />
+hash-max-ziplist-value 64<br />
+list-max-ziplist-size -2<br />
+list-compress-depth 0<br />
+set-max-intset-entries 512<br />
+zset-max-ziplist-entries 128<br />
+zset-max-ziplist-value 64<br />
+hll-sparse-max-bytes 3000<br />
+stream-node-max-bytes 4096<br />
+stream-node-max-entries 100<br />
+activerehashing yes<br />
+hz 10<br />
+dynamic-hz yes<br />
+aof-rewrite-incremental-fsync yes<br />
+rdb-save-incremental-fsync yes</p>
+<h3 id="七-docker删除redis"><a class="markdownIt-Anchor" href="#七-docker删除redis"></a> 七、Docker删除Redis</h3>
+<p>教了大家怎么装，咱们也得学会怎么卸载哈，不然没法成为熟练工人（🐶）</p>
+<h4 id="61-删除redis-容器"><a class="markdownIt-Anchor" href="#61-删除redis-容器"></a> 6.1、删除Redis 容器</h4>
+<ol>
+<li>
+<p>查看所有在运行的容器：<br />
+命令：</p>
+<p>docker ps -a</p>
+</li>
+</ol>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204504613.png" srcset="/img/loading.gif" lazyload alt="image-20230219204504613" /></p>
+<ol start="2">
+<li>
+<p>停止运行的Redis。停止命令：docker stop &lt;容器名&gt;</p>
+<pre><code class="hljs">  docker stop redis # redis 是我启动redis 命名的别
+</code></pre>
+</li>
+<li>
+<p>删除redis 容器： 删除容器命令： docker rm &lt;容器名&gt;<br />
+docker rm myredis</p>
+</li>
+</ol>
+<h4 id="62-删除redis镜像"><a class="markdownIt-Anchor" href="#62-删除redis镜像"></a> 6.2、删除Redis镜像</h4>
+<p>删除容器后，我们开始删除redis镜像。</p>
+<ol>
+<li>
+<p>查看全部镜像 命令：<code>docker images</code></p>
+</li>
+<li>
+<p>删除镜像 命令 <code>docker rmi &lt;容器 id&gt;</code><br />
+docker rmi aeeb92ae6202# 这是我镜像redis id</p>
+</li>
+</ol>
+<p>可以看到Redis 的镜像已经被删除啦。</p>
+<p>参考文章</p>
+<ol>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45821811/article/details/116211724">史上最详细Docker安装Redis （含每一步的图解）实战</a></p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39566521/article/details/120364224">docker 安装Redis并挂载配置文件</a></p>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Docker/" class="category-chain-item">Docker</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/docker/">#docker</a>
+      
+        <a href="/tags/redis/">#redis</a>
+      
+        <a href="/tags/%E6%8C%82%E8%BD%BD/">#挂载</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker安装Redis （含挂载）实战</div>
+      <div>http://xtwoy.github.io/2023/02/19/Docker安装Redis （含挂载）实战/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 19, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/19/Linux%E4%B8%AD%E5%90%84%E7%9B%AE%E5%BD%95(%E6%96%87%E4%BB%B6%E5%A4%B9)%E4%BD%9C%E7%94%A8%E8%AF%A6%E8%A7%A3/" title="Linux中各目录(文件夹)作用详解">
+                        <span class="hidden-mobile">Linux中各目录(文件夹)作用详解</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Docker"
+        id="heading-c5fd214cdd0d2b3b4272e73b022ba5c2" role="tab" data-toggle="collapse" href="#collapse-c5fd214cdd0d2b3b4272e73b022ba5c2"
+        aria-expanded="true"
+      >
+        Docker
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-c5fd214cdd0d2b3b4272e73b022ba5c2"
+           role="tabpanel" aria-labelledby="heading-c5fd214cdd0d2b3b4272e73b022ba5c2">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2023/02/19/Docker%E5%AE%89%E8%A3%85Redis%20%EF%BC%88%E5%90%AB%E6%8C%82%E8%BD%BD%EF%BC%89%E5%AE%9E%E6%88%98/" title="Docker安装Redis （含挂载）实战"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Docker安装Redis （含挂载）实战</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2023/02/19/Linux%E4%B8%AD%E5%90%84%E7%9B%AE%E5%BD%95(%E6%96%87%E4%BB%B6%E5%A4%B9)%E4%BD%9C%E7%94%A8%E8%AF%A6%E8%A7%A3/" title="Linux中各目录(文件夹)作用详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux中各目录(文件夹)作用详解</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
