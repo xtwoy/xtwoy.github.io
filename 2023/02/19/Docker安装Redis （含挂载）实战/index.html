@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204345543.png">
 <meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204504613.png">
 <meta property="article:published_time" content="2023-02-19T12:57:22.000Z">
-<meta property="article:modified_time" content="2023-02-19T13:10:05.813Z">
+<meta property="article:modified_time" content="2023-02-20T09:37:58.535Z">
 <meta property="article:author" content="XtwoY">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="docker">
@@ -261,7 +261,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.5k words
+          5.3k words
         
       </span>
     
@@ -272,7 +272,7 @@
         
         
         
-          38 mins
+          45 mins
         
       </span>
     
@@ -328,7 +328,7 @@
               <p class="note note-info">
                 
                   
-                    Last updated on February 19, 2023 pm
+                    Last updated on February 20, 2023 pm
                   
                 
               </p>
@@ -347,7 +347,7 @@
 <ul>
 <li><a href="#1-%E9%80%9A%E8%BF%87docker-ps%E6%8C%87%E4%BB%A4%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E7%8A%B6%E6%80%81">1、通过docker ps指令查看启动状态</a></li>
 <li><a href="#2-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%A5%E5%BF%97">2、查看容器运行日志</a></li>
-<li><a href="#3-%E5%AE%B9%E5%99%A8%E5%86%85%E9%83%A8%E8%BF%9E%E6%8E%A5%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95">3、 <strong>容器内部连接进行测试</strong></a></li>
+<li><a href="#3-%E5%AE%B9%E5%99%A8%E5%86%85%E9%83%A8%E8%BF%9E%E6%8E%A5%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95">3、 容器内部连接进行测试</a></li>
 </ul>
 </li>
 <li><a href="#%E5%85%AD-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">六、配置文件</a></li>
@@ -397,8 +397,22 @@ Cluster集群环境</a></p>
 </li>
 </ol>
 <p><strong>mkdir -p</strong> <code>/usr/local/volumes-docker/redis/data</code> 命令 是不存在就直接创建<code>/usr/local/volumes-docker/redis/data</code>文件夹</p>
+<ol>
+<li>
 <p>查看<code>/usr/local/volumes-docker/redis/conf/myredis.conf</code>，会发现该文件并不是myredis.conf配置文件，只有myredis.conf文件夹，这时候需要我们删除，myredis.conf文件夹，去redis github下载一个标准格式的myredis.conf文件复制到<code>/usr/local/volumes-docker/redis/conf/myredis.conf</code>目录下，并更改配置文件(这个是因为docker挂载的是目录，并且docker的redi也不自带redis.conf配置文件)</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> exec -it redis redis-server -v 查看docker中redis版本<br><span class="hljs-attribute">1</span>.将redis.conf配置文件中的protected-mode yes 改为protected-mode no<br><span class="hljs-attribute">2</span>.将redis.conf配置bind <span class="hljs-number">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">01</span> 改为 # bind <span class="hljs-number">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">01</span><br><br></code></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> exec -it redis redis-server -v 查看docker中redis版本<br><span class="hljs-attribute">1</span>.将redis.conf配置文件中的protected-mode yes 改为protected-mode no<br><span class="hljs-attribute">2</span>.将redis.conf配置bind <span class="hljs-number">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">01</span> 改为 # bind <span class="hljs-number">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">01</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>该方式可能后来启动会出现错误</p>
+</blockquote>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">Error response <span class="hljs-built_in">from</span> daemon: failed <span class="hljs-built_in">to</span> <span class="hljs-built_in">create</span> shim task: OCI runtime <span class="hljs-built_in">create</span> failed: runc <span class="hljs-built_in">create</span> failed: unable <span class="hljs-built_in">to</span> <span class="hljs-built_in">start</span> container <span class="hljs-built_in">process</span>: error during container init: error mounting <span class="hljs-string">&quot;/usr/local/volumes-docker/redis/conf/myredis.conf&quot;</span> <span class="hljs-built_in">to</span> rootfs <span class="hljs-keyword">at</span> <span class="hljs-string">&quot;/etc/redis/redis.conf&quot;</span>: mount /usr/<span class="hljs-built_in">local</span>/volumes-docker/redis/conf/myredis.conf:/etc/redis/redis.conf (via /proc/self/fd/<span class="hljs-number">6</span>), flags: <span class="hljs-number">0x5000</span>: <span class="hljs-keyword">not</span> <span class="hljs-keyword">a</span> <span class="hljs-built_in">directory</span>: unknown: Are you trying <span class="hljs-built_in">to</span> mount <span class="hljs-keyword">a</span> <span class="hljs-built_in">directory</span> onto <span class="hljs-keyword">a</span> <span class="hljs-built_in">file</span> (<span class="hljs-keyword">or</span> vice-versa)? Check <span class="hljs-keyword">if</span> <span class="hljs-keyword">the</span> specified host path exists <span class="hljs-keyword">and</span> is <span class="hljs-keyword">the</span> expected type<br>Error: failed <span class="hljs-built_in">to</span> <span class="hljs-built_in">start</span> containers: redis<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>后来发现直接创建好了一个<code>myredis.conf</code>文件，并且写好配置内容。一次启动就可以redis读取配置文件。</p>
+<blockquote>
+<p>注意该方式，可能会失败。我的解决方式是修改配置文件和挂载目录的操作权限</p>
+</blockquote>
+</li>
+</ol>
 <p>当protected-mode保护模式关闭时，外部网络可以直接访问；当protected-mode保护模式开启时，需配置bind ip或者设置访问密码才可以访问；如果不更改配置文件，项目使用redis的时候可能会遇到如下错误：org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis；</p>
 <p>下载地址https://github.com/redis/redis/releases<br />
 找到自己对应的版本，下载源代码，在源代码中找到redis.conf文件</p>
@@ -421,11 +435,12 @@ Cluster集群环境</a></p>
 <p><code>--name</code> 给这个容器取一个名字</p>
 </li>
 <li>
-<p><code>-v</code> 数据卷挂载<br />
-<code>/usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis/redis.conf</code> 这里是将 liunx<br />
-路径下的myredis.conf 和redis下的redis.conf 挂载在一起。</p>
+<p><code>-v</code> 数据卷挂载</p>
 </li>
 </ol>
+<pre><code class="hljs">`/usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis/redis.conf` 这里是将 liunx
+路径下的myredis.conf 和redis下的redis.conf 挂载在一起。 
+</code></pre>
 <blockquote>
 <p>注意</p>
 <p>千万不要  -v /usr/local/volumes-docker/redis/conf/myredis.conf:/etc/redis</p>
@@ -464,7 +479,7 @@ Cluster集群环境</a></p>
 <p>​<br />
 ​    docker logs --since 10m redis</p>
 <p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204132352.png" srcset="/img/loading.gif" lazyload alt="image-20230219204132352" /></p>
-<h4 id="3-容器内部连接进行测试"><a class="markdownIt-Anchor" href="#3-容器内部连接进行测试"></a> 3、 <strong>容器内部连接进行测试</strong></h4>
+<h4 id="3-容器内部连接进行测试"><a class="markdownIt-Anchor" href="#3-容器内部连接进行测试"></a> 3、 容器内部连接进行测试</h4>
 <p><strong>进入容器</strong></p>
 <blockquote>
 <p>命令：docker exec -it &lt;容器名&gt; /bin/bash</p>
@@ -485,66 +500,7 @@ error是没有权限验证。 <s>（因为设置了密码的。）</s></p>
 <p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230219204345543.png" srcset="/img/loading.gif" lazyload alt="image-20230219204345543" /></p>
 <h3 id="六-配置文件"><a class="markdownIt-Anchor" href="#六-配置文件"></a> 六、配置文件</h3>
 <p><strong>myredis.conf</strong></p>
-<p>​<br />
-​    # bind 192.168.1.100 10.0.0.1<br />
-​    # bind 127.0.0.1 ::1<br />
-​    #bind 127.0.0.1<br />
-​<br />
-protected-mode no<br />
-port 6379<br />
-tcp-backlog 511<br />
-requirepass root<br />
-timeout 0<br />
-tcp-keepalive 300<br />
-daemonize no<br />
-supervised no<br />
-pidfile /var/run/redis_6379.pid<br />
-loglevel notice<br />
-logfile “”<br />
-databases 30<br />
-always-show-logo yes<br />
-save 900 1<br />
-save 300 10<br />
-save 60 10000<br />
-stop-writes-on-bgsave-error yes<br />
-rdbcompression yes<br />
-rdbchecksum yes<br />
-dbfilename dump.rdb<br />
-dir ./<br />
-replica-serve-stale-data yes<br />
-replica-read-only yes<br />
-repl-diskless-sync no<br />
-repl-disable-tcp-nodelay no<br />
-replica-priority 100<br />
-lazyfree-lazy-eviction no<br />
-lazyfree-lazy-expire no<br />
-lazyfree-lazy-server-del no<br />
-replica-lazy-flush no<br />
-appendonly yes<br />
-appendfilename “appendonly.aof”<br />
-no-appendfsync-on-rewrite no<br />
-auto-aof-rewrite-percentage 100<br />
-auto-aof-rewrite-min-size 64mb<br />
-aof-load-truncated yes<br />
-aof-use-rdb-preamble yes<br />
-lua-time-limit 5000<br />
-slowlog-max-len 128<br />
-notify-keyspace-events “”<br />
-hash-max-ziplist-entries 512<br />
-hash-max-ziplist-value 64<br />
-list-max-ziplist-size -2<br />
-list-compress-depth 0<br />
-set-max-intset-entries 512<br />
-zset-max-ziplist-entries 128<br />
-zset-max-ziplist-value 64<br />
-hll-sparse-max-bytes 3000<br />
-stream-node-max-bytes 4096<br />
-stream-node-max-entries 100<br />
-activerehashing yes<br />
-hz 10<br />
-dynamic-hz yes<br />
-aof-rewrite-incremental-fsync yes<br />
-rdb-save-incremental-fsync yes</p>
+   <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"> # bind <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.100</span> <span class="hljs-number">10.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>​    # bind <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> ::<span class="hljs-number">1</span><br>​    #bind <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>​    <br>    protected-mode <span class="hljs-keyword">no</span><br>    port <span class="hljs-number">6379</span><br>    tcp-backlog <span class="hljs-number">511</span><br>    requirepass root<br>    timeout <span class="hljs-number">0</span><br>    tcp-keepalive <span class="hljs-number">300</span><br>    daemonize <span class="hljs-keyword">no</span><br>    supervised <span class="hljs-keyword">no</span><br>    pidfile /var/run/redis_6379.pid<br>    loglevel <span class="hljs-keyword">notice</span><br>    logfile &quot;&quot;<br>    databases <span class="hljs-number">30</span><br>    <span class="hljs-keyword">always</span>-<span class="hljs-keyword">show</span>-logo yes<br>    save <span class="hljs-number">900</span> <span class="hljs-number">1</span><br>    save <span class="hljs-number">300</span> <span class="hljs-number">10</span><br>    save <span class="hljs-number">60</span> <span class="hljs-number">10000</span><br>    stop-writes-<span class="hljs-keyword">on</span>-bgsave-error yes<br>    rdbcompression yes<br>    rdbchecksum yes<br>    dbfilename dump.rdb<br>    dir ./<br>    <span class="hljs-keyword">replica</span>-serve-stale-data yes<br>    <span class="hljs-keyword">replica</span>-<span class="hljs-keyword">read</span>-<span class="hljs-keyword">only</span> yes<br>    repl-diskless-sync <span class="hljs-keyword">no</span><br>    repl-<span class="hljs-keyword">disable</span>-tcp-nodelay <span class="hljs-keyword">no</span><br>    <span class="hljs-keyword">replica</span>-priority <span class="hljs-number">100</span><br>    lazyfree-lazy-eviction <span class="hljs-keyword">no</span><br>    lazyfree-lazy-expire <span class="hljs-keyword">no</span><br>    lazyfree-lazy-<span class="hljs-keyword">server</span>-del <span class="hljs-keyword">no</span><br>    <span class="hljs-keyword">replica</span>-lazy-flush <span class="hljs-keyword">no</span><br>    appendonly yes<br>    appendfilename &quot;appendonly.aof&quot;<br>    <span class="hljs-keyword">no</span>-appendfsync-<span class="hljs-keyword">on</span>-rewrite <span class="hljs-keyword">no</span><br>    auto-aof-rewrite-percentage <span class="hljs-number">100</span><br>    auto-aof-rewrite-min-size <span class="hljs-number">64</span>mb<br>    aof-<span class="hljs-keyword">load</span>-truncated yes<br>    aof-use-rdb-preamble yes<br>    lua-<span class="hljs-type">time</span>-<span class="hljs-keyword">limit</span> <span class="hljs-number">5000</span><br>    slowlog-max-len <span class="hljs-number">128</span><br>    <span class="hljs-keyword">notify</span>-keyspace-events &quot;&quot;<br>    hash-max-ziplist-entries <span class="hljs-number">512</span><br>    hash-max-ziplist-<span class="hljs-keyword">value</span> <span class="hljs-number">64</span><br>    list-max-ziplist-size <span class="hljs-number">-2</span><br>    list-compress-depth <span class="hljs-number">0</span><br>    <span class="hljs-keyword">set</span>-max-intset-entries <span class="hljs-number">512</span><br>    zset-max-ziplist-entries <span class="hljs-number">128</span><br>    zset-max-ziplist-<span class="hljs-keyword">value</span> <span class="hljs-number">64</span><br>    hll-sparse-max-bytes <span class="hljs-number">3000</span><br>    stream-node-max-bytes <span class="hljs-number">4096</span><br>    stream-node-max-entries <span class="hljs-number">100</span><br>    activerehashing yes<br>    hz <span class="hljs-number">10</span><br>    dynamic-hz yes<br>    aof-rewrite-incremental-fsync yes<br>    rdb-save-incremental-fsync yes<br></code></pre></td></tr></table></figure>
 <h3 id="七-docker删除redis"><a class="markdownIt-Anchor" href="#七-docker删除redis"></a> 七、Docker删除Redis</h3>
 <p>教了大家怎么装，咱们也得学会怎么卸载哈，不然没法成为熟练工人（🐶）</p>
 <h4 id="61-删除redis-容器"><a class="markdownIt-Anchor" href="#61-删除redis-容器"></a> 6.1、删除Redis 容器</h4>
