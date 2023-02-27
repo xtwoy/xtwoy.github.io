@@ -1,0 +1,893 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Redisson分布式锁8种锁模式剖析  可重入锁（Reentrant Lock） 基于Redis的Redisson分布式可重入锁RLock Java对象实现了java.util.concurrent.locks.Lock接口。同时还提供了异步（Async）、反射式（Reactive）和RxJava2标准的接口。 123RLock lock &#x3D; redisson.getLock(&quot;an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redisson分布式锁8种锁模式剖析 SpringAop整合">
+<meta property="og:url" content="http://xtwoy.github.io/2023/01/13/redisson/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="Redisson分布式锁8种锁模式剖析  可重入锁（Reentrant Lock） 基于Redis的Redisson分布式可重入锁RLock Java对象实现了java.util.concurrent.locks.Lock接口。同时还提供了异步（Async）、反射式（Reactive）和RxJava2标准的接口。 123RLock lock &#x3D; redisson.getLock(&quot;an">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-13T05:19:31.000Z">
+<meta property="article:modified_time" content="2023-02-27T11:19:58.280Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="Springboot">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="redisson">
+<meta property="article:tag" content="aop">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Redisson分布式锁8种锁模式剖析 SpringAop整合 - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redisson分布式锁8种锁模式剖析 SpringAop整合"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-13 13:19" pubdate>
+          January 13, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          129 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redisson分布式锁8种锁模式剖析 SpringAop整合</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on February 27, 2023 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="redisson分布式锁8种锁模式剖析"><a class="markdownIt-Anchor" href="#redisson分布式锁8种锁模式剖析"></a> Redisson分布式锁8种锁模式剖析</h2>
+<h3 id="可重入锁reentrant-lock"><a class="markdownIt-Anchor" href="#可重入锁reentrant-lock"></a> 可重入锁（Reentrant Lock）</h3>
+<p>基于Redis的Redisson分布式可重入锁<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLock.html"><code>RLock</code></a> Java对象实现了<code>java.util.concurrent.locks.Lock</code>接口。同时还提供了<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLockAsync.html">异步（Async）</a>、<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLockReactive.html">反射式（Reactive）</a>和<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLockRx.html">RxJava2标准</a>的接口。</p>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cos">RLock <span class="hljs-keyword">lock</span> = redisson.getLock(<span class="hljs-string">&quot;anyLock&quot;</span>)<span class="hljs-comment">;</span><br><span class="hljs-comment">// 最常见的使用方法</span><br><span class="hljs-keyword">lock</span>.<span class="hljs-keyword">lock</span>()<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<p>大家都知道，如果负责储存这个分布式锁的Redisson节点宕机以后，而且这个锁正好处于锁住的状态时，这个锁会出现锁死的状态。为了避免这种情况的发生，Redisson内部提供了一个监控锁的看门狗，它的作用是在Redisson实例被关闭前，不断的延长锁的有效期。默认情况下，看门狗的检查锁的超时时间是30秒钟，在消耗时间超过1/3时对锁进行续租 也可以通过修改<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/2.-%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95#lockwatchdogtimeout%E7%9B%91%E6%8E%A7%E9%94%81%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97%E8%B6%85%E6%97%B6%E5%8D%95%E4%BD%8D%E6%AF%AB%E7%A7%92">Config.lockWatchdogTimeout</a>来另行指定。</p>
+<p>另外Redisson还通过加锁的方法提供了<code>leaseTime</code>的参数来指定加锁的时间。超过这个时间后锁便自动解开了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 加锁以后10秒钟自动解锁</span><br><span class="hljs-comment">// 无需调用unlock方法手动解锁</span><br>lock.lock(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><br><span class="hljs-comment">// 尝试加锁，最多等待100秒，上锁以后10秒自动解锁</span><br><span class="hljs-type">boolean</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> lock.tryLock(<span class="hljs-number">100</span>, <span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><span class="hljs-keyword">if</span> (res) &#123;<br>   <span class="hljs-keyword">try</span> &#123;<br>     ...<br>   &#125; <span class="hljs-keyword">finally</span> &#123;<br>       lock.unlock();<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>demo：不设置等待时间会一直等待，不设置租赁时间会启动看门狗机制</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">reentrantLock</span><span class="hljs-params">()</span>&#123;<br>  <span class="hljs-comment">// 工作时间15s,注意看Redis中的ddl会在过去1/3时间后续约。</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    lock.lock();<br>    doSomething(<span class="hljs-literal">true</span>, lock, <span class="hljs-number">15L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-comment">// 租赁时间10s,设置了租赁时间，看门狗失效，工作时间15s,释放锁会报IllegalMonitorStateException</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    lock.lock(<span class="hljs-number">5</span>, TimeUnit.SECONDS);<br>    doSomething(<span class="hljs-literal">true</span>, lock, <span class="hljs-number">20L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-comment">// 等待时间45S,未设置租赁时间，看门狗生效</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">lockFlag</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      lockFlag = lock.tryLock(<span class="hljs-number">45L</span>, TimeUnit.SECONDS);<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>    doSomething(lockFlag, lock, <span class="hljs-number">15L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-comment">// 等待时间50S,租赁时间5S,工作时间10S,释放锁会报IllegalMonitorStateException</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">lockFlag</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      lockFlag = lock.tryLock(<span class="hljs-number">50L</span>,<span class="hljs-number">5L</span>, TimeUnit.SECONDS);<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>    doSomething(lockFlag, lock, <span class="hljs-number">10L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-type">Scanner</span> <span class="hljs-variable">scanner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Scanner</span>(System.in);<br>  scanner.nextLine();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>Redisson同时还为分布式锁提供了异步执行的相关方法：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">RLock <span class="hljs-keyword">lock</span> = redisson.getLock(&quot;anyLock&quot;);<br><span class="hljs-keyword">lock</span>.lockAsync();<br><span class="hljs-keyword">lock</span>.lockAsync(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br>Future&lt;<span class="hljs-type">Boolean</span>&gt; res = <span class="hljs-keyword">lock</span>.tryLockAsync(<span class="hljs-number">100</span>, <span class="hljs-number">10</span>, TimeUnit.SECONDS);<br></code></pre></td></tr></table></figure>
+<p><code>RLock</code>对象完全符合Java的Lock规范。也就是说只有拥有锁的进程才能解锁，其他进程解锁则会抛出<code>IllegalMonitorStateException</code>错误。但是如果遇到需要其他进程也能解锁的情况，请使用<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/8.-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%92%8C%E5%90%8C%E6%AD%A5%E5%99%A8#86-%E4%BF%A1%E5%8F%B7%E9%87%8Fsemaphore">分布式信号量<code>Semaphore</code></a> 对象.</p>
+<h3 id="公平锁fair-lock"><a class="markdownIt-Anchor" href="#公平锁fair-lock"></a> 公平锁（Fair Lock）</h3>
+<p>基于Redis的Redisson分布式可重入公平锁也是实现了<code>java.util.concurrent.locks.Lock</code>接口的一种<code>RLock</code>对象。同时还提供了<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLockAsync.html">异步（Async）</a>、<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLockReactive.html">反射式（Reactive）</a>和<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RLockRx.html">RxJava2标准</a>的接口。它保证了当多个Redisson客户端线程同时请求加锁时，优先分配给先发出请求的线程。所有请求线程会在一个队列中排队，当某个线程出现宕机时，Redisson会等待5秒后继续下一个线程，也就是说如果前面有5个线程都处于等待状态，那么后面的线程会等待至少25秒。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf">RLock fairLock <span class="hljs-operator">=</span> redisson.getFairLock(<span class="hljs-string">&quot;anyLock&quot;</span>)<span class="hljs-comment">;</span><br>// 最常见的使用方法<br>fairLock.lock()<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<p>大家都知道，如果负责储存这个分布式锁的Redis节点宕机以后，而且这个锁正好处于锁住的状态时，这个锁会出现锁死的状态。为了避免这种情况的发生，Redisson内部提供了一个监控锁的看门狗，它的作用是在Redisson实例被关闭前，不断的延长锁的有效期。默认情况下，看门狗的检查锁的超时时间是30秒钟，也可以通过修改<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/2.-%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95#lockwatchdogtimeout%E7%9B%91%E6%8E%A7%E9%94%81%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97%E8%B6%85%E6%97%B6%E5%8D%95%E4%BD%8D%E6%AF%AB%E7%A7%92">Config.lockWatchdogTimeout</a>来另行指定。</p>
+<p>另外Redisson还通过加锁的方法提供了<code>leaseTime</code>的参数来指定加锁的时间。超过这个时间后锁便自动解开了。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> <span class="hljs-number">10</span>秒钟以后自动解锁<br><span class="hljs-regexp">//</span> 无需调用unlock方法手动解锁<br>fairLock.lock(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><br><span class="hljs-regexp">//</span> 尝试加锁，最多等待<span class="hljs-number">100</span>秒，上锁以后<span class="hljs-number">10</span>秒自动解锁<br>boolean res = fairLock.tryLock(<span class="hljs-number">100</span>, <span class="hljs-number">10</span>, TimeUnit.SECONDS);<br>...<br>fairLock.unlock();<br></code></pre></td></tr></table></figure>
+<p>Redisson同时还为分布式可重入公平锁提供了异步执行的相关方法：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">RLock fairLock = redisson.get<span class="hljs-constructor">FairLock(<span class="hljs-string">&quot;anyLock&quot;</span>)</span>;<br>fairLock.lock<span class="hljs-constructor">Async()</span>;<br>fairLock.lock<span class="hljs-constructor">Async(10, TimeUnit.SECONDS)</span>;<br>Future&lt;Boolean&gt; res = fairLock.<span class="hljs-keyword">try</span><span class="hljs-constructor">LockAsync(100, 10, TimeUnit.SECONDS)</span>;<br></code></pre></td></tr></table></figure>
+<p>demo：主要理解公平二字，demo几乎同上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">fairLock</span><span class="hljs-params">()</span> &#123;<br>  <span class="hljs-comment">// 租赁时间5s,设置了租赁时间，看门狗失效，工作时间50s,释放锁会报IllegalMonitorStateException</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getFairLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    lock.lock(<span class="hljs-number">5</span>, TimeUnit.SECONDS);<br>    doSomething(<span class="hljs-literal">true</span>, lock, <span class="hljs-number">50L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-comment">// 工作时间15s,注意看Redis中的ddl会在过去1/3时间后续约。</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getFairLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    sleepThread(<span class="hljs-number">1</span>);<br>    lock.lock();<br>    doSomething(<span class="hljs-literal">true</span>, lock, <span class="hljs-number">15L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-comment">// 等待时间45S,未设置租赁时间，看门狗生效</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getFairLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">lockFlag</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      sleepThread(<span class="hljs-number">2</span>);<br>      lockFlag = lock.tryLock(<span class="hljs-number">100L</span>, TimeUnit.SECONDS);<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>    doSomething(lockFlag, lock, <span class="hljs-number">15L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-comment">// 等待时间50S,租赁时间5S,工作时间10S,释放锁会报IllegalMonitorStateException</span><br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getFairLock(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">lockFlag</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      sleepThread(<span class="hljs-number">3</span>);<br>      lockFlag = lock.tryLock(<span class="hljs-number">50L</span>,<span class="hljs-number">5L</span>, TimeUnit.SECONDS);<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>    doSomething(lockFlag, lock, <span class="hljs-number">10L</span>, Thread.currentThread().getName());<br>  &#125;).start();<br>  <span class="hljs-type">Scanner</span> <span class="hljs-variable">scanner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Scanner</span>(System.in);<br>  scanner.nextLine();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h3 id="联锁multilock"><a class="markdownIt-Anchor" href="#联锁multilock"></a> 联锁（MultiLock）</h3>
+<p>基于Redis的Redisson分布式联锁<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/RedissonMultiLock.html"><code>RedissonMultiLock</code></a>对象可以将多个<code>RLock</code>对象关联为一个联锁，每个<code>RLock</code>对象实例可以来自于不同的Redisson实例。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Test<br>void multi<span class="hljs-constructor">LockTest()</span>&#123;<br>  RLock lock = redissonClient.get<span class="hljs-constructor">FairLock(<span class="hljs-string">&quot;testLock&quot;</span>)</span>;<br>  RLock lock2 = redissonClient.get<span class="hljs-constructor">FairLock(<span class="hljs-string">&quot;testLock2&quot;</span>)</span>;<br>  RLock lock3 = redissonClient.get<span class="hljs-constructor">FairLock(<span class="hljs-string">&quot;testLock3&quot;</span>)</span>;<br>  RedissonMultiLock multiLock = <span class="hljs-keyword">new</span> <span class="hljs-constructor">RedissonMultiLock(<span class="hljs-params">lock</span>, <span class="hljs-params">lock2</span>, <span class="hljs-params">lock3</span>)</span>;<br>  <span class="hljs-comment">// 同时加锁：testLock testLock2 testLock3</span><br>  <span class="hljs-comment">// 所有的锁都上锁成功才算成功。</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    boolean tryLock = multiLock.<span class="hljs-keyword">try</span><span class="hljs-constructor">Lock(1, TimeUnit.SECONDS)</span>;<br>    <span class="hljs-keyword">do</span><span class="hljs-constructor">Something(<span class="hljs-params">tryLock</span>, <span class="hljs-params">multiLock</span>, 10, Thread.<span class="hljs-params">currentThread</span>()</span>.get<span class="hljs-constructor">Name()</span>);<br>  &#125; catch (InterruptedException e) &#123;<br>    throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">RuntimeException(<span class="hljs-params">e</span>)</span>;<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>大家都知道，如果负责储存某些分布式锁的某些Redis节点宕机以后，而且这些锁正好处于锁住的状态时，这些锁会出现锁死的状态。为了避免这种情况的发生，Redisson内部提供了一个监控锁的看门狗，它的作用是在Redisson实例被关闭前，不断的延长锁的有效期。默认情况下，看门狗的检查锁的超时时间是30秒钟，也可以通过修改<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/2.-%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95#lockwatchdogtimeout%E7%9B%91%E6%8E%A7%E9%94%81%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97%E8%B6%85%E6%97%B6%E5%8D%95%E4%BD%8D%E6%AF%AB%E7%A7%92">Config.lockWatchdogTimeout</a>来另行指定。</p>
+<p>另外Redisson还通过加锁的方法提供了<code>leaseTime</code>的参数来指定加锁的时间。超过这个时间后锁便自动解开了。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">RedissonMultiLock lock = <span class="hljs-keyword">new</span> <span class="hljs-constructor">RedissonMultiLock(<span class="hljs-params">lock1</span>, <span class="hljs-params">lock2</span>, <span class="hljs-params">lock3</span>)</span>;<br><span class="hljs-comment">// 给lock1，lock2，lock3加锁，如果没有手动解开的话，10秒钟后将会自动解开</span><br>lock.lock(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><br><span class="hljs-comment">// 为加锁等待100秒时间，并在加锁成功10秒钟后自动解开</span><br>boolean res = lock.<span class="hljs-keyword">try</span><span class="hljs-constructor">Lock(100, 10, TimeUnit.SECONDS)</span>;<span class="hljs-operator"></span><br><span class="hljs-operator">...</span><br><span class="hljs-operator"></span>lock.unlock<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="红锁redlock"><a class="markdownIt-Anchor" href="#红锁redlock"></a> 红锁（RedLock）</h3>
+<p>基于Redis的Redisson红锁<code>RedissonRedLock</code>对象实现了<a target="_blank" rel="noopener" href="http://redis.cn/topics/distlock.html">Redlock</a>介绍的加锁算法。该对象也可以用来将多个<code>RLock</code>对象关联为一个红锁，每个<code>RLock</code>对象实例可以来自于不同的Redisson实例。</p>
+<p>与联锁比较相似，都是对多个资源进行加锁，但是红锁与连锁不同的是，红锁只需要在大部分资源加锁成功即可，大部分是指n/2+1。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs livescript">@Test<br><span class="hljs-literal">void</span> testRedLock()&#123;<br>  <span class="hljs-keyword">new</span> Thread<span class="hljs-function"><span class="hljs-params">(()-&gt;&#123;</span></span><br><span class="hljs-params"><span class="hljs-function">    RLock lock = redissonClient.getLock(<span class="hljs-string">&quot;testLock&quot;</span>);</span></span><br><span class="hljs-params"><span class="hljs-function">    lock.lock();</span></span><br><span class="hljs-params"><span class="hljs-function">    doSomething(<span class="hljs-literal">true</span>, lock, <span class="hljs-number">100</span>, Thread.currentThread().getName());</span></span><br><span class="hljs-params"><span class="hljs-function">  &#125;)</span>.<span class="hljs-title">start</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">  <span class="hljs-title">sleepThread</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span>;</span><br><span class="hljs-function">  <span class="hljs-title">RLock</span> <span class="hljs-title">lock</span> = <span class="hljs-title">redissonClient</span>.<span class="hljs-title">getLock</span><span class="hljs-params">(<span class="hljs-string">&quot;testLock&quot;</span>)</span>;</span><br><span class="hljs-function">  <span class="hljs-title">RLock</span> <span class="hljs-title">lock2</span> = <span class="hljs-title">redissonClient</span>.<span class="hljs-title">getLock</span><span class="hljs-params">(<span class="hljs-string">&quot;testLock2&quot;</span>)</span>;</span><br><span class="hljs-function">  <span class="hljs-title">RLock</span> <span class="hljs-title">lock3</span> = <span class="hljs-title">redissonClient</span>.<span class="hljs-title">getLock</span><span class="hljs-params">(<span class="hljs-string">&quot;testLock3&quot;</span>)</span>;</span><br><span class="hljs-function">  <span class="hljs-title">RedissonRedLock</span> <span class="hljs-title">redLock</span> = <span class="hljs-title">new</span> <span class="hljs-title">RedissonRedLock</span><span class="hljs-params">(lock, lock2, lock3)</span>;</span><br><span class="hljs-function">  // 同时加锁：<span class="hljs-title">lock1</span> <span class="hljs-title">lock2</span> <span class="hljs-title">lock3</span></span><br><span class="hljs-function">  // 红锁在大部分节点上加锁成功就算成功。</span><br><span class="hljs-function">  <span class="hljs-title">boolean</span> <span class="hljs-title">flag</span> = <span class="hljs-title">redLock</span>.<span class="hljs-title">tryLock</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">  <span class="hljs-title">doSomething</span><span class="hljs-params">(flag, redLock, <span class="hljs-number">10</span>, Thread.currentThread().getName())</span>;</span><br><span class="hljs-function">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>大家都知道，如果负责储存某些分布式锁的某些Redis节点宕机以后，而且这些锁正好处于锁住的状态时，这些锁会出现锁死的状态。为了避免这种情况的发生，Redisson内部提供了一个监控锁的看门狗，它的作用是在Redisson实例被关闭前，不断的延长锁的有效期。默认情况下，看门狗的检查锁的超时时间是30秒钟，也可以通过修改<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/2.-%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95#lockwatchdogtimeout%E7%9B%91%E6%8E%A7%E9%94%81%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97%E8%B6%85%E6%97%B6%E5%8D%95%E4%BD%8D%E6%AF%AB%E7%A7%92">Config.lockWatchdogTimeout</a>来另行指定。</p>
+<p>另外Redisson还通过加锁的方法提供了<code>leaseTime</code>的参数来指定加锁的时间。超过这个时间后锁便自动解开了。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">RedissonRedLock lock = <span class="hljs-keyword">new</span> <span class="hljs-constructor">RedissonRedLock(<span class="hljs-params">lock1</span>, <span class="hljs-params">lock2</span>, <span class="hljs-params">lock3</span>)</span>;<br><span class="hljs-comment">// 给lock1，lock2，lock3加锁，如果没有手动解开的话，10秒钟后将会自动解开</span><br>lock.lock(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><br><span class="hljs-comment">// 为加锁等待100秒时间，并在加锁成功10秒钟后自动解开</span><br>boolean res = lock.<span class="hljs-keyword">try</span><span class="hljs-constructor">Lock(100, 10, TimeUnit.SECONDS)</span>;<span class="hljs-operator"></span><br><span class="hljs-operator">...</span><br><span class="hljs-operator"></span>lock.unlock<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="读写锁readwritelock"><a class="markdownIt-Anchor" href="#读写锁readwritelock"></a> 读写锁（ReadWriteLock）</h3>
+<p>基于Redis的Redisson分布式可重入读写锁<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.4.3/org/redisson/api/RReadWriteLock.html"><code>RReadWriteLock</code></a> Java对象实现了<code>java.util.concurrent.locks.ReadWriteLock</code>接口。其中读锁和写锁都继承了<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/8.-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%92%8C%E5%90%8C%E6%AD%A5%E5%99%A8#81-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81reentrant-lock">RLock</a>接口。</p>
+<p>分布式可重入读写锁允许同时有多个读锁和一个写锁处于加锁状态。</p>
+<p>允许多个线程同时读，但是只允许一个线程写，在线程获取到写锁的时候，其他写操作和读操作都会处于阻塞状态，读锁和写锁也是互斥的，所以在读的时候是不允许写的。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs livescript">@Test<br><span class="hljs-literal">void</span> readWriteLockTest()&#123;<br>  <span class="hljs-keyword">new</span> Thread<span class="hljs-function"><span class="hljs-params">(()-&gt;&#123;</span></span><br><span class="hljs-params"><span class="hljs-function">    RLock writeLock = redissonClient.getReadWriteLock(<span class="hljs-string">&quot;testLock&quot;</span>).writeLock();</span></span><br><span class="hljs-params"><span class="hljs-function">    writeLock.lock();</span></span><br><span class="hljs-params"><span class="hljs-function">    doSomething(<span class="hljs-literal">true</span>,writeLock,<span class="hljs-number">10</span>,Thread.currentThread().getName());</span></span><br><span class="hljs-params"><span class="hljs-function">  &#125;)</span>.<span class="hljs-title">start</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">  <span class="hljs-title">sleepThread</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span>;</span><br><span class="hljs-function">  <span class="hljs-title">new</span> <span class="hljs-title">Thread</span><span class="hljs-params">(()-&gt;&#123;</span></span><br><span class="hljs-params"><span class="hljs-function">    RLock readLock = redissonClient.getReadWriteLock(<span class="hljs-string">&quot;testLock&quot;</span>).readLock();</span></span><br><span class="hljs-params"><span class="hljs-function">    readLock.lock();</span></span><br><span class="hljs-params"><span class="hljs-function">    doSomething(<span class="hljs-literal">true</span>,readLock,<span class="hljs-number">10</span>,Thread.currentThread().getName());</span></span><br><span class="hljs-params"><span class="hljs-function">  &#125;)</span>.<span class="hljs-title">start</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">  <span class="hljs-title">new</span> <span class="hljs-title">Thread</span><span class="hljs-params">(()-&gt;&#123;</span></span><br><span class="hljs-params"><span class="hljs-function">    RLock readLock = redissonClient.getReadWriteLock(<span class="hljs-string">&quot;testLock&quot;</span>).readLock();</span></span><br><span class="hljs-params"><span class="hljs-function">    readLock.lock();</span></span><br><span class="hljs-params"><span class="hljs-function">    doSomething(<span class="hljs-literal">true</span>,readLock,<span class="hljs-number">10</span>,Thread.currentThread().getName());</span></span><br><span class="hljs-params"><span class="hljs-function">  &#125;)</span>.<span class="hljs-title">start</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">  <span class="hljs-title">Scanner</span> <span class="hljs-title">scanner</span> = <span class="hljs-title">new</span> <span class="hljs-title">Scanner</span><span class="hljs-params">(System.<span class="hljs-keyword">in</span>)</span>;</span><br><span class="hljs-function">  <span class="hljs-title">scanner</span>.<span class="hljs-title">nextLine</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">&#125;</span><br><span class="hljs-function"></span><br></code></pre></td></tr></table></figure>
+<p>大家都知道，如果负责储存这个分布式锁的Redis节点宕机以后，而且这个锁正好处于锁住的状态时，这个锁会出现锁死的状态。为了避免这种情况的发生，Redisson内部提供了一个监控锁的看门狗，它的作用是在Redisson实例被关闭前，不断的延长锁的有效期。默认情况下，看门狗的检查锁的超时时间是30秒钟，也可以通过修改<a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/2.-%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95#lockwatchdogtimeout%E7%9B%91%E6%8E%A7%E9%94%81%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97%E8%B6%85%E6%97%B6%E5%8D%95%E4%BD%8D%E6%AF%AB%E7%A7%92">Config.lockWatchdogTimeout</a>来另行指定。</p>
+<p>另外Redisson还通过加锁的方法提供了<code>leaseTime</code>的参数来指定加锁的时间。超过这个时间后锁便自动解开了。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 10秒钟以后自动解锁</span><br><span class="hljs-comment">// 无需调用unlock方法手动解锁</span><br>rwlock.read<span class="hljs-constructor">Lock()</span>.lock(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><span class="hljs-comment">// 或</span><br>rwlock.write<span class="hljs-constructor">Lock()</span>.lock(<span class="hljs-number">10</span>, TimeUnit.SECONDS);<br><br><span class="hljs-comment">// 尝试加锁，最多等待100秒，上锁以后10秒自动解锁</span><br>boolean res = rwlock.read<span class="hljs-constructor">Lock()</span>.<span class="hljs-keyword">try</span><span class="hljs-constructor">Lock(100, 10, TimeUnit.SECONDS)</span>;<br><span class="hljs-comment">// 或</span><br>boolean res = rwlock.write<span class="hljs-constructor">Lock()</span>.<span class="hljs-keyword">try</span><span class="hljs-constructor">Lock(100, 10, TimeUnit.SECONDS)</span>;<span class="hljs-operator"></span><br><span class="hljs-operator">...</span><br><span class="hljs-operator"></span>lock.unlock<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="信号量semaphore"><a class="markdownIt-Anchor" href="#信号量semaphore"></a> 信号量（Semaphore）</h3>
+<p>基于Redis的Redisson的分布式信号量（<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RSemaphore.html">Semaphore</a>）Java对象<code>RSemaphore</code>采用了与<code>java.util.concurrent.Semaphore</code>相似的接口和用法。同时还提供了<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RSemaphoreAsync.html">异步（Async）</a>、<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RSemaphoreReactive.html">反射式（Reactive）</a>和<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RSemaphoreRx.html">RxJava2标准</a>的接口。</p>
+<blockquote>
+<p><strong>信号量</strong> (英文：<strong>semaphore</strong>）又称为 信号标，是一个同步对象，用于保持在0至指定最大值之间的一个计数值。当线程完成一次对该semaphore对象的等待（wait）时，该计数值减一；当线程完成一次对semaphore对象的释放（release）时，计数值加一。当计数值为0，则线程等待该semaphore对象不再能成功直至该semaphore对象变成signaled状态。semaphore对象的计数值大于0，为signaled状态；计数值等于0，为nonsignaled状态。——维基百科</p>
+</blockquote>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">RSemaphore semaphore = redisson.get<span class="hljs-constructor">Semaphore(<span class="hljs-string">&quot;semaphore&quot;</span>)</span>;<br>semaphore.acquire<span class="hljs-literal">()</span>;<br><span class="hljs-comment">//或</span><br>semaphore.acquire<span class="hljs-constructor">Async()</span>;<br>semaphore.acquire(<span class="hljs-number">23</span>);<br>semaphore.<span class="hljs-keyword">try</span><span class="hljs-constructor">Acquire()</span>;<br><span class="hljs-comment">//或</span><br>semaphore.<span class="hljs-keyword">try</span><span class="hljs-constructor">AcquireAsync()</span>;<br>semaphore.<span class="hljs-keyword">try</span><span class="hljs-constructor">Acquire(23, TimeUnit.SECONDS)</span>;<br><span class="hljs-comment">//或</span><br>semaphore.<span class="hljs-keyword">try</span><span class="hljs-constructor">AcquireAsync(23, TimeUnit.SECONDS)</span>;<br>semaphore.release(<span class="hljs-number">10</span>);<br>semaphore.release<span class="hljs-literal">()</span>;<br><span class="hljs-comment">//或</span><br>semaphore.release<span class="hljs-constructor">Async()</span>;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">semaphoreLockTest</span><span class="hljs-params">()</span>&#123;<br>  <span class="hljs-type">RSemaphore</span> <span class="hljs-variable">testLock</span> <span class="hljs-operator">=</span> redissonClient.getSemaphore(<span class="hljs-string">&quot;testLock&quot;</span>);<br>  <span class="hljs-type">int</span> <span class="hljs-variable">permits</span> <span class="hljs-operator">=</span> testLock.availablePermits();<br>  testLock.addPermits(<span class="hljs-number">2</span>-permits);<br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RSemaphore</span> <span class="hljs-variable">semaphore</span> <span class="hljs-operator">=</span> redissonClient.getSemaphore(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-keyword">try</span> &#123;<br>      semaphore.acquire();<br>      System.out.println(<span class="hljs-string">&quot;获取到一个许可&quot;</span>+Thread.currentThread().getName());<br>      sleepThread(<span class="hljs-number">10</span>);<br>      semaphore.release();<br>      System.out.println(<span class="hljs-string">&quot;释放一个许可&quot;</span>+Thread.currentThread().getName());<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>  &#125;).start();<br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RSemaphore</span> <span class="hljs-variable">semaphore</span> <span class="hljs-operator">=</span> redissonClient.getSemaphore(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-keyword">try</span> &#123;<br>      semaphore.acquire();<br>      System.out.println(<span class="hljs-string">&quot;获取到一个许可&quot;</span>+Thread.currentThread().getName());<br>      sleepThread(<span class="hljs-number">10</span>);<br>      semaphore.release();<br>      System.out.println(<span class="hljs-string">&quot;释放一个许可&quot;</span>+Thread.currentThread().getName());<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>  &#125;).start();<br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>    <span class="hljs-type">RSemaphore</span> <span class="hljs-variable">semaphore</span> <span class="hljs-operator">=</span> redissonClient.getSemaphore(<span class="hljs-string">&quot;testLock&quot;</span>);<br>    <span class="hljs-keyword">try</span> &#123;<br>      semaphore.acquire();<br>      System.out.println(<span class="hljs-string">&quot;获取到一个许可&quot;</span>+Thread.currentThread().getName());<br>      sleepThread(<span class="hljs-number">10</span>);<br>      semaphore.release();<br>      System.out.println(<span class="hljs-string">&quot;释放一个许可&quot;</span>+Thread.currentThread().getName());<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125;<br>  &#125;).start();<br>  <span class="hljs-type">Scanner</span> <span class="hljs-variable">scanner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Scanner</span>(System.in);<br>  scanner.nextLine();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h3 id="可过期性信号量permitexpirablesemaphore"><a class="markdownIt-Anchor" href="#可过期性信号量permitexpirablesemaphore"></a> 可过期性信号量（PermitExpirableSemaphore）</h3>
+<p>基于Redis的Redisson可过期性信号量（<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RPermitExpirableSemaphore.html">PermitExpirableSemaphore</a>）是在<code>RSemaphore</code>对象的基础上，为每个信号增加了一个过期时间。每个信号可以通过独立的ID来辨识，释放时只能通过提交这个ID才能释放。它提供了<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RPermitExpirableSemaphoreAsync.html">异步（Async）</a>、<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RPermitExpirableSemaphoreReactive.html">反射式（Reactive）</a>和<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RPermitExpirableSemaphoreRx.html">RxJava2标准</a>的接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">permitExpirableSemaphoreLockTest</span><span class="hljs-params">()</span> &#123;<br>  <span class="hljs-type">RPermitExpirableSemaphore</span> <span class="hljs-variable">expirableSemaphore</span> <span class="hljs-operator">=</span> redissonClient.getPermitExpirableSemaphore(<span class="hljs-string">&quot;PermitExpirableSemaphore&quot;</span>);<br>  <span class="hljs-type">int</span> <span class="hljs-variable">permits</span> <span class="hljs-operator">=</span> expirableSemaphore.availablePermits();<br>  expirableSemaphore.addPermits(<span class="hljs-number">2</span>-permits);<br>  <span class="hljs-comment">// 获取一个信号，有效期只有2秒钟。</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">permitId</span> <span class="hljs-operator">=</span> expirableSemaphore.acquire(<span class="hljs-number">2</span>, TimeUnit.SECONDS);<br>    System.out.println(permitId);<br>  &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>  &#125;<br>  <span class="hljs-keyword">try</span> &#123;<br>    sleepThread(<span class="hljs-number">5</span>);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">permitId</span> <span class="hljs-operator">=</span> expirableSemaphore.acquire();<br>    System.out.println(permitId);<br>    expirableSemaphore.release(permitId);<br>  &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>  &#125;<br>  <span class="hljs-type">Scanner</span> <span class="hljs-variable">scanner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Scanner</span>(System.in);<br>  scanner.nextLine();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h3 id="闭锁countdownlatch"><a class="markdownIt-Anchor" href="#闭锁countdownlatch"></a> 闭锁（CountDownLatch）</h3>
+<p>基于Redisson的Redisson分布式闭锁（<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RCountDownLatch.html">CountDownLatch</a>）Java对象<code>RCountDownLatch</code>采用了与<code>java.util.concurrent.CountDownLatch</code>相似的接口和用法。</p>
+<blockquote>
+<p>闭锁（Latch）：一种同步方法，可以延迟线程的进度直到线程到达某个终点状态。通俗的讲就是，一个闭锁相当于一扇大门，在大门打开之前所有线程都被阻断，一旦大门打开所有线程都将通过，但是一旦大门打开，所有线程都通过了，那么这个闭锁的状态就失效了，门的状态也就不能变了，只能是打开状态。也就是说闭锁的状态是一次性的，它确保在闭锁打开之前所有特定的活动都需要在闭锁打开之后才能完成。</p>
+</blockquote>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs livescript">@Test<br><span class="hljs-literal">void</span> countDownLatchTest()&#123;<br>  RCountDownLatch countDownLatch = redissonClient.getCountDownLatch(<span class="hljs-string">&quot;CountDownLatch&quot;</span>);<br>  countDownLatch.trySetCount(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">new</span> Thread<span class="hljs-function"><span class="hljs-params">(()-&gt;&#123;</span></span><br><span class="hljs-params"><span class="hljs-function">    RCountDownLatch downLatch = redissonClient.getCountDownLatch(<span class="hljs-string">&quot;CountDownLatch&quot;</span>);</span></span><br><span class="hljs-params"><span class="hljs-function">    sleepThread(<span class="hljs-number">10</span>);</span></span><br><span class="hljs-params"><span class="hljs-function">    downLatch.countDown();</span></span><br><span class="hljs-params"><span class="hljs-function">  &#125;)</span>.<span class="hljs-title">start</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">  <span class="hljs-title">try</span> &#123;</span><br><span class="hljs-function">    <span class="hljs-title">countDownLatch</span>.<span class="hljs-title">await</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">    <span class="hljs-title">System</span>.<span class="hljs-title">out</span>.<span class="hljs-title">println</span><span class="hljs-params">(<span class="hljs-string">&quot;主线程休眠结束&quot;</span>)</span>;</span><br><span class="hljs-function">  &#125; <span class="hljs-title">catch</span> <span class="hljs-params">(InterruptedException e)</span> &#123;</span><br><span class="hljs-function">    <span class="hljs-title">throw</span> <span class="hljs-title">new</span> <span class="hljs-title">RuntimeException</span><span class="hljs-params">(e)</span>;</span><br><span class="hljs-function">  &#125;</span><br><span class="hljs-function">&#125;</span><br></code></pre></td></tr></table></figure>
+<h2 id="springboot注解整合redisson分布式锁"><a class="markdownIt-Anchor" href="#springboot注解整合redisson分布式锁"></a> SpringBoot注解整合Redisson分布式锁</h2>
+<p>[【Redisson项目介绍—官方文档】</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/redisson/redisson/wiki/Redisson%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D"></a></p>
+<h3 id="整合redisson"><a class="markdownIt-Anchor" href="#整合redisson"></a> 整合Redisson</h3>
+<h4 id="1-配置"><a class="markdownIt-Anchor" href="#1-配置"></a> 1. 配置</h4>
+<p>SpringBoot整合Redisson有两种方式1. 程序化配置方式。2. 文件方式配置</p>
+<pre><code class="hljs">1. **程序化配置**
+</code></pre>
+<p>Redisson程序化的配置方法是通过构建Config对象实例来实现的。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java">    <span class="hljs-meta">@Value(&quot;$&#123;spring.redis.host&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String host;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;spring.redis.port&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String port;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;spring.redis.password&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String password;<br><br><span class="hljs-comment">// 为了方便修改配置，所以先在yaml文件中配置了。然后读取配置文件值，java代码配置连接</span><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 所有redisson的使用，都通过RedissonClient对象</span><br><span class="hljs-comment">     * 版本太老了，项目配置文件直接设置不了</span><br><span class="hljs-comment">     * 这个不设置的话 下面的缓存过期策略就无法使用</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean(destroyMethod = &quot;shutdown&quot;)</span><span class="hljs-comment">// 服务停止后调用 shutdown 方法。</span><br>    <span class="hljs-keyword">public</span> RedissonClient <span class="hljs-title function_">redisson</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Config</span> <span class="hljs-variable">config</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Config</span>();<br>        <span class="hljs-comment">//协议 redis:/rediss:</span><br>        System.out.println(host + port + password);<br>        config.useSingleServer()<br>                .setAddress(<span class="hljs-string">&quot;redis://&quot;</span> + host + <span class="hljs-string">&quot;:&quot;</span> + port);<br>        System.out.println(password.length());<br><span class="hljs-comment">//        不需要密码连接的话 config设置密码，反而会连接不上</span><br>        <span class="hljs-keyword">if</span> (password == <span class="hljs-literal">null</span> || <span class="hljs-string">&quot;null&quot;</span>.equals(password) || <span class="hljs-string">&quot;&quot;</span>.equals(password)) &#123;<br>            <span class="hljs-keyword">return</span> Redisson.create(config);<br>        &#125;<br>        config.useSingleServer().setPassword(password);<br>        <span class="hljs-keyword">return</span> Redisson.create(config);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs">2. **文件方式配置**
+</code></pre>
+<p>Redisson的配置文件可以是或YAML格式。 通过调用<code>config.fromYAML</code>方法并指定一个<code>File</code>实例来实现读取YAML格式的配置：</p>
+<pre><code class="hljs">    Config config = Config.fromYAML(new File(&quot;config-file.yaml&quot;));
+RedissonClient redisson = Redisson.create(config);
+</code></pre>
+<h4 id="2-引入maven依赖"><a class="markdownIt-Anchor" href="#2-引入maven依赖"></a> 2 引入Maven依赖</h4>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--redisson--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.redisson<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>redisson-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.17.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h4 id="3-新建distributedlock分布式锁"><a class="markdownIt-Anchor" href="#3-新建distributedlock分布式锁"></a> 3 新建DistributedLock分布式锁</h4>
+<p>​</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Target(ElementType.METHOD)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> DistributedLock &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 锁的模式:默认自动模式,当参数只有一个使用 REENTRANT 参数多个使用RED_LOCK</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 锁模式</span><br><span class="hljs-comment">     */</span><br>    LockModel <span class="hljs-title function_">lockModel</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> LockModel.AUTO;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 增加key的前缀</span><br><span class="hljs-comment">     * 设计中预将列表数组转化为多个key使用联锁——&quot;#&#123;#apple.getArray()&#125;&quot;——将数组的每一项作为一个锁。</span><br><span class="hljs-comment">     * &quot;redisson-#&#123;#apple.getArray()&#125;&quot; 显然会被认为是一个字符串，而不会使用联锁，应将前缀放到keyPrefix中</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">keyPrefix</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 如果keys有多个AUTO模式使用红锁</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> keys</span><br><span class="hljs-comment">     */</span><br>    String[] keys() <span class="hljs-keyword">default</span> &#123;&#125;;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 租赁时间，默认为0取默认配置，-1，为无限续租。</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 租赁时间</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">long</span> <span class="hljs-title function_">leaseTime</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 等待时间，默认为0取默认配置，-1，为一直等待</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 等待时间</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">long</span> <span class="hljs-title function_">waitTime</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="31-lockmodel锁的模式"><a class="markdownIt-Anchor" href="#31-lockmodel锁的模式"></a> 3.1 LockModel：锁的模式</h5>
+<p>默认自动模式,当参数只有一个使用 REENTRANT，参数多个使用RED_LOCK</p>
+<p>​</p>
+<pre><code class="hljs">public enum LockModel &#123;
+    /**
+     * 可重入锁
+     */
+    REENTRANT,
+    /**
+     * 公平锁
+     */
+    FAIR,
+    /**
+     * 联锁
+     */
+    MULTIPLE,
+    /**
+     * 红锁
+     */
+    RED_LOCK,
+    /**
+     * 读锁
+     */
+    READ,
+    /**
+     * 写锁
+     */
+    WRITE,
+    /**
+     * 自动模式,当参数只有一个使用 REENTRANT 参数多个 RED_LOCK
+     */
+    AUTO
+&#125;
+</code></pre>
+<h5 id="32-keyprefix设计意义"><a class="markdownIt-Anchor" href="#32-keyprefix设计意义"></a> 3.2 keyPrefix设计意义</h5>
+<p>​</p>
+<pre><code class="hljs">@DistributedLock(keys = &quot;redisson-#</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Springboot/" class="category-chain-item">Springboot</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Springboot/">#Springboot</a>
+      
+        <a href="/tags/redis/">#redis</a>
+      
+        <a href="/tags/redisson/">#redisson</a>
+      
+        <a href="/tags/aop/">#aop</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redisson分布式锁8种锁模式剖析 SpringAop整合</div>
+      <div>http://xtwoy.github.io/2023/01/13/redisson/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 13, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/13/RabbitMQ/" title="RabbitMQ">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">RabbitMQ</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">
+                        <span class="hidden-mobile">设计模式</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Springboot"
+        id="heading-976059fd19c9a431c74f5db5775cc0c7" role="tab" data-toggle="collapse" href="#collapse-976059fd19c9a431c74f5db5775cc0c7"
+        aria-expanded="true"
+      >
+        Springboot
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-976059fd19c9a431c74f5db5775cc0c7"
+           role="tabpanel" aria-labelledby="heading-976059fd19c9a431c74f5db5775cc0c7">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2023/01/13/redisson/" title="Redisson分布式锁8种锁模式剖析 SpringAop整合"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Redisson分布式锁8种锁模式剖析 SpringAop整合</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
