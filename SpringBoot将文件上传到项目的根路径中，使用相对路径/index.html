@@ -16,20 +16,20 @@
   <meta name="author" content="XtwoY">
   <meta name="keywords" content="">
   
-    <meta name="description" content="SpringBoot将文件上传到项目的根路径中，使用相对路径 application.yml   controller	 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374">
+    <meta name="description" content="SpringBoot将文件上传到项目的根路径中，使用相对路径   application.yml    controller 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot将文件上传到项目的根路径中，使用相对路径">
 <meta property="og:url" content="http://xtwoy.github.io/SpringBoot%E5%B0%86%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A0%B9%E8%B7%AF%E5%BE%84%E4%B8%AD%EF%BC%8C%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/index.html">
 <meta property="og:site_name" content="XtwoY">
-<meta property="og:description" content="SpringBoot将文件上传到项目的根路径中，使用相对路径 application.yml   controller	 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374">
+<meta property="og:description" content="SpringBoot将文件上传到项目的根路径中，使用相对路径   application.yml    controller 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185250894.png">
 <meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185348635.png">
 <meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125190148520.png">
 <meta property="article:published_time" content="2022-11-25T11:08:42.000Z">
-<meta property="article:modified_time" content="2022-11-28T08:40:39.686Z">
+<meta property="article:modified_time" content="2023-03-01T06:54:49.356Z">
 <meta property="article:author" content="XtwoY">
-<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="Spring Boot">
 <meta property="article:tag" content="小问题">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185250894.png">
@@ -265,7 +265,7 @@
         
         
         
-          21 mins
+          20 mins
         
       </span>
     
@@ -321,7 +321,7 @@
               <p class="note note-info">
                 
                   
-                    Last updated on November 28, 2022 pm
+                    Last updated on March 1, 2023 pm
                   
                 
               </p>
@@ -329,35 +329,44 @@
             
               <div class="markdown-body">
                 
-                <h1 id="SpringBoot将文件上传到项目的根路径中，使用相对路径"><a href="#SpringBoot将文件上传到项目的根路径中，使用相对路径" class="headerlink" title="SpringBoot将文件上传到项目的根路径中，使用相对路径"></a>SpringBoot将文件上传到项目的根路径中，使用相对路径</h1><ol>
-<li><p>application.yml</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185250894.png" srcset="/img/loading.gif" lazyload alt="image-20221125185250894"></p>
+                <h1 id="springboot将文件上传到项目的根路径中使用相对路径"><a class="markdownIt-Anchor" href="#springboot将文件上传到项目的根路径中使用相对路径"></a> SpringBoot将文件上传到项目的根路径中，使用相对路径</h1>
+<ol>
+<li>
+<p>application.yml</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185250894.png" srcset="/img/loading.gif" lazyload alt="image-20221125185250894" /></p>
 </li>
-<li><p><strong>controller</strong>	</p>
+<li>
+<p><strong>controller</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs java">RestController<br><span class="hljs-meta">@RequestMapping(&quot;/common&quot;)</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CommonController</span> &#123;<br>    <span class="hljs-meta">@Value(&quot;$&#123;takeOutFile.fileLocation:&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String filePath;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 文件上传</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> file org.springframework.web.multipart.MultipartFile</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> com.xyy.reggie.common.R&lt;java.lang.String&gt;</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> 席子</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@PostMapping(&quot;/upload&quot;)</span><br>    <span class="hljs-keyword">public</span> R&lt;String&gt; <span class="hljs-title function_">upload</span><span class="hljs-params">(MultipartFile file)</span> &#123;<br><br>        <span class="hljs-comment">//原始文件名</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">originalFilename</span> <span class="hljs-operator">=</span> file.getOriginalFilename();<br>        <span class="hljs-keyword">assert</span> originalFilename != <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">suffix</span> <span class="hljs-operator">=</span> originalFilename.substring(originalFilename.lastIndexOf(<span class="hljs-string">&quot;.&quot;</span>));<br><br>        <span class="hljs-comment">//使用UUID重新生成文件名，防止文件名称重复造成文件覆盖</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">fileName</span> <span class="hljs-operator">=</span> UUID.randomUUID().toString() + suffix;<br><br>        <span class="hljs-comment">//创建一个目录对象</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">dir</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(filePath);<br>        <span class="hljs-comment">//判断当前目录是否存在</span><br>        <span class="hljs-keyword">if</span> (!dir.exists()) &#123;<br>            <span class="hljs-comment">//目录不存在，需要创建</span><br>            dir.mkdirs();<br>        &#125;<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            file.transferTo(<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(dir.getAbsolutePath() +File.separator+ fileName));<br>        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>        <span class="hljs-keyword">return</span> R.success(fileName);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 文件下载</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> name     java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> response javax.servlet.http.HttpServletResponse</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> 席子</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@GetMapping(&quot;/download&quot;)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">download</span><span class="hljs-params">(String name, HttpServletResponse response)</span> &#123;<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//输入流，通过输入流读取文件内容</span><br>            <span class="hljs-type">FileInputStream</span> <span class="hljs-variable">fileInputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(filePath +File.separator+  name));<br><br>            <span class="hljs-comment">//输出流，通过输出流将文件写回浏览器</span><br>            <span class="hljs-type">ServletOutputStream</span> <span class="hljs-variable">outputStream</span> <span class="hljs-operator">=</span> response.getOutputStream();<br><br>            response.setContentType(<span class="hljs-string">&quot;image/jpeg&quot;</span>);<br><br>            <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>            <span class="hljs-type">byte</span>[] bytes = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">1024</span>];<br>            <span class="hljs-keyword">while</span> ((len = fileInputStream.read(bytes)) != -<span class="hljs-number">1</span>) &#123;<br>                outputStream.write(bytes, <span class="hljs-number">0</span>, len);<br>                outputStream.flush();<br>            &#125;<br><br>            <span class="hljs-comment">//关闭资源</span><br>            outputStream.close();<br>            fileInputStream.close();<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 </li>
-<li><p>效果</p>
-<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185348635.png" srcset="/img/loading.gif" lazyload alt="image-20221125185348635"></p>
+<li>
+<p>效果</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125185348635.png" srcset="/img/loading.gif" lazyload alt="image-20221125185348635" /></p>
 </li>
 </ol>
 <blockquote>
 <p>SpringBoot文件上传下载怎么使用就不说了，说说怎么使用<strong>相对路径</strong>把文件存储到项目根目录去</p>
 </blockquote>
 <ol start="4">
-<li><p>代码分析</p>
+<li>
+<p>代码分析</p>
 <ol>
-<li><p>我们使用<code>MultipartFile的transferTo()</code>进行文件本地持久化</p>
+<li>
+<p>我们使用<code>MultipartFile的transferTo()</code>进行文件本地持久化</p>
 </li>
-<li><p>但是<code>MultipartFile的transferTo()</code>方法会监测传入其中的File对象的路径是否为绝对路径，如果不是绝对路径，&#x3D;&#x3D;会自动拼接application里设置的路径 和 \work\Tomcat\localhost\ROOT&#x3D;&#x3D;。</p>
+<li>
+<p>但是<code>MultipartFile的transferTo()</code>方法会监测传入其中的File对象的路径是否为绝对路径，如果不是绝对路径，<mark>会自动拼接application里设置的路径 和 \work\Tomcat\localhost\ROOT</mark>。</p>
 <p>所以出现</p>
 <p>java.io.FileNotFoundException: C:\Users\XXX\AppData\Local\Temp\tomcat.8080.6103676472064121995\work\Tomcat\localhost\ROOT\src\main\resources\takeOutFiled10b193c1-c840-4570-88c3-874ef18e73b5.png (系统找不到指定的路径。)</p>
 <img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20221125190148520.png" srcset="/img/loading.gif" lazyload alt="image-20221125190148520" style="zoom: 100%;" />
 </li>
-<li><p>所以只要给它一个绝对路径就可以了</p>
+<li>
+<p>所以只要给它一个绝对路径就可以了</p>
 </li>
-<li><p><code>file.transferTo(new File(dir.getAbsolutePath() +File.separator+ fileName));</code></p>
+<li>
+<p><code>file.transferTo(new File(dir.getAbsolutePath() +File.separator+ fileName));</code></p>
 <p><code>dir.getAbsolutePath()</code> 得到储存文件目录的绝对路径</p>
-<p><code>File.separator</code> 就是   <strong>&#x2F;</strong></p>
+<p><code>File.separator</code> 就是   <strong>/</strong></p>
 <p><code>fileName</code> 你要存储的文件名</p>
 </li>
 </ol>
@@ -381,15 +390,8 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  <a href="/categories/Spring-Boot/" class="category-chain-item">Spring Boot</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/Java/SpringBoot/" class="category-chain-item">SpringBoot</a>
-  
-  
-
   
 
       </span>
@@ -403,7 +405,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/SpringBoot/">#SpringBoot</a>
+        <a href="/tags/Spring-Boot/">#Spring Boot</a>
       
         <a href="/tags/%E5%B0%8F%E9%97%AE%E9%A2%98/">#小问题</a>
       
@@ -506,85 +508,31 @@
     
     <div class="category row nomargin-x">
       <a class="category-item 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Java"
-        id="heading-d52387880e1ea22817a72d3759213819" role="tab" data-toggle="collapse" href="#collapse-d52387880e1ea22817a72d3759213819"
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Spring Boot"
+        id="heading-d2b84a7bb8d211a07fd6ecbf4db9d426" role="tab" data-toggle="collapse" href="#collapse-d2b84a7bb8d211a07fd6ecbf4db9d426"
         aria-expanded="true"
       >
-        Java
-        <span class="list-group-count">(7)</span>
+        Spring Boot
+        <span class="list-group-count">(5)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse show" id="collapse-d52387880e1ea22817a72d3759213819"
-           role="tabpanel" aria-labelledby="heading-d52387880e1ea22817a72d3759213819">
+      <div class="category-collapse collapse show" id="collapse-d2b84a7bb8d211a07fd6ecbf4db9d426"
+           role="tabpanel" aria-labelledby="heading-d2b84a7bb8d211a07fd6ecbf4db9d426">
         
         
-          
           
   <div class="category-post-list">
     
     
       
       
-        <a href="/%E6%9E%9A%E4%B8%BE-enum/" title="Java-枚举(enum)"
+        <a href="/Redisson%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%818%E7%A7%8D%E9%94%81%E6%A8%A1%E5%BC%8F%E5%89%96%E6%9E%90%20SpringAop%E6%95%B4%E5%90%88/" title="Redisson分布式锁8种锁模式剖析 SpringAop整合"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">Java-枚举(enum)</span>
+          <span class="category-post">Redisson分布式锁8种锁模式剖析 SpringAop整合</span>
         </a>
       
-    
-      
-      
-        <a href="/Nacos%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" title="Nacos使用指南"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">Nacos使用指南</span>
-        </a>
-      
-    
-      
-      
-        <a href="/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" title="函数式编程-Stream流"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">函数式编程-Stream流</span>
-        </a>
-      
-    
-      
-      
-        <a href="/%E5%9C%A8Java%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F/" title="在Java内部类中使用外部类的成员方法以及成员变量"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">在Java内部类中使用外部类的成员方法以及成员变量</span>
-        </a>
-      
-    
-  </div>
-
-          
-  
-    
-    
-    
-    <div class="category-sub row nomargin-x">
-      <a class="category-subitem 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="SpringBoot"
-        id="heading-c8428a45869e78fb361ed20b9c23b0a8" role="tab" data-toggle="collapse" href="#collapse-c8428a45869e78fb361ed20b9c23b0a8"
-        aria-expanded="true"
-      >
-        SpringBoot
-        <span class="list-group-count">(2)</span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-      <div class="category-collapse collapse show" id="collapse-c8428a45869e78fb361ed20b9c23b0a8"
-           role="tabpanel" aria-labelledby="heading-c8428a45869e78fb361ed20b9c23b0a8">
-        
-        
-          
-  <div class="category-post-list">
-    
     
       
       
@@ -597,40 +545,21 @@
     
       
       
+        <a href="/SpringBoot%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="SpringBoot实现MySQL的主从复制"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot实现MySQL的主从复制</span>
+        </a>
+      
+    
+      
+      
         <a href="/SpringBoot%E5%B0%86%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A0%B9%E8%B7%AF%E5%BE%84%E4%B8%AD%EF%BC%8C%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/" title="SpringBoot将文件上传到项目的根路径中，使用相对路径"
            class="list-group-item list-group-item-action
            active">
           <span class="category-post">SpringBoot将文件上传到项目的根路径中，使用相对路径</span>
         </a>
       
-    
-  </div>
-
-        
-      </div>
-    </div>
-  
-    
-    
-    
-    <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Web项目"
-        id="heading-96d02027b93a9139af747685241288e5" role="tab" data-toggle="collapse" href="#collapse-96d02027b93a9139af747685241288e5"
-        aria-expanded="false"
-      >
-        Web项目
-        <span class="list-group-count">(1)</span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-      <div class="category-collapse collapse " id="collapse-96d02027b93a9139af747685241288e5"
-           role="tabpanel" aria-labelledby="heading-96d02027b93a9139af747685241288e5">
-        
-        
-          
-  <div class="category-post-list">
-    
     
       
       
@@ -643,10 +572,6 @@
     
   </div>
 
-        
-      </div>
-    </div>
-  
         
       </div>
     </div>
