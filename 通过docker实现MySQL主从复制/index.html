@@ -18,14 +18,14 @@
   
     <meta name="description" content="从零开始，通过docker实现mysql 主从复制  1.安装docker 很简单，命令： 1yum install -y docker 启动docker: 123systemctl start docker &#x2F;&#x2F;centos7及以后版本# service docker start &#x2F;&#x2F;centos6及之前的版本 查看镜像 1docker images  创建docker 容器（可以根据一个镜像">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从零开始，通过docker实现MySQL主从复制">
+<meta property="og:title" content="通过docker实现MySQL主从复制">
 <meta property="og:url" content="http://xtwoy.github.io/%E9%80%9A%E8%BF%87docker%E5%AE%9E%E7%8E%B0MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/index.html">
 <meta property="og:site_name" content="XtwoY">
 <meta property="og:description" content="从零开始，通过docker实现mysql 主从复制  1.安装docker 很简单，命令： 1yum install -y docker 启动docker: 123systemctl start docker &#x2F;&#x2F;centos7及以后版本# service docker start &#x2F;&#x2F;centos6及之前的版本 查看镜像 1docker images  创建docker 容器（可以根据一个镜像">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/u=2083236488,1794182989&fm=253&fmt=auto&app=138&f=JPG.webp">
 <meta property="article:published_time" content="2022-11-27T13:31:34.000Z">
-<meta property="article:modified_time" content="2023-04-18T15:06:24.804Z">
+<meta property="article:modified_time" content="2023-04-19T12:38:47.681Z">
 <meta property="article:author" content="XtwoY">
 <meta property="article:tag" content="Docker">
 <meta property="article:tag" content="Linux">
@@ -35,7 +35,7 @@
   
   
   
-  <title>从零开始，通过docker实现MySQL主从复制 - XtwoY</title>
+  <title>通过docker实现MySQL主从复制 - XtwoY</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -230,7 +230,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="从零开始，通过docker实现MySQL主从复制"></span>
+            <span id="subtitle" data-typed-text="通过docker实现MySQL主从复制"></span>
           
         </div>
 
@@ -315,12 +315,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">从零开始，通过docker实现MySQL主从复制</h1>
+            <h1 style="display: none">通过docker实现MySQL主从复制</h1>
             
               <p class="note note-info">
                 
                   
-                    Last updated on April 18, 2023 pm
+                    Last updated on April 19, 2023 pm
                   
                 
               </p>
@@ -487,6 +487,7 @@ read_only=1
 </code></pre>
 <h3 id="45-进入从数据库"><a class="markdownIt-Anchor" href="#45-进入从数据库"></a> 4.5 进入从数据库</h3>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker exec -it mysql-slave <span class="hljs-regexp">/bin/</span>bash<br>mysql -uroot -proot<br></code></pre></td></tr></table></figure>
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230419203729060.png" srcset="/img/loading.gif" lazyload alt="image-20230419203729060" style="zoom:67%;" />
 <h3 id="46-在从数据库中配置主从复制"><a class="markdownIt-Anchor" href="#46-在从数据库中配置主从复制"></a> 4.6 在从数据库中配置主从复制</h3>
 <pre><code class="hljs">change master to master_host='宿主机ip', master_user='slave', master_password='123456', master_port=3307, master_log_file='mall-mysql-bin.000001', master_log_pos=617, master_connect_retry=30;
 ## 参数说明
@@ -538,6 +539,9 @@ master_connect_retry：连接失败重试的时间间隔，单位为秒。
 <p>但要注意，在之前需要 <strong>停止<code>Slave</code></strong></p>
 </li>
 <li>
+<p>修改4.6步骤中的 <code>master_log_file</code> <code>master_log_pos</code> 两个参数</p>
+</li>
+<li>
 <p>进入主库，查看主库状态 <code>show master status;</code></p>
 </li>
 <li>
@@ -569,15 +573,8 @@ master_connect_retry：连接失败重试的时间间隔，单位为秒。
     
       <span class="category-chain">
         
-  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  <a href="/categories/Datebase/" class="category-chain-item">Datebase</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/Linux/Docker/" class="category-chain-item">Docker</a>
-  
-  
-
   
 
       </span>
@@ -607,7 +604,7 @@ master_connect_retry：连接失败重试的时间间隔，单位为秒。
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>从零开始，通过docker实现MySQL主从复制</div>
+      <div>通过docker实现MySQL主从复制</div>
       <div>http://xtwoy.github.io/通过docker实现MySQL主从复制/</div>
     </div>
     <div class="license-meta">
@@ -696,53 +693,17 @@ master_connect_retry：连接失败重试的时间间隔，单位为秒。
     
     <div class="category row nomargin-x">
       <a class="category-item 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Linux"
-        id="heading-edc9f0a5a5d57797bf68e37364743831" role="tab" data-toggle="collapse" href="#collapse-edc9f0a5a5d57797bf68e37364743831"
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Datebase"
+        id="heading-1b0452a18d880b220e70d627cc3a0e1f" role="tab" data-toggle="collapse" href="#collapse-1b0452a18d880b220e70d627cc3a0e1f"
         aria-expanded="true"
       >
-        Linux
-        <span class="list-group-count">(2)</span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-      <div class="category-collapse collapse show" id="collapse-edc9f0a5a5d57797bf68e37364743831"
-           role="tabpanel" aria-labelledby="heading-edc9f0a5a5d57797bf68e37364743831">
-        
-        
-          
-          
-  <div class="category-post-list">
-    
-    
-      
-      
-        <a href="/Linux%E4%B8%AD%E5%90%84%E7%9B%AE%E5%BD%95(%E6%96%87%E4%BB%B6%E5%A4%B9)%E4%BD%9C%E7%94%A8%E8%AF%A6%E8%A7%A3/" title="Linux中各目录(文件夹)作用详解"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">Linux中各目录(文件夹)作用详解</span>
-        </a>
-      
-    
-  </div>
-
-          
-  
-    
-    
-    
-    <div class="category-sub row nomargin-x">
-      <a class="category-subitem 
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Docker"
-        id="heading-c5fd214cdd0d2b3b4272e73b022ba5c2" role="tab" data-toggle="collapse" href="#collapse-c5fd214cdd0d2b3b4272e73b022ba5c2"
-        aria-expanded="true"
-      >
-        Docker
+        Datebase
         <span class="list-group-count">(1)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse show" id="collapse-c5fd214cdd0d2b3b4272e73b022ba5c2"
-           role="tabpanel" aria-labelledby="heading-c5fd214cdd0d2b3b4272e73b022ba5c2">
+      <div class="category-collapse collapse show" id="collapse-1b0452a18d880b220e70d627cc3a0e1f"
+           role="tabpanel" aria-labelledby="heading-1b0452a18d880b220e70d627cc3a0e1f">
         
         
           
@@ -751,19 +712,15 @@ master_connect_retry：连接失败重试的时间间隔，单位为秒。
     
       
       
-        <a href="/%E9%80%9A%E8%BF%87docker%E5%AE%9E%E7%8E%B0MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="从零开始，通过docker实现MySQL主从复制"
+        <a href="/%E9%80%9A%E8%BF%87docker%E5%AE%9E%E7%8E%B0MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="通过docker实现MySQL主从复制"
            class="list-group-item list-group-item-action
            active">
-          <span class="category-post">从零开始，通过docker实现MySQL主从复制</span>
+          <span class="category-post">通过docker实现MySQL主从复制</span>
         </a>
       
     
   </div>
 
-        
-      </div>
-    </div>
-  
         
       </div>
     </div>
