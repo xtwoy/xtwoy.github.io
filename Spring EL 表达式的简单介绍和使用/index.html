@@ -24,7 +24,7 @@
 <meta property="og:description" content="1. 简单介绍  1.1. 什么是 Spring EL 1.2. 为什么要使用 Spring EL 1.3. 如何使用 Spring EL   2. 简单使用 3. EL 表达式解析引擎  3.1. 带缓存的 EL 表达式工具方法： 3.2. 设置上下文的 EL 表达式   4. 总结 5. 补充示例  5.1. 使用 Spring EL 进行赋值 5.2. 使用 Spring EL 进行计算">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-02-27T05:44:31.000Z">
-<meta property="article:modified_time" content="2023-03-01T07:08:40.684Z">
+<meta property="article:modified_time" content="2023-04-20T09:08:55.928Z">
 <meta property="article:author" content="XtwoY">
 <meta property="article:tag" content="Spring El">
 <meta name="twitter:card" content="summary_large_image">
@@ -316,7 +316,7 @@
               <p class="note note-info">
                 
                   
-                    Last updated on March 1, 2023 pm
+                    Last updated on April 20, 2023 pm
                   
                 
               </p>
@@ -449,17 +449,12 @@
 root = proceedingJoinPoint.getTarget();<br />
 //设置root对象真的的做法<br />
 standardEvaluationContext.setRootObject(root);</p>
-  <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><br><span class="hljs-bullet">- </span>换个名字呗<br><br></code></pre></td></tr></table></figure>
-<p>@Override<br />
-@DistributedLock(keyPrefix = keyPrefix, keys = “#xtwoy.type”)<br />
-public boolean tagOrUnmarkUpdates(RedisUtil redisUtil, boolean type) &#123;<br />
-System.out.println(redisUtil.a);<br />
-return true;<br />
-&#125;</p>
-<p>//动态获取root对象<br />
-root = proceedingJoinPoint.getTarget();</p>
-<p>standardEvaluationContext.setVariable(“xtwoy”,root);</p>
-  <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br>  <br><br>&gt; 三<br><br><br><br>使用情景<br><br>```java<br>@Override<br>@<span class="hljs-constructor">DistributedLock(<span class="hljs-params">keyPrefix</span> = <span class="hljs-params">keyPrefix</span>, <span class="hljs-params">keys</span> = <span class="hljs-string">&quot;x&quot;</span>)</span><br>public boolean tag<span class="hljs-constructor">OrUnmarkUpdates(RedisUtil <span class="hljs-params">redisUtil</span>, <span class="hljs-params">boolean</span> <span class="hljs-params">type</span>)</span> &#123;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(redisUtil.a);<br>    return <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">//获取解析值 值全部拿取解析 类似 SpringCache的key</span><br><span class="hljs-keyword">private</span> String get<span class="hljs-constructor">ElValue(String <span class="hljs-params">key</span>, StandardEvaluationContext <span class="hljs-params">context</span>)</span> &#123;<br><br>        ExpressionParser parser = <span class="hljs-keyword">new</span> <span class="hljs-constructor">SpelExpressionParser()</span>;<br>        Expression exp = parser.parse<span class="hljs-constructor">Expression(<span class="hljs-params">key</span>)</span>;<br>        String value = exp.get<span class="hljs-constructor">Value(<span class="hljs-params">context</span>, String.<span class="hljs-params">class</span>)</span>;<br>        return value;<br>&#125;<br></code></pre></td></tr></table></figure>
+  <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br>- 换个名字呗<br><br>  ```java<br>  @Override<br>  @<span class="hljs-constructor">DistributedLock(<span class="hljs-params">keyPrefix</span> = <span class="hljs-params">keyPrefix</span>, <span class="hljs-params">keys</span> = <span class="hljs-string">&quot;#xtwoy.type&quot;</span>)</span><br>  public boolean tag<span class="hljs-constructor">OrUnmarkUpdates(RedisUtil <span class="hljs-params">redisUtil</span>, <span class="hljs-params">boolean</span> <span class="hljs-params">type</span>)</span> &#123;<br>      <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(redisUtil.a);<br>      return <span class="hljs-literal">true</span>;<br>  &#125;<br>  <br>  <span class="hljs-comment">//动态获取root对象</span><br>  root = proceedingJoinPoint.get<span class="hljs-constructor">Target()</span>;<br>  <br>  standardEvaluationContext.set<span class="hljs-constructor">Variable(<span class="hljs-string">&quot;xtwoy&quot;</span>,<span class="hljs-params">root</span>)</span>;<br>  <br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>三</p>
+</blockquote>
+<p>使用情景</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@DistributedLock(keyPrefix = keyPrefix, keys = &quot;x&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tagOrUnmarkUpdates</span><span class="hljs-params">(RedisUtil redisUtil, <span class="hljs-type">boolean</span> type)</span> &#123;<br>    System.out.println(redisUtil.a);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">//获取解析值 值全部拿取解析 类似 SpringCache的key</span><br><span class="hljs-keyword">private</span> String <span class="hljs-title function_">getElValue</span><span class="hljs-params">(String key, StandardEvaluationContext context)</span> &#123;<br><br>        <span class="hljs-type">ExpressionParser</span> <span class="hljs-variable">parser</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SpelExpressionParser</span>();<br>        <span class="hljs-type">Expression</span> <span class="hljs-variable">exp</span> <span class="hljs-operator">=</span> parser.parseExpression(key);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> exp.getValue(context, String.class);<br>        <span class="hljs-keyword">return</span> value;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>是想着单单设置一个 <code>x</code> 字符</p>
 <p>原因</p>
 <p>keys的值会全部拿去解析，默认去root对象上找字段 方法。但是我这个root对象并没 <code>x</code> 字段</p>
