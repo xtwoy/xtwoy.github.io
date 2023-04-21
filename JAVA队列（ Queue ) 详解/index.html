@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="[toc]  JAVA队列（ Queue ) 详解 [原文链接](https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_27184497&#x2F;article&#x2F;details&#x2F;116093422?ops_request_misc&#x3D;%7B%22request%5Fid%22%3A%22167323285516800215073503%22%2C%22scm%22%3A%2220140713.130102334">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XtwoY">
+<meta property="og:url" content="http://xtwoy.github.io/JAVA%E9%98%9F%E5%88%97%EF%BC%88%20Queue%20)%20%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="[toc]  JAVA队列（ Queue ) 详解 [原文链接](https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_27184497&#x2F;article&#x2F;details&#x2F;116093422?ops_request_misc&#x3D;%7B%22request%5Fid%22%3A%22167323285516800215073503%22%2C%22scm%22%3A%2220140713.130102334">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424160130335.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424161031283.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424161404577.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424172014888.png">
+<meta property="article:published_time" content="2023-04-21T15:22:02.877Z">
+<meta property="article:modified_time" content="2023-01-10T02:59:49.073Z">
+<meta property="article:author" content="XtwoY">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424160130335.png">
+  
+  
+  
+  <title>XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-21 23:22" pubdate>
+          April 21, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on January 10, 2023 am
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>[toc]</p>
+<h1 id="java队列-queue-详解"><a class="markdownIt-Anchor" href="#java队列-queue-详解"></a> JAVA队列（ Queue ) 详解</h1>
+<p>[原文链接](<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27184497/article/details/116093422?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167323285516800215073503%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=167323285516800215073503&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-">https://blog.csdn.net/qq_27184497/article/details/116093422?ops_request_misc=%7B%22request%5Fid%22%3A%22167323285516800215073503%22%2C%22scm%22%3A%2220140713.130102334..%22%7D&amp;request_id=167323285516800215073503&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-</a><br />
+task-blog-2<sub>all</sub>top_click~default-1-116093422-null-<br />
+null.142<sup>v70</sup>wechat,201<sup>v4</sup>add_ask&amp;utm_term=Java%20%E9%98%9F%E5%88%97&amp;spm=1018.2226.3001.4187)</p>
+<h1 id="什么是队列"><a class="markdownIt-Anchor" href="#什么是队列"></a> 什么是队列？</h1>
+<p>队列是一种特殊的线性表，遵循先入先出、后入后出的基本原则，一般来说，它只允许在表的前端进行删除操作，而在表的后端进行插入操作，但是java的某些队列运行在任何地方插入删除；比如我们常用的LinkedList 集合，它实现了Queue 接口，因此，我们可以理解为 LinkedList 就是一个队列；</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424160130335.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h1 id="java队列特性"><a class="markdownIt-Anchor" href="#java队列特性"></a> java队列特性</h1>
+<p>队列主要分为阻塞和非阻塞，有界和无界、单向链表和双向链表之分；</p>
+<h3 id="阻塞和非阻塞"><a class="markdownIt-Anchor" href="#阻塞和非阻塞"></a> 阻塞和非阻塞</h3>
+<p><strong>阻塞队列</strong><br />
+入列(添加元素)时，如果元素数量超过队列总数，会进行等待（阻塞），待队列的中的元素出列后，元素数量未超过队列总数时，就会解除阻塞状态，进而可以继续入列；<br />
+出列(删除元素)时，如果队列为空的情况下，也会进行等待（阻塞），待队列有值的时候即会解除阻塞状态，进而继续出列；<br />
+阻塞队列的好处是可以防止队列容器溢出；只要满了就会进行阻塞等待；也就不存在溢出的情况；<br />
+只要是阻塞队列，都是线程安全的；</p>
+<p><strong>非阻塞队列</strong><br />
+不管出列还是入列，都不会进行阻塞，入列时，如果元素数量超过队列总数，则会抛出异常，<br />
+出列时，如果队列为空，则取出空值；</p>
+<p>一般情况下，非阻塞式队列使用的比较少，一般都用阻塞式的对象比较多；阻塞和非阻塞队列在使用上的最大区别就是阻塞队列提供了以下2个方法：</p>
+<ul>
+<li>出队阻塞方法 ： <strong>take()</strong></li>
+<li>入队阻塞方法 ： <strong>put()</strong></li>
+</ul>
+<h3 id="有界和无界"><a class="markdownIt-Anchor" href="#有界和无界"></a> 有界和无界</h3>
+<p><strong>有界</strong> ：有界限，大小长度受限制<br />
+<strong>无界</strong> ：无限大小，其实说是无限大小，其实是有界限的，只不过超过界限时就会进行扩容，就行ArrayList 一样，在内部动态扩容</p>
+<h3 id="单向链表和双向链表"><a class="markdownIt-Anchor" href="#单向链表和双向链表"></a> 单向链表和双向链表</h3>
+<p><strong>单向链表 ：</strong> 每个元素中除了元素本身之外，还存储一个指针，这个指针指向下一个元素；</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424161031283.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p><strong>双向链表 ：</strong> 除了元素本身之外，还有两个指针，一个指针指向前一个元素的地址，另一个指针指向后一个元素的地址；</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424161404577.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h1 id="java-队列接口继承图"><a class="markdownIt-Anchor" href="#java-队列接口继承图"></a> java 队列接口继承图</h1>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/20210424172014888.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h1 id="队列常用方法"><a class="markdownIt-Anchor" href="#队列常用方法"></a> 队列常用方法</h1>
+<p><strong>add</strong> 增加一个元索 如果队列已满，则抛出一个IIIegaISlabEepeplian异常</p>
+<p><strong>remove</strong> 移除并返回队列头部的元素 如果队列为空，则抛出一个NoSuchElementException异常</p>
+<p><strong>element</strong> 返回队列头部的元素 如果队列为空，则抛出一个NoSuchElementException异常</p>
+<p><strong>offer</strong> 添加一个元素并返回true 如果队列已满，则返回false</p>
+<p><strong>poll</strong> 移除并返问队列头部的元素 如果队列为空，则返回null</p>
+<p><strong>peek</strong> 返回队列头部的元素 如果队列为空，则返回null</p>
+<p><strong>put</strong> 添加一个元素 如果队列满，则阻塞</p>
+<p><strong>take</strong> 移除并返回队列头部的元素 如果队列为空，则阻塞</p>
+<p><strong>drainTo(list)</strong> 一次性取出队列所有元素</p>
+<p><strong>知识点： remove、element、offer 、poll、peek 其实是属于Queue接口。</strong></p>
+<h1 id="非阻塞队列"><a class="markdownIt-Anchor" href="#非阻塞队列"></a> 非阻塞队列</h1>
+<h3 id="1-concurrentlinkedqueue"><a class="markdownIt-Anchor" href="#1-concurrentlinkedqueue"></a> 1、ConcurrentLinkedQueue</h3>
+<p>单向链表结构的无界并发队列, 非阻塞队列，由CAS实现线程安全，内部基于节点实现</p>
+<h3 id="2-concurrentlinkeddeque"><a class="markdownIt-Anchor" href="#2-concurrentlinkeddeque"></a> 2、ConcurrentLinkedDeque</h3>
+<p>双向链表结构的无界并发队列, 非阻塞队列，由CAS实现线程安全</p>
+<h3 id="3-priorityqueue"><a class="markdownIt-Anchor" href="#3-priorityqueue"></a> 3、PriorityQueue</h3>
+<p>内部基于数组实现，线程不安全的队列</p>
+<h1 id="阻塞队列"><a class="markdownIt-Anchor" href="#阻塞队列"></a> 阻塞队列</h1>
+<h3 id="1-delayqueue"><a class="markdownIt-Anchor" href="#1-delayqueue"></a> 1、DelayQueue</h3>
+<p>一个支持延时获取元素的无界阻塞队列</p>
+<h3 id="2-linkedtransferqueue"><a class="markdownIt-Anchor" href="#2-linkedtransferqueue"></a> 2、LinkedTransferQueue</h3>
+<p>一个由链表结构组成的无界阻塞队列。</p>
+<h3 id="3-arrayblockingqueue"><a class="markdownIt-Anchor" href="#3-arrayblockingqueue"></a> 3、ArrayBlockingQueue</h3>
+<p>有界队列，阻塞式,初始化时必须指定队列大小，且不可改变；，底层由数组实现；</p>
+<h3 id="4-synchronousqueue"><a class="markdownIt-Anchor" href="#4-synchronousqueue"></a> 4、SynchronousQueue</h3>
+<p>最多只能存储一个元素，每一个put操作必须等待一个take操作，否则不能继续添加元素</p>
+<h3 id="5-priorityblockingqueue"><a class="markdownIt-Anchor" href="#5-priorityblockingqueue"></a> 5、PriorityBlockingQueue</h3>
+<p>一个带优先级的队列，而不是先进先出队列。元素按优先级顺序被移除，而且它也是无界的，也就是没有容量上限，虽然此队列逻辑上是无界的，但是由于资源被耗尽，所以试图执行添加操作可能会导致OutOfMemoryError 错误；</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://xtwoy.github.io/JAVA队列（ Queue ) 详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 21, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/Java%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3/" title="Java注解详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java注解详解</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E5%85%AB%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%EF%BC%9A%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E3%80%81%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F%E3%80%81%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F%E3%80%81%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E3%80%81%E5%A0%86%E6%8E%92%E5%BA%8F%E3%80%81%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E3%80%82%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E3%80%81%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/" title="八大排序算法：冒泡排序、选择排序、插入排序、希尔排序、堆排序、快速排序。归并排序、基数排序">
+                        <span class="hidden-mobile">八大排序算法：冒泡排序、选择排序、插入排序、希尔排序、堆排序、快速排序。归并排序、基数排序</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

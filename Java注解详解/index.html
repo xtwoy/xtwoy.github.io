@@ -1,0 +1,983 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="摘要 Java Annotation是JDK5.0引入的一种注释机制。 网上很多关于Java Annotation的文章，看得人眼花缭乱。Java Annotation本来很简单的，结果说的人没说清楚；弄的看的人更加迷糊。 我按照自己的思路，对Annotation进行了整理。理解 Annotation 的关键，是理解Annotation的语法和用法，对这些内容，我都进行了详细说明；理解Annota">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java注解详解">
+<meta property="og:url" content="http://xtwoy.github.io/Java%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="摘要 Java Annotation是JDK5.0引入的一种注释机制。 网上很多关于Java Annotation的文章，看得人眼花缭乱。Java Annotation本来很简单的，结果说的人没说清楚；弄的看的人更加迷糊。 我按照自己的思路，对Annotation进行了整理。理解 Annotation 的关键，是理解Annotation的语法和用法，对这些内容，我都进行了详细说明；理解Annota">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28123151-d471f82eb2bc4812b46cc5ff3e9e6b82.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28123653-84d14b886429482bb601dc97155220fb.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28124653-adf73c4cdcce4a63b7bf78efbe1a9cdf.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28132554-8729c2663c5943a4b3302f210904e1d7.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28133438-ba03c958e2c047a08d150d9abe298b73.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28133459-3f430d51736d44edb17ada87e4398808.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28134305-4722f5184b1d4cc0aac2c0d1223c0fcb.jpg">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230421231857602.png">
+<meta property="article:published_time" content="2023-04-21T15:22:59.000Z">
+<meta property="article:modified_time" content="2023-04-21T15:22:59.000Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Annotation">
+<meta property="article:tag" content="注解">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28123151-d471f82eb2bc4812b46cc5ff3e9e6b82.jpg">
+  
+  
+  
+  <title>Java注解详解 - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java注解详解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-21 23:22" pubdate>
+          April 21, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          113 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java注解详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>摘要</strong></p>
+<p>Java Annotation是JDK5.0引入的一种注释机制。</p>
+<p>网上很多关于Java Annotation的文章，看得人眼花缭乱。Java Annotation本来很简单的，结果说的人没说清楚；弄的看的人更加迷糊。</p>
+<p><em>我按照自己的思路，对Annotation进行了整理。理解 Annotation 的关键，是理解Annotation的语法和用法，对这些内容，我都进行了详细说明；理解Annotation的语法和用法之后，再看Annotation的框架图，可能有更深刻体会。废话就说这么多，下面开始对Annotation进行说明。若您发现文章中存在错误或不足的地方，希望您能指出！</em></p>
+<h2 id="第1部分-annotation架构"><a class="markdownIt-Anchor" href="#第1部分-annotation架构"></a> <strong>第1部分 Annotation架构</strong></h2>
+<hr />
+<p>先看看Annotation的架构图：</p>
+<p><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28123151-d471f82eb2bc4812b46cc5ff3e9e6b82.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28123151-d471f82eb2bc4812b46cc5ff3e9e6b82.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a></p>
+<p>从中，我们可以看出：</p>
+<p>(01) 1个Annotation 和 1个RetentionPolicy关联。<br />
+可以理解为：每1个Annotation对象，都会有唯一的RetentionPolicy属性。</p>
+<p>(02) 1个Annotation 和 1~n个ElementType关联。<br />
+可以理解为：对于每1个Annotation对象，可以有若干个ElementType属性。</p>
+<p>(03) Annotation 有许多实现类，包括：Deprecated, Documented, Inherited, Override等等。<br />
+Annotation 的每一个实现类，都“和1个RetentionPolicy关联”并且“和1~n个ElementType关联”。</p>
+<p>下面，我先介绍框架图的左半边(如下图)，即Annotation, RetentionPolicy, ElementType；然后在就Annotation的实现类进行举例说明。</p>
+<p><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28123653-84d14b886429482bb601dc97155220fb.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28123653-84d14b886429482bb601dc97155220fb.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a></p>
+<h2 id="第2部分-annotation组成部分"><a class="markdownIt-Anchor" href="#第2部分-annotation组成部分"></a> <strong>第2部分 Annotation组成部分</strong></h2>
+<hr />
+<p><strong>1 annotation组成成分</strong></p>
+<p>java annotation 的组成中，有3个非常重要的主干类。它们分别是：</p>
+<p>(01) Annotation.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.lang.annotation;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Annotation</span> &#123;<br><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">equals</span><span class="hljs-params">(Object obj)</span>;<br><br>    <span class="hljs-type">int</span> <span class="hljs-title function_">hashCode</span><span class="hljs-params">()</span>;<br><br>    String <span class="hljs-title function_">toString</span><span class="hljs-params">()</span>;<br><br>    Class&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Annotation</span>&gt; annotationType();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>(02) ElementType.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.lang.annotation;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">ElementType</span> &#123;<br>    TYPE,               <span class="hljs-comment">/* 类、接口（包括注释类型）或枚举声明  */</span><br><br>    FIELD,              <span class="hljs-comment">/* 字段声明（包括枚举常量）  */</span><br><br>    METHOD,             <span class="hljs-comment">/* 方法声明  */</span><br><br>    PARAMETER,          <span class="hljs-comment">/* 参数声明  */</span><br><br>    CONSTRUCTOR,        <span class="hljs-comment">/* 构造方法声明  */</span><br><br>    LOCAL_VARIABLE,     <span class="hljs-comment">/* 局部变量声明  */</span><br><br>    ANNOTATION_TYPE,    <span class="hljs-comment">/* 注释类型声明  */</span><br><br>    PACKAGE             <span class="hljs-comment">/* 包声明  */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>(03) RetentionPolicy.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.lang.annotation;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">RetentionPolicy</span> &#123;<br>    SOURCE,            <span class="hljs-comment">/* Annotation信息仅存在于编译器处理期间，编译器处理完之后就没有该Annotation信息了  */</span><br><br>    CLASS,             <span class="hljs-comment">/* 编译器将Annotation存储于类对应的.class文件中。默认行为  */</span><br><br>    RUNTIME            <span class="hljs-comment">/* 编译器将Annotation存储于class文件中，并且可由JVM读入 */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>说明：<br />
+(01) Annotation 就是个接口。<br />
+“每1个Annotation” 都与 “1个RetentionPolicy”关联，并且与  “1～n个ElementType”关联。可以通俗的理解为：每1个Annotation对象，都会有唯一的RetentionPolicy属性；至于ElementType属性，则有1~n个。</p>
+<p>(02) ElementType 是Enum枚举类型，它用来指定Annotation的类型。<br />
+“每1个Annotation” 都与 “1～n个ElementType”关联。当Annotation与某个ElementType关联时，就意味着：Annotation有了某种用途。<br />
+例如，若一个Annotation对象是METHOD类型，则该Annotation只能用来修饰方法。</p>
+<p>(03) RetentionPolicy 是Enum枚举类型，它用来指定Annotation的策略。通俗点说，就是不同RetentionPolicy类型的Annotation的作用域不同。<br />
+“每1个Annotation” 都与 “1个RetentionPolicy”关联。<br />
+a) 若Annotation的类型为 SOURCE，则意味着：Annotation仅存在于编译器处理期间，编译器处理完之后，该Annotation就没用了。<br />
+例如，“ @Override ”标志就是一个Annotation。当它修饰一个方法的时候，就意味着该方法覆盖父类的方法；并且在编译期间会进行语法检查！编译器处理完后，“@Override”就没有任何作用了。<br />
+b) 若Annotation的类型为 CLASS，则意味着：编译器将Annotation存储于类对应的.class文件中，它是Annotation的默认行为。<br />
+c) 若Annotation的类型为 RUNTIME，则意味着：编译器将Annotation存储于class文件中，并且可由JVM读入。</p>
+<p>这时，只需要记住*“每1个Annotation” 都与 “1个RetentionPolicy”关联，并且与 “1～n个ElementType”关联*。学完后面的内容之后，再回头看这些内容，会更容易理解。</p>
+<h2 id="第3部分-java自带的annotation"><a class="markdownIt-Anchor" href="#第3部分-java自带的annotation"></a> <strong>第3部分 java自带的Annotation</strong></h2>
+<hr />
+<p>理解了上面的3个类的作用之后，我们接下来可以讲解Annotation实现类的语法定义了。</p>
+<h3 id="1-annotation通用定义"><a class="markdownIt-Anchor" href="#1-annotation通用定义"></a> <strong>1 Annotation通用定义</strong></h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(ElementType.TYPE)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MyAnnotation1 &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>说明：</p>
+<p>上面的作用是定义一个Annotation，它的名字是MyAnnotation1。定义了MyAnnotation1之后，我们可以在代码中通过“@MyAnnotation1”来使用它。<br />
+其它的，@Documented, @Target, @Retention, @interface都是来修饰MyAnnotation1的。下面分别说说它们的含义：</p>
+<p>(01) @interface<br />
+使用@interface定义注解时，意味着它实现了java.lang.annotation.Annotation接口，即该注解就是一个Annotation。<br />
+<em>定义Annotation时，@interface是必须的。</em><br />
+注意：它和我们通常的implemented实现接口的方法不同。Annotation接口的实现细节都由编译器完成。通过@interface定义注解后，该注解不能继承其他的注解或接口。</p>
+<p>(02) @Documented<br />
+类和方法的Annotation在缺省情况下是不出现在javadoc中的。如果使用@Documented修饰该Annotation，则表示它可以出现在javadoc中。<br />
+<em>定义Annotation时，@Documented可有可无；若没有定义，则Annotation不会出现在javadoc中。</em></p>
+<p>(03) @Target(ElementType.TYPE)<br />
+前面我们说过，ElementType 是Annotation的类型属性。而@Target的作用，就是来指定Annotation的类型属性。<br />
+@Target(ElementType.TYPE) 的意思就是指定该Annotation的类型是ElementType.TYPE。这就意味着，MyAnnotation1是来修饰“类、接口（包括注释类型）或枚举声明”的注解。<br />
+<em>定义Annotation时，@Target可有可无。若有@Target，则该Annotation只能用于它所指定的地方；若没有@Target，则该Annotation可以用于任何地方。</em></p>
+<p>(04) @Retention(RetentionPolicy.RUNTIME)<br />
+前面我们说过，RetentionPolicy 是Annotation的策略属性，而@Retention的作用，就是指定Annotation的策略属性。<br />
+@Retention(RetentionPolicy.RUNTIME)  的意思就是指定该Annotation的策略是RetentionPolicy.RUNTIME。这就意味着，编译器会将该Annotation信息保留在.class文件中，并且能被虚拟机读取。<br />
+<em>定义Annotation时，@Retention可有可无。若没有@Retention，则默认是RetentionPolicy.CLASS。</em></p>
+<h3 id="2-java自带的annotation"><a class="markdownIt-Anchor" href="#2-java自带的annotation"></a> <strong>2 java自带的Annotation</strong></h3>
+<p>通过上面的示例，我们能理解：***@interface用来声明Annotation，@Documented用来表示该Annotation是否会出现在javadoc中， @Target用来指定Annotation的类型，@Retention用来指定Annotation的策略。***</p>
+<p>理解这一点之后，我们就很容易理解java中自带的Annotation的实现类，即Annotation架构图的右半边。如下图：</p>
+<p><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28124653-adf73c4cdcce4a63b7bf78efbe1a9cdf.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28124653-adf73c4cdcce4a63b7bf78efbe1a9cdf.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a></p>
+<p><strong>java 常用的Annotation：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Deprecated</span>  -- <span class="hljs-meta">@Deprecated</span> 所标注内容，不再被建议使用。<br><span class="hljs-meta">@Override</span>    -- <span class="hljs-meta">@Override</span> 只能标注方法，表示该方法覆盖父类中的方法。<br><span class="hljs-meta">@Documented</span>  -- <span class="hljs-meta">@Documented</span> 所标注内容，可以出现在javadoc中。<br><span class="hljs-meta">@Inherited</span>   -- <span class="hljs-meta">@Inherited</span>只能被用来标注“Annotation类型”，它所标注的Annotation具有继承性。<br><span class="hljs-meta">@Retention</span>   -- <span class="hljs-meta">@Retention</span>只能被用来标注“Annotation类型”，而且它被用来指定Annotation的RetentionPolicy属性。<br><span class="hljs-meta">@Target</span>      -- <span class="hljs-meta">@Target</span>只能被用来标注“Annotation类型”，而且它被用来指定Annotation的ElementType属性。<br><span class="hljs-meta">@SuppressWarnings</span> -- <span class="hljs-meta">@SuppressWarnings</span> 所标注内容产生的警告，编译器会对这些警告保持静默。<br></code></pre></td></tr></table></figure>
+<p>由于“@Deprecated和@Override”类似，“@Documented, @Inherited, @Retention, @Target”类似；下面，我们只对@Deprecated, @Inherited, @SuppressWarnings 这3个Annotation进行说明。</p>
+<h4 id="21-deprecated"><a class="markdownIt-Anchor" href="#21-deprecated"></a> <strong>2.1 @Deprecated</strong></h4>
+<p>@Deprecated 的定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> Deprecated &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>说明</strong>：<br />
+(01) @interface  – 它的用来修饰Deprecated，意味着Deprecated实现了java.lang.annotation.Annotation接口；即Deprecated就是一个注解。<br />
+(02) @Documented – 它的作用是说明该注解能出现在javadoc中。<br />
+(03) @Retention(RetentionPolicy.RUNTIME) –  它的作用是指定Deprecated的策略是RetentionPolicy.RUNTIME。这就意味着，编译器会将Deprecated的信息保留在.class文件中，并且能被虚拟机读取。<br />
+(04) @Deprecated 所标注内容，不再被建议使用。<br />
+例如，若某个方法被 @Deprecated 标注，则该方法不再被建议使用。如果有开发人员试图使用或重写被@Deprecated标示的方法，编译器会给相应的提示信息。示例如下:</p>
+<p><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28132554-8729c2663c5943a4b3302f210904e1d7.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28132554-8729c2663c5943a4b3302f210904e1d7.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a></p>
+<p><strong>源码如下</strong>(DeprecatedTest.java)：</p>
+<p>View Code</p>
+<p><strong>说明</strong>：<br />
+上面是eclipse中的截图，比较类中 “getString1() 和 getString2()” 以及 “testDate() 和 testCalendar()” 。</p>
+<p>(01) getString1() 被@Deprecated标注，意味着建议不再使用getString1()；所以getString1()的定义和调用时，都会一横线。这一横线是eclipse()对@Deprecated方法的处理。<br />
+getString2() 没有被@Deprecated标注，它的显示正常。</p>
+<p>(02) testDate() 调用了Date的相关方法，而java已经建议不再使用Date操作日期/时间。因此，在调用Date的API时，会产生警告信息，途中的warnings。<br />
+testCalendar() 调用了Calendar的API来操作日期/时间，java建议用Calendar取代Date。因此，操作Calendar不回产生warning。</p>
+<h4 id="22-inherited"><a class="markdownIt-Anchor" href="#22-inherited"></a> <strong>2.2 @Inherited</strong></h4>
+<p>@Inherited 的定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Target(ElementType.ANNOTATION_TYPE)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> Inherited &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>说明</strong>：<br />
+(01) @interface  – 它的用来修饰Inherited，意味着Inherited实现了java.lang.annotation.Annotation接口；即Inherited就是一个注解。<br />
+(02) @Documented – 它的作用是说明该注解能出现在javadoc中。<br />
+(03) @Retention(RetentionPolicy.RUNTIME)  –  它的作用是指定Inherited的策略是RetentionPolicy.RUNTIME。这就意味着，编译器会将Inherited的信息保留在.class文件中，并且能被虚拟机读取。<br />
+(04) @Target(ElementType.ANNOTATION_TYPE) – 它的作用是指定Inherited的类型是ANNOTATION_TYPE。这就意味着，@Inherited只能被用来标注“Annotation类型”。<br />
+(05) @Inherited 的含义是，它所标注的Annotation将具有继承性。<br />
+假设，我们定义了某个Annotaion，它的名称是MyAnnotation，并且MyAnnotation被标注为@Inherited。现在，某个类Base使用了MyAnnotation，则Base具有了“具有了注解MyAnnotation”；现在，Sub继承了Base，由于MyAnnotation是@Inherited的(具有继承性)，所以，Sub也“具有了注解MyAnnotation”。</p>
+<p>@Inherited的使用示例<br />
+<strong>源码如下</strong>(InheritableSon.java)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"> <span class="hljs-number">1</span> <span class="hljs-comment">/**</span><br><span class="hljs-comment"> 2  * <span class="hljs-doctag">@Inherited</span> 演示示例</span><br><span class="hljs-comment"> 3  * </span><br><span class="hljs-comment"> 4  * <span class="hljs-doctag">@author</span> skywang</span><br><span class="hljs-comment"> 5  * <span class="hljs-doctag">@email</span> kuiwu-wang@163.com</span><br><span class="hljs-comment"> 6  */</span><br> <span class="hljs-number">7</span> <span class="hljs-keyword">package</span> com.skywang.annotation;<br> <span class="hljs-number">8</span> <br> <span class="hljs-number">9</span> <span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><span class="hljs-number">10</span> <span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-number">11</span> <span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-number">12</span> <span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-number">13</span> <span class="hljs-keyword">import</span> java.lang.annotation.Inherited;<br><span class="hljs-number">14</span> <br><span class="hljs-number">15</span> <span class="hljs-comment">/**</span><br><span class="hljs-comment">16  * 自定义的Annotation。</span><br><span class="hljs-comment">17  */</span><br><span class="hljs-number">18</span> <span class="hljs-meta">@Target(ElementType.TYPE)</span><br><span class="hljs-number">19</span> <span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-number">20</span> <span class="hljs-meta">@Inherited</span><br><span class="hljs-number">21</span> <span class="hljs-meta">@interface</span> Inheritable<br><span class="hljs-number">22</span> &#123;<br><span class="hljs-number">23</span> &#125;<br><span class="hljs-number">24</span> <br><span class="hljs-number">25</span> <span class="hljs-meta">@Inheritable</span><br><span class="hljs-number">26</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InheritableFather</span><br><span class="hljs-number">27</span> &#123;<br><span class="hljs-number">28</span>     <span class="hljs-keyword">public</span> <span class="hljs-title function_">InheritableFather</span><span class="hljs-params">()</span> &#123;<br><span class="hljs-number">29</span>         <span class="hljs-comment">// InheritableBase是否具有 Inheritable Annotation</span><br><span class="hljs-number">30</span>         System.out.println(<span class="hljs-string">&quot;InheritableFather:&quot;</span>+InheritableFather.class.isAnnotationPresent(Inheritable.class));<br><span class="hljs-number">31</span>     &#125;<br><span class="hljs-number">32</span> &#125;<br><span class="hljs-number">33</span> <br><span class="hljs-number">34</span> <span class="hljs-comment">/**</span><br><span class="hljs-comment">35  * InheritableSon 类只是继承于 InheritableFather，</span><br><span class="hljs-comment">36  */</span><br><span class="hljs-number">37</span> <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InheritableSon</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">InheritableFather</span><br><span class="hljs-number">38</span> &#123;<br><span class="hljs-number">39</span>     <span class="hljs-keyword">public</span> <span class="hljs-title function_">InheritableSon</span><span class="hljs-params">()</span> &#123;<br><span class="hljs-number">40</span>         <span class="hljs-built_in">super</span>();    <span class="hljs-comment">// 调用父类的构造函数</span><br><span class="hljs-number">41</span>         <span class="hljs-comment">// InheritableSon类是否具有 Inheritable Annotation</span><br><span class="hljs-number">42</span>         System.out.println(<span class="hljs-string">&quot;InheritableSon:&quot;</span>+InheritableSon.class.isAnnotationPresent(Inheritable.class));<br><span class="hljs-number">43</span>     &#125;<br><span class="hljs-number">44</span>     <br><span class="hljs-number">45</span>     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br><span class="hljs-number">46</span>     &#123;<br><span class="hljs-number">47</span>         <span class="hljs-type">InheritableSon</span> <span class="hljs-variable">is</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InheritableSon</span>();<br><span class="hljs-number">48</span>     &#125;<br><span class="hljs-number">49</span> &#125;<br></code></pre></td></tr></table></figure>
+<p><strong>运行结果</strong>：</p>
+<p>InheritableFather:true<br />
+InheritableSon:true</p>
+<p>现在，我们对InheritableSon.java进行修改：<strong>注释掉“Inheritable的@Inherited注解”</strong>。<br />
+源码如下(InheritableSon.java)：</p>
+<p>View Code</p>
+<p><strong>运行结果</strong>：</p>
+<p>InheritableFather:true<br />
+InheritableSon:false</p>
+<p>对比上面的两个结果，我们发现：当注解Inheritable被@Inherited标注时，它具有继承性。否则，没有继承性。</p>
+<h4 id="23-suppresswarnings"><a class="markdownIt-Anchor" href="#23-suppresswarnings"></a> <strong>2.3 @SuppressWarnings</strong></h4>
+<p>@SuppressWarnings 的定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Target(&#123;TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.SOURCE)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> SuppressWarnings &#123;<br><br>    String[] value();<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>说明</strong>：<br />
+(01) @interface  – 它的用来修饰SuppressWarnings，意味着SuppressWarnings实现了java.lang.annotation.Annotation接口；即SuppressWarnings就是一个注解。<br />
+(02) @Retention(RetentionPolicy.SOURCE) –  它的作用是指定SuppressWarnings的策略是RetentionPolicy.SOURCE。这就意味着，SuppressWarnings信息仅存在于编译器处理期间，编译器处理完之后SuppressWarnings就没有作用了。<br />
+(03) @Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})  – 它的作用是指定SuppressWarnings的类型同时包括TYPE, FIELD, METHOD, PARAMETER,  CONSTRUCTOR, LOCAL_VARIABLE。<br />
+TYPE意味着，它能标注“类、接口（包括注释类型）或枚举声明”。<br />
+FIELD意味着，它能标注“字段声明”。<br />
+METHOD意味着，它能标注“方法”。<br />
+PARAMETER意味着，它能标注“参数”。<br />
+CONSTRUCTOR意味着，它能标注“构造方法”。<br />
+LOCAL_VARIABLE意味着，它能标注“局部变量”。<br />
+(04) String[] value(); 意味着，SuppressWarnings能指定参数<br />
+(05) SuppressWarnings  的作用是，让编译器对“它所标注的内容”的某些警告保持静默。例如，&quot;@SuppressWarnings(value={“deprecation”, “unchecked”})&quot; 表示对“它所标注的内容”中的  “SuppressWarnings不再建议使用警告”和“未检查的转换时的警告”保持沉默。示例如下：</p>
+<p><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28133438-ba03c958e2c047a08d150d9abe298b73.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28133438-ba03c958e2c047a08d150d9abe298b73.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28133459-3f430d51736d44edb17ada87e4398808.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28133459-3f430d51736d44edb17ada87e4398808.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a></p>
+<p><strong>源码如下</strong>(SuppressWarningTest.java)：</p>
+<p>View Code</p>
+<p><strong>说明</strong>：<br />
+(01) 左边的图中，没有使用 @SuppressWarnings(value={“deprecation”}) , 而Date属于java不再建议使用的类。因此，调用Date的API时，会产生警告。<br />
+而右边的途中，使用了 @SuppressWarnings(value={“deprecation”})。因此，编译器对“调用Date的API产生的警告”保持沉默。</p>
+<p>补充：<strong>SuppressWarnings 常用的关键字的表格</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">deprecation  -- 使用了不赞成使用的类或方法时的警告<br>unchecked    -- 执行了未检查的转换时的警告，例如当使用集合时没有用泛型 (Generics) 来指定集合保存的类型。<br>fallthrough  -- 当 Switch 程序块直接通往下一种情况而没有 Break 时的警告。<br>path         -- 在类路径、源文件路径等中有不存在的路径时的警告。<br>serial       -- 当在可序列化的类上缺少 serialVersionUID 定义时的警告。<br><span class="hljs-keyword">finally</span>      -- 任何 <span class="hljs-keyword">finally</span> 子句不能正常完成时的警告。<br>all          -- 关于以上所有情况的警告。<br></code></pre></td></tr></table></figure>
+<h2 id="第4部分-annotation-的作用"><a class="markdownIt-Anchor" href="#第4部分-annotation-的作用"></a> <strong>第4部分 Annotation 的作用</strong></h2>
+<hr />
+<p>Annotation 是一个辅助类，它在Junit、Struts、Spring等工具框架中被广泛使用。</p>
+<p>我们在编程中经常会使用到的Annotation作用有：</p>
+<h3 id="1-编译检查"><a class="markdownIt-Anchor" href="#1-编译检查"></a> <strong>1 编译检查</strong></h3>
+<p>Annotation具有“让编译器进行编译检查的作用”。</p>
+<p>例如，@SuppressWarnings, @Deprecated和@Override都具有编译检查作用。<br />
+(01) 关于@SuppressWarnings和@Deprecated，已经在“第3部分”中详细介绍过了。这里就不再举例说明了。<br />
+(02) 若某个方法被 @Override的 标注，则意味着该方法会覆盖父类中的同名方法。如果有方法被@Override标示，但父类中却没有“被@Override标注”的同名方法，则编译器会报错。示例如下：</p>
+<p><a target="_blank" rel="noopener" href="https://images0.cnblogs.com/blog/497634/201309/28134305-4722f5184b1d4cc0aac2c0d1223c0fcb.jpg"><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/28134305-4722f5184b1d4cc0aac2c0d1223c0fcb.jpg" srcset="/img/loading.gif" lazyload alt="img" /></a></p>
+<p><strong>源码</strong>(OverrideTest.java):</p>
+<p>View Code</p>
+<p>上面是该程序在eclipse中的截图。从中，我们可以发现“getString()”函数会报错。这是因为“getString() 被@Override所标注，但在OverrideTest的任何父类中都没有定义getString1()函数”。<br />
+“将getString() 上面的@Override注释掉”，即可解决该错误。</p>
+<h3 id="2-在反射中使用annotation"><a class="markdownIt-Anchor" href="#2-在反射中使用annotation"></a> <strong>2 在反射中使用Annotation</strong></h3>
+<p>在反射的Class, Method, Field等函数中，有许多于Annotation相关的接口。<br />
+这也意味着，我们可以在反射中解析并使用Annotation。<br />
+<strong>源码如下</strong>(AnnotationTest.java)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.skywang.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Annotation;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Inherited;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Annotation在反射函数中的使用示例</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> skywang</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@email</span> kuiwu-wang@163.com</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@interface</span> MyAnnotation &#123;<br>    String[] value() <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;unknown&quot;</span>;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Person类。它会使用MyAnnotation注解。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> &#123;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * empty()方法同时被 &quot;<span class="hljs-doctag">@Deprecated</span>&quot; 和 “<span class="hljs-doctag">@MyAnnotation</span>(value=&#123;&quot;a&quot;,&quot;b&quot;&#125;)”所标注 </span><br><span class="hljs-comment">     * (01) <span class="hljs-doctag">@Deprecated</span>，意味着empty()方法，不再被建议使用</span><br><span class="hljs-comment">     * (02) <span class="hljs-doctag">@MyAnnotation</span>, 意味着empty() 方法对应的MyAnnotation的value值是默认值&quot;unknown&quot;</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@MyAnnotation</span><br>    <span class="hljs-meta">@Deprecated</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">empty</span><span class="hljs-params">()</span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;\nempty&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * sombody() 被 <span class="hljs-doctag">@MyAnnotation</span>(value=&#123;&quot;girl&quot;,&quot;boy&quot;&#125;) 所标注，</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@MyAnnotation</span>(value=&#123;&quot;girl&quot;,&quot;boy&quot;&#125;), 意味着MyAnnotation的value值是&#123;&quot;girl&quot;,&quot;boy&quot;&#125;</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@MyAnnotation(value=&#123;&quot;girl&quot;,&quot;boy&quot;&#125;)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">somebody</span><span class="hljs-params">(String name, <span class="hljs-type">int</span> age)</span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;\nsomebody: &quot;</span>+name+<span class="hljs-string">&quot;, &quot;</span>+age);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AnnotationTest</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <br>        <span class="hljs-comment">// 新建Person</span><br>        <span class="hljs-type">Person</span> <span class="hljs-variable">person</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>();<br>        <span class="hljs-comment">// 获取Person的Class实例</span><br>        Class&lt;Person&gt; c = Person.class;<br>        <span class="hljs-comment">// 获取 somebody() 方法的Method实例</span><br>        <span class="hljs-type">Method</span> <span class="hljs-variable">mSomebody</span> <span class="hljs-operator">=</span> c.getMethod(<span class="hljs-string">&quot;somebody&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Class</span>[]&#123;String.class, <span class="hljs-type">int</span>.class&#125;);<br>        <span class="hljs-comment">// 执行该方法</span><br>        mSomebody.invoke(person, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[]&#123;<span class="hljs-string">&quot;lily&quot;</span>, <span class="hljs-number">18</span>&#125;);<br>        iteratorAnnotations(mSomebody);<br>        <br><br>        <span class="hljs-comment">// 获取 somebody() 方法的Method实例</span><br>        <span class="hljs-type">Method</span> <span class="hljs-variable">mEmpty</span> <span class="hljs-operator">=</span> c.getMethod(<span class="hljs-string">&quot;empty&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Class</span>[]&#123;&#125;);<br>        <span class="hljs-comment">// 执行该方法</span><br>        mEmpty.invoke(person, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[]&#123;&#125;);        <br>        iteratorAnnotations(mEmpty);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">iteratorAnnotations</span><span class="hljs-params">(Method method)</span> &#123;<br><br>        <span class="hljs-comment">// 判断 somebody() 方法是否包含MyAnnotation注解</span><br>        <span class="hljs-keyword">if</span>(method.isAnnotationPresent(MyAnnotation.class))&#123;<br>            <span class="hljs-comment">// 获取该方法的MyAnnotation注解实例</span><br>            <span class="hljs-type">MyAnnotation</span> <span class="hljs-variable">myAnnotation</span> <span class="hljs-operator">=</span> method.getAnnotation(MyAnnotation.class);<br>            <span class="hljs-comment">// 获取 myAnnotation的值，并打印出来</span><br>            String[] values = myAnnotation.value();<br>            <span class="hljs-keyword">for</span> (String str:values)<br>                System.out.printf(str+<span class="hljs-string">&quot;, &quot;</span>);<br>            System.out.println();<br>        &#125;<br>        <br>        <span class="hljs-comment">// 获取方法上的所有注解，并打印出来</span><br>        Annotation[] annotations = method.getAnnotations();<br>        <span class="hljs-keyword">for</span>(Annotation annotation : annotations)&#123;<br>            System.out.println(annotation);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>运行结果</strong>：<br />
+somebody: lily, 18<br />
+girl, boy,<br />
+@com.skywang.annotation.MyAnnotation(value=[girl, boy])</p>
+<p>empty<br />
+unknown,<br />
+@com.skywang.annotation.MyAnnotation(value=[unknown])<br />
+@java.lang.Deprecated()</p>
+<h3 id="3-根据annotation生成帮助文档"><a class="markdownIt-Anchor" href="#3-根据annotation生成帮助文档"></a> <strong>3 根据Annotation生成帮助文档</strong></h3>
+<p>通过给Annotation注解加上@Documented标签，能使该Annotation标签出现在javadoc中。</p>
+<h3 id="4-能够帮忙查看查看代码"><a class="markdownIt-Anchor" href="#4-能够帮忙查看查看代码"></a> <strong>4 能够帮忙查看查看代码</strong></h3>
+<p>通过@Override, @Deprecated等，我们能很方便的了解程序的大致结构。<br />
+另外，我们也可以通过自定义Annotation来实现一些功能。</p>
+<h2 id="第5部分-使用小技巧"><a class="markdownIt-Anchor" href="#第5部分-使用小技巧"></a> 第5部分 使用小技巧</h2>
+<blockquote>
+<p>个人查阅资料实践</p>
+</blockquote>
+<h3 id="注解属性赋值简化操作"><a class="markdownIt-Anchor" href="#注解属性赋值简化操作"></a> 注解属性赋值简化操作</h3>
+<ol>
+<li>
+<p>如果 注解属性 名称是 <strong>value</strong> , 并且 注解中只有 <strong>1</strong> 个属性 , 那么在使用 注解 为 注解属性 赋值时 , 可以省略注解名称 , 直接传入 注解属性值 ;</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MyTestAnnotation &#123;<br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;xtwoy&quot;</span>;qita<br>&#125;<br></code></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MyTestAnnotation(&quot;xtwoy.github.io&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>如果 注解属性 名称是 <strong>value</strong> , 并且其他注解属性均有默认值 , 那么在使用 注解 并且只为 <strong>value</strong> 注解属性 赋值时 , 可以省略注解名称 , 直接传入 注解属性值 ;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MyTestAnnotation &#123;<br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;xtwoy&quot;</span>;<br>    String <span class="hljs-title function_">name</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;xtwoy&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MyTestAnnotation(&quot;xtwoy.github.io&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>同时想要为 <strong>name</strong> 注解属性 赋值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MyTestAnnotation(value = &quot;xtwoy.github.io&quot;,name = &quot;xtwoy.github.io&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>省略 <strong>value=</strong> 则</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230421231857602.png" srcset="/img/loading.gif" lazyload alt="image-20230421231857602" /></p>
+</li>
+</ol>
+<p>​</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/">#Java</a>
+      
+        <a href="/tags/Annotation/">#Annotation</a>
+      
+        <a href="/tags/%E6%B3%A8%E8%A7%A3/">#注解</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java注解详解</div>
+      <div>http://xtwoy.github.io/Java注解详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 21, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/JAVA%E9%98%9F%E5%88%97%EF%BC%88%20Queue%20)%20%E8%AF%A6%E8%A7%A3/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Java"
+        id="heading-d52387880e1ea22817a72d3759213819" role="tab" data-toggle="collapse" href="#collapse-d52387880e1ea22817a72d3759213819"
+        aria-expanded="true"
+      >
+        Java
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-d52387880e1ea22817a72d3759213819"
+           role="tabpanel" aria-labelledby="heading-d52387880e1ea22817a72d3759213819">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/Enum/" title="Java-枚举(enum)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Java-枚举(enum)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Java%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3/" title="Java注解详解"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Java注解详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" title="函数式编程-Stream流"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">函数式编程-Stream流</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E5%9C%A8Java%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F/" title="在Java内部类中使用外部类的成员方法以及成员变量"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在Java内部类中使用外部类的成员方法以及成员变量</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
