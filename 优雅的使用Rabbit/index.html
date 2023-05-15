@@ -1,0 +1,989 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="介绍 以前 RestTemplate发起远程调用的代码，存在代码可读性差、编程体验不统一、参数复杂URL难以维护等问题。 通过Feign，可以很方便的进行服务间的调用。Feign是一个声明式的http客户端，其作用就是帮助我们优雅的实现http请求的发送。 同时微服务项目使用消息队列进行解耦，也会存在代码可读性差、编程体验不统一、参数复杂、消息该使用什么代码处理难以维护等问题。 比如，一个微服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优雅的使用Rabbit">
+<meta property="og:url" content="http://xtwoy.github.io/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8Rabbit/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="介绍 以前 RestTemplate发起远程调用的代码，存在代码可读性差、编程体验不统一、参数复杂URL难以维护等问题。 通过Feign，可以很方便的进行服务间的调用。Feign是一个声明式的http客户端，其作用就是帮助我们优雅的实现http请求的发送。 同时微服务项目使用消息队列进行解耦，也会存在代码可读性差、编程体验不统一、参数复杂、消息该使用什么代码处理难以维护等问题。 比如，一个微服务">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141621138.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305152149577.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305152154022.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141858358.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141901378.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305152153613.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141911785.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141911914.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141916849.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141936019.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141942303.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141946489.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305142000276.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305142001391.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151402106.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151359743.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151359374.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151400563.png">
+<meta property="article:published_time" content="2023-05-15T14:44:04.000Z">
+<meta property="article:modified_time" content="2023-05-15T14:51:47.169Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="MQ">
+<meta property="article:tag" content="Spring Boot">
+<meta property="article:tag" content="Spring Cloude">
+<meta property="article:tag" content="Rabbit">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141621138.png">
+  
+  
+  
+  <title>优雅的使用Rabbit - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="优雅的使用Rabbit"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-05-15 22:44" pubdate>
+          May 15, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          146 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">优雅的使用Rabbit</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on May 15, 2023 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="介绍"><a class="markdownIt-Anchor" href="#介绍"></a> 介绍</h2>
+<p>以前 <code>RestTemplate</code>发起远程调用的代码，存在代码可读性差、编程体验不统一、参数复杂URL难以维护等问题。</p>
+<p>通过<code>Feign</code>，可以很方便的进行服务间的调用。<code>Feign</code>是一个声明式的http客户端，其作用就是帮助我们优雅的实现http请求的发送。</p>
+<p>同时微服务项目使用消息队列进行解耦，也会存在代码可读性差、编程体验不统一、参数复杂、消息该使用什么代码处理难以维护等问题。</p>
+<p>比如，一个微服务项目中，有<code>project</code>，<code>user</code>两个服务。</p>
+<p>问题一：两个服务之间有十几种不同的通知消息，如何想让这些消息都正确地去执行这个消息本应该执行的逻辑？</p>
+<ol>
+<li>一种消息，对应一个队列？</li>
+<li>几个消息归为一类，在根据消息类型，判断执行什么逻辑代码？</li>
+</ol>
+<p>问题二：现在<code>user</code>又要增加接收一种消息，如何处理？</p>
+<ol>
+<li><code>user</code>消息接受方增加一个队列？</li>
+<li><code>user</code>在同一个队列下面，根据消息在来判断执行不同的逻辑？</li>
+</ol>
+<p>问题三：消息，消息，肯定要携带一些信息。这些信息怎么携带？</p>
+<ol>
+<li>不同类型的消息，放入不同的消息对象（<code>class</code>），接收方去接收对应的消息？但是因为消息种类复杂，难以维护。</li>
+<li>将消息对象通统一设置为map？需要什么参数，直接去<code>get(need)</code>。同样存在难以维护。</li>
+</ol>
+<p>问题……</p>
+<p>也是自己写做项目遇到以上的问题，主要通过Spring Aop，Java反射来解决这些问题，后面设计为工具包–<strong>MQ</strong>，方便使用。</p>
+<p>使用<code>MQ</code>，完成一个配置，就可以如同<code>Feign</code>一样。你只需要在发送方通过注解指定URL，接收方通过注解指定URl，他们之间便有一一对应的关系。问题一，二，得以解决。关于问题三，需要保证发送方的参数和接收方的处理方法的参数一致。MQ会帮你完成参数的获取，直接使用就ok。</p>
+<p>还有其他细节化的功能……</p>
+<h2 id="基本使用"><a class="markdownIt-Anchor" href="#基本使用"></a> 基本使用</h2>
+<p>先将jar包添加到maven本地仓库</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">mvn install:install-file <span class="hljs-attribute">-Dfile</span>=存放路径\MQ-1.0.jar <span class="hljs-attribute">-DgroupId</span>=io.xtwoy <span class="hljs-attribute">-DartifactId</span>=MQ <span class="hljs-attribute">-Dversion</span>=1.0 <span class="hljs-attribute">-Dpackaging</span>=jar<br><br>mvn install:install-file <span class="hljs-attribute">-Dfile</span>=存放路径\MQ\target\MQ-1.0-sources.jar <span class="hljs-attribute">-DgroupId</span>=io.xtwoy <span class="hljs-attribute">-DartifactId</span>=MQ <span class="hljs-attribute">-Dversion</span>=1.0 <span class="hljs-attribute">-Dpackaging</span>=sources<br></code></pre></td></tr></table></figure>
+<h3 id="测试项目结构"><a class="markdownIt-Anchor" href="#测试项目结构"></a> 测试项目结构</h3>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141621138.png" srcset="/img/loading.gif" lazyload alt="image-20230514162125865" /></p>
+<blockquote>
+<p>使用MQ的准备工作</p>
+</blockquote>
+<ol>
+<li>
+<p>在这之前准备好了<code>rabbit</code>的<code>exchange</code> <code>queue</code></p>
+</li>
+<li>
+<p>注册发送客户端</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305152149577.png" srcset="/img/loading.gif" lazyload alt="image-20230515214900402" /></p>
+</li>
+<li>
+<p>监听消息，并消息体转交消息处理工厂处理</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305152154022.png" srcset="/img/loading.gif" lazyload alt="image-20230514190526984" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141858358.png" srcset="/img/loading.gif" lazyload alt="image-20230514185832295" /></p>
+</li>
+<li>
+<p>配置 exchange url route-key之间的映射关系。MQ通过 exchange  url  可以找出route-key。然后进行消息的发送。<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141901378.png" srcset="/img/loading.gif" lazyload alt="image-20230514190155245" /></p>
+</li>
+<li>
+<p>注册一个消息处理work，在其下面编写处理方法使用 <code>@MQReceiveUrl</code>修饰。</p>
+</li>
+</ol>
+<p>​	<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305152153613.png" srcset="/img/loading.gif" lazyload alt="image-20230515215336467" /></p>
+<blockquote>
+<p>测试</p>
+</blockquote>
+<p><a href="user%E6%B5%8B%E8%AF%95">localhost:8080/user/test</a></p>
+<ol>
+<li>
+<p>发送消息<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141911785.png" srcset="/img/loading.gif" lazyload alt="image-20230514191105704" /></p>
+</li>
+<li>
+<p>接收到消息</p>
+<ol>
+<li>
+<p>消息work 处理消息<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141911914.png" srcset="/img/loading.gif" lazyload alt="image-20230514191138809" /></p>
+</li>
+<li>
+<p>处理失败</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141916849.png" srcset="/img/loading.gif" lazyload alt="image-20230514191632716" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<p><a href="project%E6%B5%8B%E8%AF%95">localhost:8080/project/test</a></p>
+<ol>
+<li>做一样准备工作</li>
+<li><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141936019.png" srcset="/img/loading.gif" lazyload alt="image-20230514193647906" /></li>
+</ol>
+<h2 id="扩展使用"><a class="markdownIt-Anchor" href="#扩展使用"></a> 扩展使用</h2>
+<ol>
+<li>
+<p>继承 <code>MQProducer</code> 注册为Bean 。可以在消息发送前后执行你自己的代码</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141942303.png" srcset="/img/loading.gif" lazyload alt="image-20230514194212058" /></p>
+</li>
+<li>
+<p>自己设置NQMsg消息体对象</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305141946489.png" srcset="/img/loading.gif" lazyload alt="image-20230514194633248" /></p>
+</li>
+<li>
+<p>指定转交处理工厂</p>
+<p><a href="user%E6%B5%8B%E8%AF%95">localhost:8080/user/test</a></p>
+<p><a href="project%E6%B5%8B%E8%AF%95">localhost:8080/project/test</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQCommit(factory = &quot;user&quot;)</span><br><span class="hljs-meta">@RabbitListener(queues = MQNames.USER_DIRECT_QUEUE_NAME_SAVE_USER)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiveMsg1</span><span class="hljs-params">(MQMsg mqMsg, Channel channel, Message message)</span> &#123;<br>   <br>&#125;<br>   <br><span class="hljs-meta">@MQCommit(factory = &quot;project&quot;)</span><br><span class="hljs-meta">@RabbitListener(queues = MQNames.PROJECT_DIRECT_QUEUE_NAME_SAVE_PROJECT)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiveMsg2</span><span class="hljs-params">(MQMsg mqMsg, Channel channel, Message message)</span> &#123;<br>   <br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>user</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQFactory(name = &quot;user&quot;)</span><br><span class="hljs-meta">@Slf4j()</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserMQHandleFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">MQHandleFactory</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>project</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQFactory(name = &quot;project&quot; )</span><br><span class="hljs-meta">@Slf4j()</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProjectMQHandleFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">MQHandleFactory</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>效果：</p>
+<p><code>2023-05-14 19:51:52.986 DEBUG 21576 --- [ntContainer#1-1] i.g.xtwoy.receive.UserMQHandleFactory : 该消息由我自己的工厂提交处理</code></p>
+<p><code>2023-05-14 19:52:52.245 DEBUG 21576 --- [ntContainer#0-1] i.g.x.receive.ProjectMQHandleFactory : 该消息由我自己的工厂提交处理</code></p>
+</li>
+<li>
+<p>没有指定转交处理工厂，转交给默认处理工厂。</p>
+<p><a href="project%E6%B5%8B%E8%AF%95">localhost:8080/project/test</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//取消指定工厂</span><br><span class="hljs-meta">@MQCommit()</span><br>    <span class="hljs-meta">@RabbitListener(queues = MQNames.PROJECT_DIRECT_QUEUE_NAME_SAVE_PROJECT)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiveMsg2</span><span class="hljs-params">(MQMsg mqMsg, Channel channel, Message message)</span> &#123;<br><br>    &#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>
+<p>没有设置默认工厂：</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305142000276.png" srcset="/img/loading.gif" lazyload alt="image-20230514200023124" /></p>
+</li>
+<li>
+<p>设置默认工厂</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQFactory(name = &quot;user&quot;,isDefault = true)</span><br><span class="hljs-meta">@Slf4j()</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserMQHandleFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">MQHandleFactory</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305142001391.png" srcset="/img/loading.gif" lazyload alt="image-20230514200155244" /></p>
+<p><code>2023-05-14 20:02:26.244 DEBUG 10564 --- [ntContainer#1-1] i.g.xtwoy.receive.UserMQHandleFactory : 该消息由我自己的工厂提交处理</code></p>
+</li>
+<li>
+<p>工厂指定work</p>
+<p><a href="project%E6%B5%8B%E8%AF%95">localhost:8080/project/test</a></p>
+<ol>
+<li>没有选择有处理能力的work</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQFactory(name = &quot;user&quot;,isDefault = true,works = &quot;userWork&quot;)</span><br><span class="hljs-meta">@Slf4j()</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserMQHandleFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">MQHandleFactory</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQCommit()</span><br>    <span class="hljs-meta">@RabbitListener(queues = MQNames.PROJECT_DIRECT_QUEUE_NAME_SAVE_PROJECT)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">receiveMsg2</span><span class="hljs-params">(MQMsg mqMsg, Channel channel, Message message)</span> &#123;<br><br>    &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQWork(url = &quot;user&quot;,name = &quot;userWork&quot;)</span><br><span class="hljs-meta">@Slf4j()</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserWork</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>效果</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-number">2023</span><span class="hljs-number">-05</span><span class="hljs-number">-14</span> <span class="hljs-number">20</span>:<span class="hljs-number">06</span>:<span class="hljs-number">19.372</span>  WARN <span class="hljs-number">3624</span> --- [ntContainer<span class="hljs-variable">#1</span><span class="hljs-number">-1</span>] io.xtwoy.mq.utils.MQHandleFactory        : 处理工厂[user]无法由[/project/demo]路径找到处于[userWork]下处理work<span class="hljs-punctuation">,</span><br><span class="hljs-number">2023</span><span class="hljs-number">-05</span><span class="hljs-number">-14</span> <span class="hljs-number">20</span>:<span class="hljs-number">06</span>:<span class="hljs-number">19.373</span> ERROR <span class="hljs-number">3624</span> --- [ntContainer<span class="hljs-variable">#1</span><span class="hljs-number">-1</span>] i.g.xtwoy.receive.UserMQHandleFactory    : 工厂[user]消息[&#123;toRouteKey<span class="hljs-operator">=</span>project.direct.routingkey.save.project<span class="hljs-punctuation">,</span> toExchangeName<span class="hljs-operator">=</span>project.direct.exchange<span class="hljs-punctuation">,</span> me<span class="hljs-operator">=</span>我是自己创建的<span class="hljs-punctuation">,</span> MQUrl<span class="hljs-operator">=</span>/project/demo<span class="hljs-punctuation">,</span> channel<span class="hljs-operator">=</span>Cached Rabbit Channel: AMQChannel(amqp://admin<span class="hljs-title">@192</span>.<span class="hljs-number">168.23</span>.<span class="hljs-number">132</span>:<span class="hljs-number">5672</span>/<span class="hljs-punctuation">,</span><span class="hljs-number">2</span>)<span class="hljs-punctuation">,</span> conn: Proxy<span class="hljs-title">@323</span>f<span class="hljs-number">3</span><span class="hljs-keyword">c</span><span class="hljs-number">96</span> Shared Rabbit Connection: SimpleConnection<span class="hljs-title">@1</span>ac<span class="hljs-number">4</span>ccad [delegate<span class="hljs-operator">=</span>amqp://admin<span class="hljs-title">@192</span>.<span class="hljs-number">168.23</span>.<span class="hljs-number">132</span>:<span class="hljs-number">5672</span>/<span class="hljs-punctuation">,</span> localPort<span class="hljs-operator">=</span> <span class="hljs-number">58167</span>]<span class="hljs-punctuation">,</span> delayTime<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> id<span class="hljs-operator">=</span><span class="hljs-number">12345</span><span class="hljs-punctuation">,</span> UUID<span class="hljs-operator">=</span><span class="hljs-number">12345</span>demo<span class="hljs-punctuation">,</span> <span class="hljs-keyword">type</span><span class="hljs-operator">=</span>update<span class="hljs-punctuation">,</span> message<span class="hljs-operator">=</span>(Body:&#x27;&#123;<span class="hljs-string">&quot;@type&quot;</span>:<span class="hljs-string">&quot;io.xtwoy.mq.utils.MQMsg&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;toRouteKey&quot;</span>:<span class="hljs-string">&quot;project.direct.routingkey.save.project&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;toExchangeName&quot;</span>:<span class="hljs-string">&quot;project.direct.exchange&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;me&quot;</span>:<span class="hljs-string">&quot;我是自己创建的&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;MQUrl&quot;</span>:<span class="hljs-string">&quot;/project/demo&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;delayTime&quot;</span>:<span class="hljs-number">0</span>L<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;id&quot;</span>:<span class="hljs-number">12345</span>L<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;UUID&quot;</span>:<span class="hljs-string">&quot;12345demo&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;type&quot;</span>:<span class="hljs-string">&quot;update&quot;</span>&#125;&#x27; MessageProperties [headers<span class="hljs-operator">=</span>&#123;&#125;<span class="hljs-punctuation">,</span> contentType<span class="hljs-operator">=</span>application/json<span class="hljs-punctuation">,</span> contentLength<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> receivedDeliveryMode<span class="hljs-operator">=</span>PERSISTENT<span class="hljs-punctuation">,</span> priority<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> redelivered<span class="hljs-operator">=</span><span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span> receivedExchange<span class="hljs-operator">=</span>project.direct.exchange<span class="hljs-punctuation">,</span> receivedRoutingKey<span class="hljs-operator">=</span>project.direct.routingkey.save.project<span class="hljs-punctuation">,</span> deliveryTag<span class="hljs-operator">=</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> consumerTag<span class="hljs-operator">=</span>amq.ctag-_KyHvwc<span class="hljs-number">2</span>LxFlQwS-TIofag<span class="hljs-punctuation">,</span> consumerQueue<span class="hljs-operator">=</span>project.direct.queue.save.project])&#125;]无法处理<span class="hljs-punctuation">,</span>原因-&gt;<span class="hljs-keyword">null</span><br><span class="hljs-number">2023</span><span class="hljs-number">-05</span><span class="hljs-number">-14</span> <span class="hljs-number">20</span>:<span class="hljs-number">06</span>:<span class="hljs-number">19.377</span> DEBUG <span class="hljs-number">3624</span> --- [ntContainer<span class="hljs-variable">#1</span><span class="hljs-number">-1</span>] i.g.xtwoy.receive.UserMQHandleFactory    : 该消息由我自己的工厂提交处理<br><span class="hljs-number">2023</span><span class="hljs-number">-05</span><span class="hljs-number">-14</span> <span class="hljs-number">20</span>:<span class="hljs-number">06</span>:<span class="hljs-number">19.377</span>  WARN <span class="hljs-number">3624</span> --- [ntContainer<span class="hljs-variable">#1</span><span class="hljs-number">-1</span>] io.xtwoy.mq.utils.MQHandleFactory        : 处理工厂[user]无法由[/project/demo<span class="hljs-number">1</span>]路径找到处于[userWork]下处理work<span class="hljs-punctuation">,</span><br><span class="hljs-number">2023</span><span class="hljs-number">-05</span><span class="hljs-number">-14</span> <span class="hljs-number">20</span>:<span class="hljs-number">06</span>:<span class="hljs-number">19.378</span> ERROR <span class="hljs-number">3624</span> --- [ntContainer<span class="hljs-variable">#1</span><span class="hljs-number">-1</span>] i.g.xtwoy.receive.UserMQHandleFactory    : 工厂[user]消息[&#123;toRouteKey<span class="hljs-operator">=</span>project.direct.routingkey.save.project<span class="hljs-punctuation">,</span> toExchangeName<span class="hljs-operator">=</span>project.direct.exchange<span class="hljs-punctuation">,</span> MQUrl<span class="hljs-operator">=</span>/project/demo<span class="hljs-number">1</span><span class="hljs-punctuation">,</span> channel<span class="hljs-operator">=</span>Cached Rabbit Channel: AMQChannel(amqp://admin<span class="hljs-title">@192</span>.<span class="hljs-number">168.23</span>.<span class="hljs-number">132</span>:<span class="hljs-number">5672</span>/<span class="hljs-punctuation">,</span><span class="hljs-number">2</span>)<span class="hljs-punctuation">,</span> conn: Proxy<span class="hljs-title">@323</span>f<span class="hljs-number">3</span><span class="hljs-keyword">c</span><span class="hljs-number">96</span> Shared Rabbit Connection: SimpleConnection<span class="hljs-title">@1</span>ac<span class="hljs-number">4</span>ccad [delegate<span class="hljs-operator">=</span>amqp://admin<span class="hljs-title">@192</span>.<span class="hljs-number">168.23</span>.<span class="hljs-number">132</span>:<span class="hljs-number">5672</span>/<span class="hljs-punctuation">,</span> localPort<span class="hljs-operator">=</span> <span class="hljs-number">58167</span>]<span class="hljs-punctuation">,</span> delayTime<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> id<span class="hljs-operator">=</span><span class="hljs-number">678910</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">type</span><span class="hljs-operator">=</span>update<span class="hljs-punctuation">,</span> UUID<span class="hljs-operator">=</span>d<span class="hljs-number">5</span>b<span class="hljs-number">73</span><span class="hljs-keyword">c</span><span class="hljs-number">8</span>b-dc<span class="hljs-number">2</span>d<span class="hljs-number">-45</span>f<span class="hljs-number">8</span><span class="hljs-number">-8</span>ceb<span class="hljs-number">-5083101</span>da<span class="hljs-number">4</span>be<span class="hljs-punctuation">,</span> message<span class="hljs-operator">=</span>(Body:&#x27;&#123;<span class="hljs-string">&quot;@type&quot;</span>:<span class="hljs-string">&quot;io.xtwoy.mq.utils.MQMsg&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;toRouteKey&quot;</span>:<span class="hljs-string">&quot;project.direct.routingkey.save.project&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;toExchangeName&quot;</span>:<span class="hljs-string">&quot;project.direct.exchange&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;MQUrl&quot;</span>:<span class="hljs-string">&quot;/project/demo1&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;delayTime&quot;</span>:<span class="hljs-number">0</span>L<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;id&quot;</span>:<span class="hljs-number">678910</span>L<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;type&quot;</span>:<span class="hljs-string">&quot;update&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;UUID&quot;</span>:<span class="hljs-string">&quot;d5b73c8b-dc2d-45f8-8ceb-5083101da4be&quot;</span>&#125;&#x27; MessageProperties [headers<span class="hljs-operator">=</span>&#123;&#125;<span class="hljs-punctuation">,</span> contentType<span class="hljs-operator">=</span>application/json<span class="hljs-punctuation">,</span> contentLength<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> receivedDeliveryMode<span class="hljs-operator">=</span>PERSISTENT<span class="hljs-punctuation">,</span> priority<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> redelivered<span class="hljs-operator">=</span><span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span> receivedExchange<span class="hljs-operator">=</span>project.direct.exchange<span class="hljs-punctuation">,</span> receivedRoutingKey<span class="hljs-operator">=</span>project.direct.routingkey.save.project<span class="hljs-punctuation">,</span> deliveryTag<span class="hljs-operator">=</span><span class="hljs-number">2</span><span class="hljs-punctuation">,</span> consumerTag<span class="hljs-operator">=</span>amq.ctag-_KyHvwc<span class="hljs-number">2</span>LxFlQwS-TIofag<span class="hljs-punctuation">,</span> consumerQueue<span class="hljs-operator">=</span>project.direct.queue.save.project])&#125;]无法处理<span class="hljs-punctuation">,</span>原因-&gt;<span class="hljs-keyword">null</span><br><span class="hljs-number">2023</span><span class="hljs-number">-05</span><span class="hljs-number">-14</span> <span class="hljs-number">20</span>:<span class="hljs-number">06</span>:<span class="hljs-number">19.383</span> DEBUG <span class="hljs-number">3624</span> --- [ntContainer<span class="hljs-variable">#1</span><span class="hljs-number">-1</span>] i.g.xtwoy.receive.UserMQHandleFactory    : 该消息由我自己的工厂提交处理<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>user</strong>工厂添加有处理能力projecWork</li>
+</ol>
+<p><code>2023-05-14 20:16:50.448 DEBUG 11432 --- [ntContainer#1-1] i.g.xtwoy.receive.UserMQHandleFactory : 该消息由我自己的工厂提交处理 2023-05-14 20:16:50.448 INFO 11432 --- [ntContainer#1-1] io.github.xtwoy.receive.ProjectWork : 678910</code></p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>work</strong> Bean对象，傲娇地只选择一些工厂。</p>
+<p><a href="project%E6%B5%8B%E8%AF%95">localhost:8080/project/test</a></p>
+<p>projectWork，选择project</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@MQWork(url = &quot;project&quot;,name = &quot;projectWork&quot;,factories = &quot;project&quot;)</span><br><span class="hljs-meta">@Slf4j()</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProjectWork</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>效果</p>
+<p><code>2023-05-14 20:33:26.981 DEBUG 23012 --- [ntContainer#0-1] i.g.xtwoy.receive.UserMQHandleFactory : 该消息由我自己的工厂提交处理 2023-05-14 20:33:26.981 WARN 23012 --- [ntContainer#0-1] io.xtwoy.mq.utils.MQHandleFactory : 处理工厂[user]无法由[/project/demo2]路径找到处于[userWork, projectWork]下处理work,</code></p>
+</li>
+<li>
+<p>发布确认处理</p>
+<p>配置文件开启rabbit的发布确认模式为 <code>correlated</code></p>
+<p><a href="user%E6%B5%8B%E8%AF%95">localhost:8080/user/test</a></p>
+<p><a href="project%E6%B5%8B%E8%AF%95">localhost:8080/project/test</a></p>
+<p>默认处理效果</p>
+<ol>
+<li>
+<p>成功收到</p>
+<p><code>2023-05-14 20:40:50.228 DEBUG 20456 --- [nectionFactory1] io.xtwoy.mq.config.MQCallBack : 交换机已经收到ID[58adc7c4-7694-49d0-b9cc-7084cdf88672]的消息[&#123;toRouteKey=user.direct.routingkey.save.user, toExchangeName=user.direct.exchange, MQUrl=/user/demo1, delayTime=0, id=678910, type=update, UUID=58adc7c4-7694-49d0-b9cc-7084cdf88672&#125;]</code></p>
+</li>
+<li>
+<p>未收到</p>
+<p><code>2023-05-14 20:40:50.244 DEBUG 20456 --- [nectionFactory2] io.xtwoy.mq.config.MQCallBack : 交换机还未收到ID[432f1480-50f3-41c5-ac5e-295bd4bca8e4]的消息[&#123;toExchangeName=de, MQUrl=/user/demo3, delayTime=0, type=update, UUID=432f1480-50f3-41c5-ac5e-295bd4bca8e4, user=UserTo(name=Ai-kun, age=18, hobby=篮球, address=China)&#125;],由于原因：channel error; protocol method: #method&lt;channel.close&gt;(reply-code=404, reply-text=NOT_FOUND - no exchange 'de' in vhost '/', class-id=60, method-id=40)</code></p>
+</li>
+</ol>
+<p>通过注册 继承了 <code>MQCallBack</code>的Bean对象，可以重写。</p>
+<p>在如下进行注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyMQCallBack</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">MQCallBack</span> &#123;<br><br>    <span class="hljs-meta">@PostConstruct</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">this</span>.setSuccessDoConfirm(<span class="hljs-keyword">new</span> <span class="hljs-title class_">DoConfirm</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">confirm</span><span class="hljs-params">(CorrelationData correlationData, <span class="hljs-type">boolean</span> b, String s)</span> &#123;<br><br>                log.info(<span class="hljs-string">&quot;重写了成功 -&gt; &#123;&#125;&quot;</span>, MQMsgUtil.get(correlationData.getId()));<br>            &#125;<br>        &#125;);<br>        <span class="hljs-built_in">this</span>.setFailDoConfirm(<span class="hljs-keyword">new</span> <span class="hljs-title class_">DoConfirm</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">confirm</span><span class="hljs-params">(CorrelationData correlationData, <span class="hljs-type">boolean</span> b, String s)</span> &#123;<br>                log.info(<span class="hljs-string">&quot;重写了失败 -&gt; &#123;&#125;&quot;</span>, MQMsgUtil.get(correlationData.getId()));<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>效果</p>
+<p><code>2023-05-14 20:54:36.501 INFO 29216 --- [nectionFactory1] io.github.xtwoy.config.MyMQCallBack : 重写了成功 -&gt; &#123;toRouteKey=user.direct.routingkey.save.user, toExchangeName=user.direct.exchange, MQUrl=/user/demo2, delayTime=0, type=update, UUID=e1ea25cb-f296-4b62-b5a6-d7d0d7922d6f, user=UserTo(name=Ai—kun, age=18, hobby=篮球, address=China)&#125;</code><br />
+<code>2023-05-14 20:54:36.504 ERROR 29216 --- [168.23.132:5672] o.s.a.r.c.CachingConnectionFactory : Channel shutdown: channel error; protocol method: #method&lt;channel.close&gt;(reply-code=404, reply-text=NOT_FOUND - no exchange 'de' in vhost '/', class-id=60, method-id=40)</code><br />
+<code>2023-05-14 20:54:36.506 INFO 29216 --- [nectionFactory2] io.github.xtwoy.config.MyMQCallBack : 重写了失败 -&gt; &#123;toExchangeName=de, MQUrl=/user/demo3, delayTime=0, type=update, UUID=75b557bc-0620-49c9-8106-5608b6168820, user=UserTo(name=Ai-kun, age=18, hobby=篮球, address=China)&#125;</code></p>
+<p>如果不需要该功能可以在配置文件中，取消MQ默认的发布确认机制。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">mq:</span><br>  <span class="hljs-attr">m-q-call-back-is-open:</span> <span class="hljs-string">off</span><br></code></pre></td></tr></table></figure>
+<p>在这之后，注入你的发布确认执行代码。</p>
+</li>
+<li>
+<p>上面运用了一个 <code>MQMsgUtil.get(correlationData.getId())</code>。</p>
+<p>MQ内部实现了一个<code>cache</code>，在你发送消息时，缓存MQMsg，在发布确认逻辑代码完成之后移除缓存。可以通过MQMsg的<strong>UUID</strong>获取，也可以通过 <code>correlationData.getId()</code> 获取。</p>
+<p>如果不需要该功能可以在配置文件中，取消功能</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">mq:</span><br>  <span class="hljs-attr">msg-util-is-open:</span> <span class="hljs-string">off</span><br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="mq的注解"><a class="markdownIt-Anchor" href="#mq的注解"></a> MQ的注解</h2>
+<p><code>MQClient.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> org.springframework.core.annotation.AliasFor;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;消息发送客户端&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.TYPE, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQClient &#123;<br><br>    <span class="hljs-meta">@AliasFor(annotation = Component.class,value = &quot;value&quot;)</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;url&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;与其他注解组合url属性配合使用&lt;/p&gt;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">url</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQCommit.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> org.springframework.amqp.rabbit.annotation.RabbitListener;<br><span class="hljs-keyword">import</span> org.springframework.core.annotation.AliasFor;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;该注解下方法，在执行之前。会将消息体交给指定的消息处理工厂处理&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;想要将消息交给消息处理工厂 必须要有 MQMsg mqMsg 格式参数存在&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.METHOD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQCommit &#123;<br><br>    <span class="hljs-meta">@AliasFor(&quot;factory&quot;)</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;default&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 指定处理工厂</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@AliasFor(&quot;value&quot;)</span><br>    String <span class="hljs-title function_">factory</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;default&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 消息完成处理之后是否自动ack</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> boolean</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">isAck</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQFactory.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> org.springframework.core.annotation.AliasFor;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;消息处理工厂&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.TYPE, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQFactory &#123;<br><br><br>    <span class="hljs-meta">@AliasFor(annotation = Component.class, value = &quot;value&quot;)</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 名字</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String[]</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">name</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 是否是默认工厂</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> boolean</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">isDefault</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-literal">false</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 指定work</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String[]</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String[] works() <span class="hljs-keyword">default</span> &#123;&#125;;<br><br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQFail.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;在处理工厂内中方法使用，标记方法为失败处理方法&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;标记方法内参数由消息监听方法（被MQCommitListener修饰）中参数获取&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;特殊参数 异常对象可由 异常类型 e 注入使用&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;多个按照class文件中顺序，执行第一个&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123; ElementType.METHOD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQFail &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQParam.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;在MQ系列注解中，会涉及多个方法的联合调用（包含跨服务）&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;通过Java反射，进行方法联合调用&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;被调用之间的参数传递通过参数名，通过参数名一一对应，进行参数的注入&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;在参数名不一致情况下，使用MQParam注解设置参数别名（优先于参数名）&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/6 10:26]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.ANNOTATION_TYPE, ElementType.PARAMETER&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQParam &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 参数别名</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQReceive.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> org.springframework.core.annotation.AliasFor;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;修饰方法将处理url对应的消息体&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.METHOD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQReceive &#123;<br><br><br>    <span class="hljs-meta">@AliasFor(&quot;url&quot;)</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;url&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;与其他注解组合url属性配合使用&lt;/p&gt;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@AliasFor(&quot;value&quot;)</span><br>    String <span class="hljs-title function_">url</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQSend.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><br><span class="hljs-keyword">import</span> io.xtwoy.mq.core.MQMsg;<br><span class="hljs-keyword">import</span> org.springframework.core.annotation.AliasFor;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;修饰下的方法中参数全部加载到MQMsg消息中&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;以key：value形式 key-参数名（参数别名）value-参数值&lt;/p&gt;</span><br><span class="hljs-comment"> * &lt;p&gt;如被修饰的方法返回一个MQMsg对象，则设置该对象为消息体进行Rabbit消息的路由&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.METHOD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQSend &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;url&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;与其他注解组合url属性配合使用&lt;/p&gt;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@AliasFor(&quot;url&quot;)</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-meta">@AliasFor(&quot;value&quot;)</span><br>    String <span class="hljs-title function_">url</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 消息类型</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">type</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> MQMsg.TYPE_UPDATE;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * UUID前缀</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">preUUID</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;UUID&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;属性值会被作为Spring EL解析使用&lt;/p&gt;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">UUID</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 消息延迟时间</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> long</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">long</span> <span class="hljs-title function_">delayTime</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 延迟时间单位</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.util.concurrent.TimeUnit</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    TimeUnit <span class="hljs-title function_">timeUnit</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> TimeUnit.SECONDS;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 接收方交换机</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">toExchangeName</span><span class="hljs-params">()</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;接收方路由key&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;优先级低于核心配置文件&lt;/p&gt;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">toRoutingKey</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 发送方交换机</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">fromExchangeName</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 发送方路由key</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">fromRoutingKey</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>MQWork.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.xtwoy.mq.inerface;<br><br><span class="hljs-keyword">import</span> org.springframework.core.annotation.AliasFor;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * &lt;p&gt;消息处理work&lt;/p&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/2 17:23]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Target(&#123;ElementType.TYPE, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> MQWork &#123;<br><br><br>    <span class="hljs-meta">@AliasFor(annotation = Component.class, value = &quot;value&quot;)</span><br>    String <span class="hljs-title function_">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;url&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;与其他注解组合url属性配合使用&lt;/p&gt;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">url</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 名字</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String[]</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">name</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 指定factory</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> java.lang.String[]</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xtwoy</span><br><span class="hljs-comment">     */</span><br>    String[] factories() <span class="hljs-keyword">default</span> &#123;&#125;;<br><br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="mq设计"><a class="markdownIt-Anchor" href="#mq设计"></a> MQ设计</h2>
+<h3 id="发送客户端与接收客户端流程图"><a class="markdownIt-Anchor" href="#发送客户端与接收客户端流程图"></a> 发送客户端与接收客户端流程图</h3>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151402106.png" srcset="/img/loading.gif" lazyload alt="发送客户端流程图" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151359743.png" srcset="/img/loading.gif" lazyload alt="准备MQMsg子流程图" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151359374.png" srcset="/img/loading.gif" lazyload alt="消息接收客户端" /></p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305151400563.png" srcset="/img/loading.gif" lazyload alt="工厂处理子流程图" /></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Rabbit/" class="category-chain-item">Rabbit</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MQ/">#MQ</a>
+      
+        <a href="/tags/Spring-Boot/">#Spring Boot</a>
+      
+        <a href="/tags/Spring-Cloude/">#Spring Cloude</a>
+      
+        <a href="/tags/Rabbit/">#Rabbit</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>优雅的使用Rabbit</div>
+      <div>http://xtwoy.github.io/优雅的使用Rabbit/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 15, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/swagger2%E4%BD%BF%E7%94%A8%E6%8A%A5%E9%94%99/" title="swagger2使用报错">
+                        <span class="hidden-mobile">swagger2使用报错</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Rabbit"
+        id="heading-34dd4150fa869f4500f0badbb92946f7" role="tab" data-toggle="collapse" href="#collapse-34dd4150fa869f4500f0badbb92946f7"
+        aria-expanded="true"
+      >
+        Rabbit
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-34dd4150fa869f4500f0badbb92946f7"
+           role="tabpanel" aria-labelledby="heading-34dd4150fa869f4500f0badbb92946f7">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8Rabbit/" title="优雅的使用Rabbit"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">优雅的使用Rabbit</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
