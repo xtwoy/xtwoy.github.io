@@ -1,0 +1,890 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是fail-fast  fail-fast  fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件。  其实fail-fast机制并不是Java集合特有的机制，它是一个通用的系统设计思想。看下维基百科的解释  In systems design, a fail-fast system is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="什么是fail-fast">
+<meta property="og:url" content="http://xtwoy.github.io/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="什么是fail-fast  fail-fast  fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件。  其实fail-fast机制并不是Java集合特有的机制，它是一个通用的系统设计思想。看下维基百科的解释  In systems design, a fail-fast system is">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/15551448234429.jpg">
+<meta property="article:published_time" content="2023-06-16T08:36:01.000Z">
+<meta property="article:modified_time" content="2023-06-16T08:37:08.631Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="fail-fast">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/15551448234429.jpg">
+  
+  
+  
+  <title>什么是fail-fast - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="什么是fail-fast"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-06-16 16:36" pubdate>
+          June 16, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">什么是fail-fast</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on June 16, 2023 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="什么是fail-fast"><a class="markdownIt-Anchor" href="#什么是fail-fast"></a> 什么是fail-fast</h1>
+<h2 id="fail-fast"><a class="markdownIt-Anchor" href="#fail-fast"></a> fail-fast</h2>
+<blockquote>
+<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件。</p>
+</blockquote>
+<p>其实fail-fast机制并不是Java集合特有的机制，它是一个通用的系统设计思想。看下维基百科的解释</p>
+<blockquote>
+<p>In systems design, a fail-fast system is one which immediately reports at its interface any condition that is likely to indicate a failure. Fail-fast systems are usually designed to stop normal operation rather than attempt to continue a possibly flawed process. Such designs often check the system’s state at several points in an operation, so any failures can be detected early. The responsibility of a fail-fast module is detecting errors, then letting the next-highest level of the system handle them.</p>
+</blockquote>
+<p>大概意思是：在系统设计中，快速失效系统一种可以立即报告任何可能表明故障的情况的系统。快速失效系统通常设计用于停止正常操作，而不是试图继续可能存在缺陷的过程。这种设计通常会在操作中的多个点检查系统的状态，因此可以及早检测到任何故障。快速失败模块的职责是检测错误，然后让系统的下一个最高级别处理错误。</p>
+<p>其实，这是一种理念，说白了就是在做系统设计的时候先考虑异常情况，一旦发生异常，直接停止并上报。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> User <span class="hljs-title function_">queryUserById</span><span class="hljs-params">(Long userId)</span>&#123;<br>    <span class="hljs-keyword">if</span>(userId==<span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;用户ID不允许为空&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">// XyyTODO 2023/6/16 16:27 执行其他逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上面的列子就是一个快速失败的列子，而且是我们开发中经常会用到的错误检测的方式。这样做能及早发现问题，不让明显错误的代码继续往下运行，而且自己抛出的异常更更容易定位问题。</p>
+<h2 id="集合中的fail-fast机制"><a class="markdownIt-Anchor" href="#集合中的fail-fast机制"></a> 集合中的fail-fast机制</h2>
+<p>我们通常说的Java中的fail-fast机制，默认指的是Java集合的一种错误检测机制。当多个线程对部分集合进行结构上的改变的操作时，有可能会产生fail-fast机制，这个时候就会抛出<code>ConcurrentModificationException</code></p>
+<p>下面来复现下异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;String&gt;() &#123;&#123;<br>    add(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>    add(<span class="hljs-string">&quot;hollis&quot;</span>);<br>    add(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>    add(<span class="hljs-string">&quot;H&quot;</span>);<br>&#125;&#125;;<br><br><span class="hljs-keyword">for</span> (String userName : userNames) &#123;<br>    <span class="hljs-keyword">if</span> (userName.equals(<span class="hljs-string">&quot;Hollis&quot;</span>)) &#123;<br>        userNames.remove(userName);<br>    &#125;<br>&#125;<br><br>System.out.println(userNames);<br></code></pre></td></tr></table></figure>
+<p>以上代码，使用增强for循环遍历元素，并尝试删除其中的Hollis字符串元素。运行以上代码，会抛出以下异常：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">Exception <span class="hljs-keyword">in</span> thread <span class="hljs-string">&quot;main&quot;</span> java<span class="hljs-selector-class">.util</span><span class="hljs-selector-class">.ConcurrentModificationException</span><br>	at java<span class="hljs-selector-class">.util</span>.ArrayList<span class="hljs-variable">$Itr</span><span class="hljs-selector-class">.checkForComodification</span>(ArrayList<span class="hljs-selector-class">.java</span>:<span class="hljs-number">909</span>)<br>	at java<span class="hljs-selector-class">.util</span>.ArrayList<span class="hljs-variable">$Itr</span><span class="hljs-selector-class">.next</span>(ArrayList<span class="hljs-selector-class">.java</span>:<span class="hljs-number">859</span>)<br>	at io<span class="hljs-selector-class">.xtwoy</span><span class="hljs-selector-class">.failfast</span><span class="hljs-selector-class">.CopyOnWriteArrayListDemo</span><span class="hljs-selector-class">.main</span>(CopyOnWriteArrayListDemo<span class="hljs-selector-class">.java</span>:<span class="hljs-number">23</span>)<br></code></pre></td></tr></table></figure>
+<p>同样的，读者可以尝试下在增强for循环中使用add方法添加元素，结果也会同样抛出该异常。</p>
+<p><strong>异常产生的原因</strong></p>
+<p>增强for循环其实是Java提供的一个语法糖，我们将代码反编译后可以看到增强for循环其实是用的是<code>Iterator</code>迭代器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-comment">// 使用ImmutableList初始化一个List</span><br>    List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;String&gt;() &#123;&#123;<br>        add(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>        add(<span class="hljs-string">&quot;hollis&quot;</span>);<br>        add(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>        add(<span class="hljs-string">&quot;H&quot;</span>);<br>    &#125;&#125;;<br><br>    <span class="hljs-type">Iterator</span> <span class="hljs-variable">iterator</span> <span class="hljs-operator">=</span> userNames.iterator();<br>    <span class="hljs-keyword">do</span><br>    &#123;<br>        <span class="hljs-keyword">if</span>(!iterator.hasNext())<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">userName</span> <span class="hljs-operator">=</span> (String)iterator.next();<br>        <span class="hljs-keyword">if</span>(userName.equals(<span class="hljs-string">&quot;Hollis&quot;</span>))<br>            userNames.remove(userName);<br>    &#125; <span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>);<br>    System.out.println(userNames);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>通过以上代码的异常堆栈，我们可以跟踪到真正抛出异常的代码是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">java.util.ArrayList$Itr.checkForComodification(ArrayList.java:<span class="hljs-number">909</span>)<br></code></pre></td></tr></table></figure>
+<p>该方法是在iterator.next()方法中调用的。我们看下该方法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">checkForComodification</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">if</span> (modCount != expectedModCount)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentModificationException</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如上，在该方法中对<code>modCount</code>和<code>expectedModCount</code>进行了比较，如果二者不想等，则抛出ConcurrentModificationException。</p>
+<p>那么，modCount和expectedModCount是什么？是什么原因导致他们的值不想等的呢？</p>
+<p>modCount是ArrayList中的一个成员变量。它表示该集合实际被修改的次数。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp">List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;() &#123;&#123;<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;H&quot;</span>);<br>&#125;&#125;;<br></code></pre></td></tr></table></figure>
+<p>当使用以上代码初始化集合之后该变量就有了。初始值为0。</p>
+<p>expectedModCount 是 ArrayList中的一个内部类——<code>Itr</code>中的成员变量。</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vbnet"><span class="hljs-keyword">Iterator</span> <span class="hljs-keyword">iterator</span> = userNames.<span class="hljs-keyword">iterator</span>();<br></code></pre></td></tr></table></figure>
+<p>以上代码，即可得到一个 Itr类，该类实现了Iterator接口。</p>
+<p>expectedModCount表示这个迭代器预期该集合被修改的次数。其值随着Itr被创建而初始化。只有通过迭代器对集合进行操作，该值才会改变。</p>
+<p>那么，接着我们看下userNames.remove(userName);方法里面做了什么事情，为什么会导致expectedModCount和modCount的值不一样。</p>
+<p>通过翻阅代码，我们也可以发现，remove方法核心逻辑如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fastRemove</span><span class="hljs-params">(<span class="hljs-type">int</span> index)</span> &#123;<br>    modCount++;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">numMoved</span> <span class="hljs-operator">=</span> size - index - <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">if</span> (numMoved &gt; <span class="hljs-number">0</span>)<br>        System.arraycopy(elementData, index+<span class="hljs-number">1</span>, elementData, index,<br>                         numMoved);<br>    elementData[--size] = <span class="hljs-literal">null</span>; <span class="hljs-comment">// clear to let GC do its work</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以看到，它只修改了modCount，并没有对expectedModCount做任何操作。</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/15551448234429.jpg" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>所以导致产生异常的原因是：<code>remove</code>和<code>add</code>操作会导致<code>modCount</code>和迭代器中的<code>expectedModCount</code>不一致。</p>
+<h2 id="正确姿势"><a class="markdownIt-Anchor" href="#正确姿势"></a> 正确姿势</h2>
+<p>至此，我们介绍清楚了不能在foreach循环体中直接对集合进行add/remove操作的原因。</p>
+<p>但是，很多时候，我们是有需求需要过滤集合的，比如删除其中一部分元素，那么应该如何做呢？有几种方法可供参考：</p>
+<p><strong>1、</strong></p>
+<p><strong>直接使用普通for循环进行操作</strong></p>
+<p>我们说不能在foreach中进行，但是使用普通的for循环还是可以的，因为普通for循环并没有用到Iterator的遍历，所以压根就没有进行fail-fast的检验。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs csharp">List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;() &#123;&#123;<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;H&quot;</span>);<br>&#125;&#125;;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1</span>; i++) &#123;<br>    <span class="hljs-keyword">if</span> (userNames.<span class="hljs-keyword">get</span>(i).<span class="hljs-keyword">equals</span>(<span class="hljs-string">&quot;Hollis&quot;</span>)) &#123;<br>        userNames.<span class="hljs-keyword">remove</span>(i);<br>    &#125;<br>&#125;<br>System.<span class="hljs-keyword">out</span>.println(userNames);<br></code></pre></td></tr></table></figure>
+<p>这种方案其实存在一个问题，那就是remove操作会改变List中元素的下标，可能存在漏删的情况。<br />
+<strong>2、直接使用Iterator进行操作</strong></p>
+<p>除了直接使用普通for循环以外，我们还可以直接使用Iterator提供的remove方法。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs csharp">List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;() &#123;&#123;<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;H&quot;</span>);<br>&#125;&#125;;<br><br>Iterator iterator = userNames.iterator();<br><br><span class="hljs-keyword">while</span> (iterator.hasNext()) &#123;<br>    <span class="hljs-keyword">if</span> (iterator.next().<span class="hljs-keyword">equals</span>(<span class="hljs-string">&quot;Hollis&quot;</span>)) &#123;<br>        iterator.<span class="hljs-keyword">remove</span>();<br>    &#125;<br>&#125;<br>System.<span class="hljs-keyword">out</span>.println(userNames);<br></code></pre></td></tr></table></figure>
+<p>如果直接使用Iterator提供的remove方法，那么就可以修改到expectedModCount的值。那么就不会再抛出异常了。源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">if</span> (lastRet &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>();<br>    checkForComodification();<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        ArrayList.<span class="hljs-built_in">this</span>.remove(lastRet);<br>        cursor = lastRet;<br>        lastRet = -<span class="hljs-number">1</span>;<br>        expectedModCount = modCount;<br>    &#125; <span class="hljs-keyword">catch</span> (IndexOutOfBoundsException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentModificationException</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>3、使用Java 8中提供的filter过滤</strong></p>
+<p>Java 8中可以把集合转换成流，对于流有一种filter操作， 可以对原始 Stream 进行某项测试，通过测试的元素被留下来生成一个新 Stream。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csharp">List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;() &#123;&#123;<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;H&quot;</span>);<br>&#125;&#125;;<br><br>userNames = userNames.stream().filter(userName -&gt; !userName.<span class="hljs-keyword">equals</span>(<span class="hljs-string">&quot;Hollis&quot;</span>)).collect(Collectors.toList());<br>System.<span class="hljs-keyword">out</span>.println(userNames);<br></code></pre></td></tr></table></figure>
+<p><strong>4、使用增强for循环其实也可以</strong></p>
+<p>如果，我们非常确定在一个集合中，某个即将删除的元素只包含一个的话， 比如对Set进行操作，那么其实也是可以使用增强for循环的，只要在删除之后，立刻结束循环体，不要再继续进行遍历就可以了，也就是说不让代码执行到下一次的next方法。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs csharp">List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;() &#123;&#123;<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;hollis&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>    <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;H&quot;</span>);<br>&#125;&#125;;<br><br><span class="hljs-keyword">for</span> (String userName : userNames) &#123;<br>    <span class="hljs-keyword">if</span> (userName.<span class="hljs-keyword">equals</span>(<span class="hljs-string">&quot;Hollis&quot;</span>)) &#123;<br>        userNames.<span class="hljs-keyword">remove</span>(userName);<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>&#125;<br>System.<span class="hljs-keyword">out</span>.println(userNames);<br></code></pre></td></tr></table></figure>
+<p><strong>5、直接使用fail-safe的集合类</strong></p>
+<p>在Java中，除了一些普通的集合类以外，还有一些采用了fail-safe机制的集合类。这样的集合容器在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合上进行遍历。</p>
+<p>由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发ConcurrentModificationException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    List&lt;String&gt; userNames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CopyOnWriteArrayList</span>&lt;String&gt;() &#123;&#123;<br>        add(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>        add(<span class="hljs-string">&quot;hollis&quot;</span>);<br>        add(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>        add(<span class="hljs-string">&quot;H&quot;</span>);<br>    &#125;&#125;;<br><br><br>    <span class="hljs-keyword">for</span> (String userName : userNames) &#123;<br>        <span class="hljs-keyword">if</span> (userName.equals(<span class="hljs-string">&quot;Hollis&quot;</span>)) &#123;<br>            userNames.remove(userName);<br>        &#125;<br>    &#125;<br><br>    System.out.println(userNames);<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>    ConcurrentLinkedDeque&lt;String&gt; userNames = <span class="hljs-keyword">new</span> ConcurrentLinkedDeque&lt;String&gt;() &#123;&#123;<br>        <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;Hollis&quot;</span>);<br>        <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;hollis&quot;</span>);<br>        <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;HollisChuang&quot;</span>);<br>        <span class="hljs-keyword">add</span>(<span class="hljs-string">&quot;H&quot;</span>);<br>    &#125;&#125;;<br><br>    <span class="hljs-keyword">for</span> (String userName : userNames) &#123;<br>        <span class="hljs-keyword">if</span> (userName.<span class="hljs-keyword">equals</span>(<span class="hljs-string">&quot;Hollis&quot;</span>)) &#123;<br>            userNames.<span class="hljs-keyword">remove</span>();<br>        &#125;<br>    &#125;<br>    <br>     System.<span class="hljs-keyword">out</span>.println(userNames);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>基于拷贝内容的优点是避免了ConcurrentModificationException，但同样地，迭代器并不能访问到修改后的内容，即：迭代器遍历的是开始遍历那一刻拿到的集合拷贝，在遍历期间原集合发生的修改迭代器是不知道的。</p>
+<p>java.util.concurrent包下的容器都是安全失败，可以在多线程下并发使用，并发修改。</p>
+<blockquote>
+<p>Copy-On-Write</p>
+<p>在了解了CopyOnWriteArrayList之后，不知道大家会不会有这样的疑问：他的add/remove等方法都已经加锁了，还要copy一份再修改干嘛？多此一举？同样是线程安全的集合，这玩意和Vector有啥区别呢？</p>
+<p>Copy-On-Write简称COW，是一种用于程序设计中的优化策略。其基本思路是，从一开始大家都在共享同一个内容，当某个人想要修改这个内容的时候，才会真正把内容Copy出去形成一个新的内容然后再改，这是一种延时懒惰策略。</p>
+<p>CopyOnWrite容器即写时复制的容器。通俗的理解是当我们往一个容器添加元素的时候，不直接往当前容器添加，而是先将当前容器进行Copy，复制出一个新的容器，然后新的容器里添加元素，添加完元素之后，再将原容器的引用指向新的容器。</p>
+<p>CopyOnWriteArrayList中add/remove等写方法是需要加锁的，目的是为了避免Copy出N个副本出来，导致并发写。</p>
+<p>但是，CopyOnWriteArrayList中的读方法是没有加锁的。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> E <span class="hljs-keyword">get</span>(<span class="hljs-type">int</span> <span class="hljs-keyword">index</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">get</span>(getArray(), <span class="hljs-keyword">index</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这样做的好处是我们可以对CopyOnWrite容器进行并发的读，当然，这里读到的数据可能不是最新的。因为写时复制的思想是通过延时更新的策略来实现数据的最终一致性的，并非强一致性。</p>
+<p>**所以CopyOnWrite容器是一种读写分离的思想，读和写不同的容器。**而Vector在读写的时候使用同一个容器，读写互斥，同时只能做一件事儿。</p>
+</blockquote>
+<h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
+<p>我们使用的增强for循环，其实是Java提供的语法糖，其实现原理是借助Iterator进行元素的遍历。</p>
+<p>但是如果在遍历过程中，不通过Iterator，而是通过集合类自身的方法对集合进行添加/删除操作。那么在Iterator进行下一次的遍历时，经检测发现有一次集合的修改操作并未通过自身进行，那么可能是发生了并发被其他线程执行的，这时候就会抛出异常，来提示用户可能发生了并发修改，这就是所谓的fail-fast机制。</p>
+<p>当然还是有很多种方法可以解决这类问题的。比如使用普通for循环、使用Iterator进行元素删除、使用Stream的filter、使用fail-safe的类等。</p>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.hollischuang.com/archives/3542">https://www.hollischuang.com/archives/3542</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.hollischuang.com/archives/3304">https://www.hollischuang.com/archives/3304</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/">#Java</a>
+      
+        <a href="/tags/fail-fast/">#fail-fast</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>什么是fail-fast</div>
+      <div>http://xtwoy.github.io/什么是fail-fast/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>June 16, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8Rabbit/" title="优雅的使用Rabbit">
+                        <span class="hidden-mobile">优雅的使用Rabbit</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Java"
+        id="heading-d52387880e1ea22817a72d3759213819" role="tab" data-toggle="collapse" href="#collapse-d52387880e1ea22817a72d3759213819"
+        aria-expanded="true"
+      >
+        Java
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-d52387880e1ea22817a72d3759213819"
+           role="tabpanel" aria-labelledby="heading-d52387880e1ea22817a72d3759213819">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/Enum/" title="Java-枚举(enum)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Java-枚举(enum)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Java%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3/" title="Java注解详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Java注解详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast/" title="什么是fail-fast"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">什么是fail-fast</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" title="函数式编程-Stream流"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">函数式编程-Stream流</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E5%9C%A8Java%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F/" title="在Java内部类中使用外部类的成员方法以及成员变量"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在Java内部类中使用外部类的成员方法以及成员变量</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
