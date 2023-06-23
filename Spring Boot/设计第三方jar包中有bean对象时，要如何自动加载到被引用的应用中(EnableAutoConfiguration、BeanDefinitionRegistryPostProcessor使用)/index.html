@@ -1,0 +1,961 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中  解决方法   使用@ComponentScan指定需要扫描路径   需要 使用方自行补充到项目的启动类上 。 @SpringBootApplication(scanBasePackages &#x3D; &amp;#123;&quot;io.xtwoy.user&quot;,&quot;io.xtwoy.common&quot;&amp;#125;)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中">
+<meta property="og:url" content="http://xtwoy.github.io/Spring%20Boot/%E8%AE%BE%E8%AE%A1%E7%AC%AC%E4%B8%89%E6%96%B9jar%E5%8C%85%E4%B8%AD%E6%9C%89bean%E5%AF%B9%E8%B1%A1%E6%97%B6%EF%BC%8C%E8%A6%81%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%88%B0%E8%A2%AB%E5%BC%95%E7%94%A8%E7%9A%84%E5%BA%94%E7%94%A8%E4%B8%AD(EnableAutoConfiguration%E3%80%81BeanDefinitionRegistryPostProcessor%E4%BD%BF%E7%94%A8)/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中  解决方法   使用@ComponentScan指定需要扫描路径   需要 使用方自行补充到项目的启动类上 。 @SpringBootApplication(scanBasePackages &#x3D; &amp;#123;&quot;io.xtwoy.user&quot;,&quot;io.xtwoy.common&quot;&amp;#125;)">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305092212011.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230623201710304.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230623202052056.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230623203455168.png">
+<meta property="article:published_time" content="2023-05-15T14:44:04.000Z">
+<meta property="article:modified_time" content="2023-06-23T13:21:29.438Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="Spring Boot，jar">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305092212011.png">
+  
+  
+  
+  <title>设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中 - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-05-15 22:44" pubdate>
+          May 15, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on June 23, 2023 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="设计第三方jar包中有bean对象时要如何自动加载到被引用的应用中"><a class="markdownIt-Anchor" href="#设计第三方jar包中有bean对象时要如何自动加载到被引用的应用中"></a> 设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中</h1>
+<h2 id="解决方法"><a class="markdownIt-Anchor" href="#解决方法"></a> 解决方法</h2>
+<ol>
+<li>
+<p>使用@ComponentScan指定需要扫描路径</p>
+<ol>
+<li>
+<p>需要 <strong>使用方自行补充到项目的启动类上</strong> 。</p>
+<p><code>@SpringBootApplication(scanBasePackages = &#123;&quot;io.xtwoy.user&quot;,&quot;io.xtwoy.common&quot;&#125;)</code></p>
+</li>
+</ol>
+</li>
+<li>
+<p>使用<code>EnableAutoConfiguration</code>自动装配 + <code>@Configuration</code></p>
+<ol>
+<li><strong>第三方jar包中编写</strong> ，将需要生成的bean对象，编写到被@Configuration注释的类A上。</li>
+<li>再使用EnableAutoConfiguration自动装配 将类A生成bean对象，然后类A再将自身中@Bean的生成bean对象。</li>
+<li>但 <strong>Dao层是接口</strong> ， <strong>没办法new对象生成对象</strong> ，因此 <strong>使用方</strong> 还是需要 <strong>自行补充@MapperScan到项目的启动类</strong> 上。</li>
+</ol>
+</li>
+<li>
+<p>使用<code>EnableAutoConfiguration</code>自动装配 + <code>BeanDefinitionRegistryPostProcessor</code></p>
+<ol>
+<li>
+<p>第三方jar包中编写，将要扫描的包路径写好到类A上。</p>
+</li>
+<li>
+<p>再使用EnableAutoConfiguration自动装配 将类A生成bean对象，然后类A再对指定的包路径进行扫描补充beanDefinition到Registry中。</p>
+</li>
+<li>
+<p>扫描的可以是被@Component与@Mapper注解的类，因此使用方 <strong>不需要补充任何扫描的注解</strong> 。真正做到引用即用。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AutoConfig</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">BeanDefinitionRegistryPostProcessor</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String[] SCAN_PACKAGES = &#123;<span class="hljs-string">&quot;io.xtwoy.mq&quot;</span>&#125;;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">postProcessBeanDefinitionRegistry</span><span class="hljs-params">(BeanDefinitionRegistry beanDefinitionRegistry)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        <span class="hljs-comment">// 扫描@Component的类</span><br>        <span class="hljs-type">ClassPathBeanDefinitionScanner</span> <span class="hljs-variable">pathScanner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathBeanDefinitionScanner</span>(beanDefinitionRegistry);<br>        pathScanner.scan(SCAN_PACKAGES);<br><br>        <span class="hljs-comment">// 扫描@Mapper的接口类</span><br>        <span class="hljs-type">ClassPathMapperScanner</span> <span class="hljs-variable">mapperScanner</span><br>                <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathMapperScanner</span>(beanDefinitionRegistry);<br>        mapperScanner.scan(SCAN_PACKAGES);<br><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">postProcessBeanFactory</span><span class="hljs-params">(ConfigurableListableBeanFactory configurableListableBeanFactory)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        <span class="hljs-comment">// 这里涉及到beanFactory 对这里无需关注</span><br>        <span class="hljs-comment">// 即 空实现</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="代码解释"><a class="markdownIt-Anchor" href="#代码解释"></a> 代码解释</h2>
+<h3 id="1-使用componentscan指定需要扫描路径不推荐"><a class="markdownIt-Anchor" href="#1-使用componentscan指定需要扫描路径不推荐"></a> 1. 使用@ComponentScan指定需要扫描路径[不推荐]</h3>
+<ol>
+<li>我们知道一个spring项目启动的时候，会扫描 <strong>启动类所在包下以及其子包下的类是否加入@Component @Service 等这些生成bean的注解</strong> ，从而将这些类生成bean对象放入spring容器中。</li>
+<li>而如果要 <strong>扫描其他指定的包路径</strong> ，可以在 <strong>启动类</strong> 上使用**@ComponentScan指定需要扫描路径**</li>
+<li>这种方式 <strong>确实可以</strong> 指定扫描第三方jar包的包路径，对应生成bean对象。</li>
+<li><strong>不足</strong> ：每次新的应用使用该jar包，都必须在启动类加上@ComponentScan指定需要扫描路径。</li>
+<li>代码如下：<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202305092212011.png" srcset="/img/loading.gif" lazyload alt="image-20230509221238655" /></li>
+</ol>
+<h3 id="2-使用enableautoconfiguration自动装配-configuration"><a class="markdownIt-Anchor" href="#2-使用enableautoconfiguration自动装配-configuration"></a> 2. 使用EnableAutoConfiguration自动装配 + @Configuration</h3>
+<ol>
+<li>
+<p>先了解：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xueyijin/article/details/124853073">EnableAutoConfiguration自动装配</a></p>
+</li>
+<li>
+<p><strong>EnableAutoConfiguration自动装配作用即把指定的类构造成对象，并放入spring容器中，使其成为bean对象</strong></p>
+</li>
+</ol>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230623201710304.png" srcset="/img/loading.gif" lazyload alt="image-20230623201710304" /></p>
+<ol start="3">
+<li>
+<p>由于可能bean对象很多，可能需要写类路径很多，嫌弃到时候看一堆路径麻烦，可以配合使用@Configuration + @Bean<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230623202052056.png" srcset="/img/loading.gif" lazyload alt="image-20230623202052056" /></p>
+</li>
+<li>
+<p>但是如果jar包要去数据库打交道，dao层又是使用接口的。是无法使用 @Bean注册spring对象。</p>
+</li>
+</ol>
+<h2 id="3-使用enableautoconfiguration自动装配-beandefinitionregistrypostprocessor"><a class="markdownIt-Anchor" href="#3-使用enableautoconfiguration自动装配-beandefinitionregistrypostprocessor"></a> 3. 使用EnableAutoConfiguration自动装配 + BeanDefinitionRegistryPostProcessor</h2>
+<ol>
+<li>
+<p>首先得知道spring在启动的时候，是会扫描项目中的类，判断类是否是个bean，如果是个bean会先生成 <strong>BeanDefinition[bean的定义信息]</strong> ，然后会 <strong>根据该定义信息生成bean对象</strong> 。</p>
+</li>
+<li>
+<p>还需要知道XXXPostProcessor 其实是bean的后置处理器，作用： <strong>可以在bean实例化的时候执行自己加上的逻辑</strong></p>
+<p>在Spring Boot中，XXXPostProcessor（XXX后置处理器）是一种特定类型的Bean后置处理器，用于对应用程序上下文中的Bean进行自定义处理。</p>
+<p>后置处理器是Spring框架的扩展点之一，它允许开发者在Bean实例化、初始化和销毁的过程中干预并进行自定义操作。XXXPostProcessor是一类特殊的后置处理器，它通过实现Spring提供的相应接口或扩展特定的抽象类来实现。</p>
+<p>XXXPostProcessor通常用于在Bean实例化和初始化阶段对Bean进行修改、增强或其他特定操作。它可以在Bean创建之前或之后拦截并修改Bean的属性、行为或状态。XXXPostProcessor可以用于实现各种功能，例如：</p>
+<ol>
+<li>
+<p>Bean的属性注入：可以在Bean实例化后，对其进行属性的自动注入或修改。</p>
+</li>
+<li>
+<p>Bean的包装：可以在Bean初始化前后对其进行包装，例如使用代理对Bean进行增强。</p>
+</li>
+<li>
+<p>Bean的定制化配置：可以对Bean的某些属性或行为进行定制化的配置。</p>
+</li>
+<li>
+<p>Bean的依赖关系解析：可以在Bean初始化前，解析和处理Bean之间的依赖关系。</p>
+</li>
+</ol>
+<p>需要注意的是，XXXPostProcessor的具体作用取决于它的实现方式和具体的应用场景。在Spring Boot中，有许多内置的后置处理器，如BeanPostProcessor、BeanFactoryPostProcessor等，开发者也可以自定义自己的后置处理器来满足特定需求。</p>
+</li>
+<li>
+<p><strong>这里使用BeanDefinitionRegistryPostProcessor作用：为了补充剩下没被扫描到的BeanDefinition信息</strong></p>
+<p>BeanDefinitionRegistryPostProcessor是Spring框架提供的一个特殊类型的Bean后置处理器。它在其他Bean实例化之前执行，并且在应用程序上下文中的Bean定义被解析之后但还没有实例化之前调用。</p>
+<p>BeanDefinitionRegistryPostProcessor接口继承自BeanFactoryPostProcessor接口，并扩展了对Bean定义的修改和扩展能力。通过实现BeanDefinitionRegistryPostProcessor接口，开发者可以在Spring容器解析Bean定义的过程中对Bean定义进行修改、注册额外的Bean定义，或者执行其他与Bean定义相关的自定义操作。</p>
+<p>下面是BeanDefinitionRegistryPostProcessor的主要作用：</p>
+<ol>
+<li>
+<p>修改Bean定义：可以通过实现BeanDefinitionRegistryPostProcessor接口，在容器解析Bean定义之后但还没有实例化之前，修改已存在的Bean定义的属性、配置元数据或其他相关信息。这使得开发者可以在运行时动态地修改Bean定义。</p>
+</li>
+<li>
+<p>注册额外的Bean定义：可以通过BeanDefinitionRegistryPostProcessor接口注册额外的Bean定义，从而向应用程序上下文中添加新的Bean。这对于动态地注册Bean或者根据特定条件决定是否注册某些Bean非常有用。</p>
+</li>
+<li>
+<p>验证和调整Bean定义：可以通过BeanDefinitionRegistryPostProcessor对已定义的Bean进行验证和调整。开发者可以检查Bean定义的合法性、完整性或冲突，并进行相应的调整。</p>
+</li>
+<li>
+<p>扩展Bean定义：可以通过实现BeanDefinitionRegistryPostProcessor接口，在Bean定义被解析之后注册新的Bean定义扩展点。这使得开发者可以自定义自己的Bean定义元数据，并将其应用于特定的Bean。</p>
+</li>
+</ol>
+<p>需要注意的是，BeanDefinitionRegistryPostProcessor是在Spring容器启动过程中调用的，因此它的实现类在应用程序上下文初始化阶段的早期执行。这使得开发者可以在应用程序上下文准备就绪之前对Bean定义进行修改和扩展，以满足特定需求。</p>
+</li>
+<li>
+<p>因此，在第三方jar包这里，对，大干一场。</p>
+</li>
+<li>
+<p>在 <strong>第三方jar包里，我们加上如下代码</strong> ：<br />
+<img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/image-20230623203455168.png" srcset="/img/loading.gif" lazyload alt="image-20230623203455168" /></p>
+</li>
+</ol>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> io.github.xtwoy.mq.config;<br><br><span class="hljs-keyword">import</span> io.github.xtwoy.mq.aop.MQClientAndSendAop;<br><span class="hljs-keyword">import</span> io.github.xtwoy.mq.aop.MQCommitAop;<br><span class="hljs-keyword">import</span> org.springframework.beans.BeansException;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.config.ConfigurableListableBeanFactory;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.support.BeanDefinitionRegistry;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.ClassPathBeanDefinitionScanner;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> : [xtwoy]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> : [V1.0]</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> : [2023/5/9 10:42]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AutoConfig</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">BeanDefinitionRegistryPostProcessor</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String[] SCAN_PACKAGES = &#123;<span class="hljs-string">&quot;io.github.xtwoy.mq&quot;</span>&#125;;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">postProcessBeanDefinitionRegistry</span><span class="hljs-params">(BeanDefinitionRegistry beanDefinitionRegistry)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        <span class="hljs-comment">// 扫描@Component的类</span><br>        <span class="hljs-type">ClassPathBeanDefinitionScanner</span> <span class="hljs-variable">pathScanner</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathBeanDefinitionScanner</span>(beanDefinitionRegistry);<br>        pathScanner.scan(SCAN_PACKAGES);<br><br>        <span class="hljs-comment">/*// 扫描@Mapper的接口类</span><br><span class="hljs-comment">        ClassPathMapperScanner mapperScanner</span><br><span class="hljs-comment">                = new ClassPathMapperScanner(beanDefinitionRegistry);</span><br><span class="hljs-comment">        mapperScanner.scan(SCAN_PACKAGES);*/</span><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">postProcessBeanFactory</span><span class="hljs-params">(ConfigurableListableBeanFactory configurableListableBeanFactory)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        <span class="hljs-comment">// 这里涉及到beanFactory 对这里无需关注</span><br>        <span class="hljs-comment">// 即 空实现</span><br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+<ol start="9">
+<li>
+<p>因为 <strong>上述类要先被创建为bean对象才会执行postProcessBeanDefinitionRegistry方法，因此需要先让它变成bean对象</strong> ，又在项目 <strong>包路径之外</strong> ，当然是使用EnableAutoConfiguration来配合啦。</p>
+</li>
+<li>
+<p>使用EnableAutoConfiguration来创建 <strong>上述类为bean对象</strong></p>
+<pre><code class="hljs">  org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.github.xtwoy.mq.config.AutoConfig
+</code></pre>
+<ol start="11">
+<li>项目启动类上， <strong>无需加上任何扫描的注解</strong> ，因为BeanDefinitionRegistryPostProcessor类都进行扫描了。</li>
+</ol>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Spring-Boot/" class="category-chain-item">Spring Boot</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Spring-Boot%EF%BC%8Cjar/">#Spring Boot，jar</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中</div>
+      <div>http://xtwoy.github.io/Spring Boot/设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中(EnableAutoConfiguration、BeanDefinitionRegistryPostProcessor使用)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 15, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast/" title="什么是fail-fast">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">什么是fail-fast</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Spring%20Boot/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8Rabbit/" title="优雅的使用Rabbit">
+                        <span class="hidden-mobile">优雅的使用Rabbit</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Spring Boot"
+        id="heading-d2b84a7bb8d211a07fd6ecbf4db9d426" role="tab" data-toggle="collapse" href="#collapse-d2b84a7bb8d211a07fd6ecbf4db9d426"
+        aria-expanded="true"
+      >
+        Spring Boot
+        <span class="list-group-count">(7)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-d2b84a7bb8d211a07fd6ecbf4db9d426"
+           role="tabpanel" aria-labelledby="heading-d2b84a7bb8d211a07fd6ecbf4db9d426">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/Redisson%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%818%E7%A7%8D%E9%94%81%E6%A8%A1%E5%BC%8F%E5%89%96%E6%9E%90%20SpringAop%E6%95%B4%E5%90%88/" title="Redisson分布式锁8种锁模式剖析 SpringAop整合"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Redisson分布式锁8种锁模式剖析 SpringAop整合</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/SpringBoot2_%E5%B0%9A%E7%A1%85%E8%B0%B7/" title="SpringBoot2_尚硅谷"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot2_尚硅谷</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/SpringBoot%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="SpringBoot实现MySQL的主从复制"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot实现MySQL的主从复制</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/SpringBoot%E5%B0%86%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A0%B9%E8%B7%AF%E5%BE%84%E4%B8%AD%EF%BC%8C%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/" title="SpringBoot将文件上传到项目的根路径中，使用相对路径"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot将文件上传到项目的根路径中，使用相对路径</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/Springboot%20+%20Spring%20Security%20%E5%AE%9E%E7%8E%B0%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E5%8F%8A%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/" title="Springboot + Spring Security 实现前后端分离登录认证及基于数据库动态权限控制"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Springboot + Spring Security 实现前后端分离登录认证及基于数据库动态权限控制</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96%E7%AC%94%E8%AE%B0/" title="瑞吉外卖"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">瑞吉外卖</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/%E8%AE%BE%E8%AE%A1%E7%AC%AC%E4%B8%89%E6%96%B9jar%E5%8C%85%E4%B8%AD%E6%9C%89bean%E5%AF%B9%E8%B1%A1%E6%97%B6%EF%BC%8C%E8%A6%81%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%88%B0%E8%A2%AB%E5%BC%95%E7%94%A8%E7%9A%84%E5%BA%94%E7%94%A8%E4%B8%AD(EnableAutoConfiguration%E3%80%81BeanDefinitionRegistryPostProcessor%E4%BD%BF%E7%94%A8)/" title="设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访 
+        <span id="leancloud-site-uv"></span>
+         次
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
