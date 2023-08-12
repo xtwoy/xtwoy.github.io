@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lbxx.png">
+  <link rel="icon" href="/img/lbxx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XtwoY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="动态数据备份工具（动态建表，动态插入数据） 在我的实习期间，我接到了第一个的任务：设计并实现一个动态数据备份工具。这个工具的核心功能包括动态建表和动态插入数据，为了更好地应对多种数据备份需求。  功能概述 我们都知道数据备份是保障业务连续性和数据完整性的关键一环。为了应对不同类型、不同结构的数据，我设计了这个动态数据备份工具。它能够根据配置，在不同的数据库中动态创建表格，并将数据按需插入这些表格">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态数据备份工具（动态建表，动态插入数据）">
+<meta property="og:url" content="http://xtwoy.github.io/Java/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%B7%A5%E5%85%B7%EF%BC%88%E5%8A%A8%E6%80%81%E5%BB%BA%E8%A1%A8%EF%BC%8C%E5%8A%A8%E6%80%81%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%89/index.html">
+<meta property="og:site_name" content="XtwoY">
+<meta property="og:description" content="动态数据备份工具（动态建表，动态插入数据） 在我的实习期间，我接到了第一个的任务：设计并实现一个动态数据备份工具。这个工具的核心功能包括动态建表和动态插入数据，为了更好地应对多种数据备份需求。  功能概述 我们都知道数据备份是保障业务连续性和数据完整性的关键一环。为了应对不同类型、不同结构的数据，我设计了这个动态数据备份工具。它能够根据配置，在不同的数据库中动态创建表格，并将数据按需插入这些表格">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202308130027257.png">
+<meta property="og:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202308130027336.png">
+<meta property="article:published_time" content="2023-08-12T16:26:25.000Z">
+<meta property="article:modified_time" content="2023-08-12T16:28:26.805Z">
+<meta property="article:author" content="XtwoY">
+<meta property="article:tag" content="Spring Boot">
+<meta property="article:tag" content="PostgreSQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202308130027257.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>动态数据备份工具（动态建表，动态插入数据） - XtwoY</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xtwoy.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":150,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"XcZMRYxyoKLVblDJBK1NWiIm-gzGzoHsz","app_key":"0CQR4gbS0Oqa9nyaFPmaiXSw","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XtwoYのBlog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="动态数据备份工具（动态建表，动态插入数据）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-13 00:26" pubdate>
+          August 13, 2023 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">动态数据备份工具（动态建表，动态插入数据）</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on August 13, 2023 am
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="动态数据备份工具动态建表动态插入数据"><a class="markdownIt-Anchor" href="#动态数据备份工具动态建表动态插入数据"></a> 动态数据备份工具（动态建表，动态插入数据）</h2>
+<p>在我的实习期间，我接到了第一个的任务：设计并实现一个动态数据备份工具。这个工具的核心功能包括动态建表和动态插入数据，为了更好地应对多种数据备份需求。</p>
+<h3 id="功能概述"><a class="markdownIt-Anchor" href="#功能概述"></a> 功能概述</h3>
+<p>我们都知道数据备份是保障业务连续性和数据完整性的关键一环。为了应对不同类型、不同结构的数据，我设计了这个动态数据备份工具。它能够根据配置，在不同的数据库中动态创建表格，并将数据按需插入这些表格中。这不仅仅是简单的备份，也是数据灵活处理的一种方式。</p>
+<h3 id="动态建表功能"><a class="markdownIt-Anchor" href="#动态建表功能"></a> 动态建表功能</h3>
+<p>动态建表功能非常有用，它允许我们根据不同的数据类型、不同的业务需求，在备份时创建适合的数据表。例如，我们可能需要为不同的部门或数据类型创建独立的数据表，以更好地管理和查询数据。这个工具可以根据配置动态生成表格结构，确保备份数据的规范性和可查询性。</p>
+<h3 id="动态插入数据功能"><a class="markdownIt-Anchor" href="#动态插入数据功能"></a> 动态插入数据功能</h3>
+<p>数据备份的关键在于将数据安全地存储起来。而且，我们不仅仅希望备份数据的结构正确，还希望数据能够被动态插入到正确的表格中。这个工具的动态插入数据功能能够根据目标表格的结构，将数据按照相应的字段进行插入。这样，我们不必手动编写复杂的插入逻辑，而是让工具自动处理。</p>
+<h3 id="实现代码"><a class="markdownIt-Anchor" href="#实现代码"></a> 实现代码</h3>
+<h4 id="customfield自定字段"><a class="markdownIt-Anchor" href="#customfield自定字段"></a> <code>CustomField</code>–自定字段</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@Builder</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomField</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 外部数据字段</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String externalDataField;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 是否为空</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> isNotNull;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 默认值</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String defaultValue;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 备注</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String comment;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 建表数据字段</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String createTableFiledName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 字段类型</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String fieldType;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 字段长度</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> lengthLimit;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 选择,choose如果为true说明是可添加</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Builder</span>.Default()<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">choose</span> <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="customtable自定义表"><a class="markdownIt-Anchor" href="#customtable自定义表"></a> <code>CustomTable</code>–自定义表</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@Builder</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomTable</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 数据库名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Builder</span>.Default<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> <span class="hljs-variable">databaseName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;sde&quot;</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 表名</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String tableName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 自定义字段列表</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> List&lt;CustomField&gt; customFieldList;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="customvalue自定义值"><a class="markdownIt-Anchor" href="#customvalue自定义值"></a> <code>CustomValue</code>–自定义值</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@Builder</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomValue</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 表名</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String tableName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 字段名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> List&lt;String&gt; fieldNames;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * &lt;p&gt;字段值&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;外层List:更新值集合&lt;/p&gt;</span><br><span class="hljs-comment">     * &lt;p&gt;内层List:具体一条记录的值，顺序 一定 要与 fieldNames 保持一致&lt;/p&gt;</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> List&lt;List&lt;String&gt;&gt; fieldValues;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h4 id="datasynchronizationmapper数据同步映射器"><a class="markdownIt-Anchor" href="#datasynchronizationmapper数据同步映射器"></a> <code>DataSynchronizationMapper</code>–数据同步映射器</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 数据同步映射器</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> xi.yang.yong</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2023/07/31</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">DataSynchronizationMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseMapper</span> &#123;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 存在表</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> tableName 表名</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> boolean</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">existTable</span><span class="hljs-params">(String tableName)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 使用 drop 命令 删除表</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> tableName java.lang.String 表名</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> int</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xi.yang.yong</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">int</span> <span class="hljs-title function_">dropTable</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;tableName&quot;)</span> String tableName)</span>;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建新表</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> customTable 自定义表</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> int</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">int</span> <span class="hljs-title function_">createNewTable</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;customTable&quot;)</span> CustomTable customTable)</span>;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 插入数据</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> customValue 自定义值</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> int</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@author</span> xi.yang.yong</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@date</span> 2023/08/07</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">int</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;customValue&quot;)</span> CustomValue customValue)</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="datasynchronizationmapperxml"><a class="markdownIt-Anchor" href="#datasynchronizationmapperxml"></a> <code>DataSynchronizationMapper.xml</code></h4>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span> <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;com.gxdnr.ic.spoint.mapper.turf.DataSynchronizationMapper&quot;</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;existTable&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;String&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;Boolean&quot;</span>&gt;</span><br>        SELECT EXISTS(SELECT FROM pg_class WHERE relname = #&#123;tableName&#125;);<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;dropTable&quot;</span>&gt;</span><br>        DROP TABLE IF EXISTS $&#123;tableName&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;createNewTable&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;com.gxdnr.ic.spoint.tools.CustomTable&quot;</span>&gt;</span><br>        CREATE TABLE IF NOT EXISTS $&#123;customTable.tableName&#125; (<br>        <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;customTable.customFieldList&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;item.choose == true&quot;</span>&gt;</span><br>                $&#123;item.createTableFiledName&#125; $&#123;item.fieldType&#125;<br>                <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;item.isNotNull != null and item.isNotNull !=&#x27;&#x27;&quot;</span>&gt;</span><br>                        NOT NULL<br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>                DEFAULT<br>                <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;item.defaultValue != null and item.defaultValue !=&#x27;&#x27;&quot;</span>&gt;</span><br>                        $&#123;item.defaultValue&#125;<br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">otherwise</span>&gt;</span><br>                        NULL<br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">otherwise</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;index+1!=customTable.customFieldList.size()&quot;</span>&gt;</span><br>                        ,<br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br>        );<br>        <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;customTable.customFieldList&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;item.comment != null and item.comment !=&#x27;&#x27;&quot;</span>&gt;</span><br>                    COMMENT ON COLUMN $&#123;customTable.databaseName&#125;.$&#123;customTable.tableName&#125;.$&#123;item.createTableFiledName&#125; IS &#x27;$&#123;item.comment&#125;&#x27;;<br>                <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insert&quot;</span>&gt;</span><br>        INSERT INTO $&#123;customValue.tableName&#125;<br>            (<br>                <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;customValue.fieldNames&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span><br>                    $&#123;item&#125;<br>                    <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;index+1!=customValue.fieldNames.size()&quot;</span>&gt;</span><br>                            ,<br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br>             )<br>         VALUES<br>            <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;customValue.fieldValues&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;indexList&quot;</span>&gt;</span><br>                (<br>                    <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span><br>                        &#x27;$&#123;item&#125;&#x27;<br>                        <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;index+1!=list.size()&quot;</span>&gt;</span><br>                                ,<br>                            <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br>                 <span class="hljs-tag">&lt;<span class="hljs-name">choose</span>&gt;</span><br>                     <span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;indexList+1!=customValue.fieldValues.size()&quot;</span>&gt;</span><br>                         ),<br>                     <span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span><br>                     <span class="hljs-tag">&lt;<span class="hljs-name">otherwise</span>&gt;</span><br>                         );<br>                     <span class="hljs-tag">&lt;/<span class="hljs-name">otherwise</span>&gt;</span><br>                 <span class="hljs-tag">&lt;/<span class="hljs-name">choose</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h3 id="工具示例"><a class="markdownIt-Anchor" href="#工具示例"></a> 工具示例</h3>
+<p>下面让我通过一个简单的示例来演示这个工具的使用。假设我们要备份公司的员工数据，包括姓名、性别、年龄等信息。我们可以通过配置，让工具自动创建一个员工数据表，并将员工数据插入其中。这个过程不仅简单，还能够适应不同的业务需求。</p>
+<ol>
+<li>
+<p>准备数据</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>	<span class="hljs-attr">&quot;tableName&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;staff_info&quot;</span><span class="hljs-punctuation">,</span><br>	<span class="hljs-attr">&quot;fieldComments&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>		<span class="hljs-string">&quot;主键&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;名字&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;性别,0：女；1：男&quot;</span><span class="hljs-punctuation">,</span><br>		 <span class="hljs-string">&quot;年龄&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;爱好&quot;</span><br>	<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>	<span class="hljs-attr">&quot;fieldTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>		<span class="hljs-string">&quot;int8&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;varchar(255)&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;int2&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;int4&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;varchar(255)&quot;</span><br>	<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>	<span class="hljs-attr">&quot;fields&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>		<span class="hljs-string">&quot;id&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;name&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;sex&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;age&quot;</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-string">&quot;happy&quot;</span><br>	<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>	<span class="hljs-attr">&quot;fieldValues&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>		<span class="hljs-punctuation">[</span><span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;小明&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;18&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;唱、跳、rapper、篮球&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>		<span class="hljs-punctuation">[</span><span class="hljs-string">&quot;0&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;小红&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;0&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;18&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;唱、跳、rapper、篮球&quot;</span><span class="hljs-punctuation">]</span><br>	<span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br><br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>根据工具提供Java类构建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createTable</span><span class="hljs-params">(Map value)</span> &#123;<br><br>        <span class="hljs-comment">// 表名</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">tableName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-comment">// 字段备注</span><br>        List&lt;String&gt; filedComments =<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-comment">// 字段类型</span><br>        List&lt;String&gt; fieldTypes =<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-comment">// 字段名</span><br>        List&lt;String&gt; fields =<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-comment">// 数据</span><br>        List&lt;List&lt;String&gt;&gt; fieldValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>        <span class="hljs-comment">// 2.1.获取表名、没有表名</span><br>        <span class="hljs-keyword">if</span>(value.containsKey(<span class="hljs-string">&quot;tableName&quot;</span>)) &#123;<br>            tableName = (String) value.get(<span class="hljs-string">&quot;tableName&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 2.2.获取待更新数据</span><br>        <span class="hljs-keyword">if</span>(value.containsKey(<span class="hljs-string">&quot;fieldValues&quot;</span>)) &#123;<br>            fieldValues = (List&lt;List&lt;String&gt;&gt;) value.get(<span class="hljs-string">&quot;fieldValues&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 2.3.获取字段备注</span><br>        <span class="hljs-keyword">if</span>(value.containsKey(<span class="hljs-string">&quot;fieldComments&quot;</span>)) &#123;<br>            filedComments = (List&lt;String&gt;) value.get(<span class="hljs-string">&quot;fieldComments&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 2.4.获取字段类型</span><br>        <span class="hljs-keyword">if</span>(value.containsKey(<span class="hljs-string">&quot;fieldTypes&quot;</span>)) &#123;<br>            fieldTypes = (List&lt;String&gt;) value.get(<span class="hljs-string">&quot;fieldTypes&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 2.5.获取字段名</span><br>        <span class="hljs-keyword">if</span>(value.containsKey(<span class="hljs-string">&quot;fields&quot;</span>)) &#123;<br>            fields = (List&lt;String&gt;) value.get(<span class="hljs-string">&quot;fields&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 字段备注、字段类型、字段名个数不一致</span><br>        <span class="hljs-keyword">if</span>(filedComments.size()!=fieldTypes.size()&amp;&amp;fieldTypes.size()!=fields.size())&#123;<br><br>        &#125;<br><br>        <span class="hljs-comment">// 3.构建自定义字段</span><br>        ArrayList&lt;CustomField&gt; customFields = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; fields.size(); i++) &#123;<br>            customFields.add(<br>                    CustomField.builder()<br>                            .createTableFiledName(fields.get(i))<br>                            .fieldType(fieldTypes.get(i))<br>                            .comment(filedComments.get(i))<br>                            .build());<br>        &#125;<br><br>        <span class="hljs-comment">// 4.由自定义字段构建自定义表</span><br>        <span class="hljs-type">CustomTable</span> <span class="hljs-variable">customTable</span> <span class="hljs-operator">=</span> CustomTable.builder()<br>                .tableName(tableName)<br>                .customFieldList(customFields)<br>                .build();<br><br>        <span class="hljs-comment">// 5.构建自定义数据</span><br>        <span class="hljs-type">CustomValue</span> <span class="hljs-variable">customValue</span> <span class="hljs-operator">=</span> CustomValue.builder()<br>                .tableName(tableName)<br>                .fieldNames(fields)<br>                .fieldValues(fieldValues)<br>                .build();<br><br><br><br>        <span class="hljs-comment">// 6.数据库备份</span><br><br>        <span class="hljs-comment">// 6.1.查询表是否已经存在</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">existTable</span> <span class="hljs-operator">=</span> dynaDataMapper.existTable(tableName);<br><br>        <span class="hljs-comment">// 6.2.删除表</span><br>        <span class="hljs-keyword">if</span> (existTable) &#123;<br>            dynaDataMapper.dropTable(tableName);<br>        &#125;<br><br>        <span class="hljs-comment">// 6.3创建新表</span><br>        dynaDataMapper.createNewTable(customTable);<br><br>        <span class="hljs-comment">// 6.4.更新数据</span><br>        dynaDataMapper.insert(customValue);<br><br>    &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>效果</p>
+<p>前：</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202308130027257.png" srcset="/img/loading.gif" lazyload alt="image-20230813002108028" /></p>
+<p>后：</p>
+<p><img src="https://typora-xyy.oss-cn-nanjing.aliyuncs.com/imgs/202308130027336.png" srcset="/img/loading.gif" lazyload alt="image-20230813002337093" /></p>
+</li>
+</ol>
+<h3 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h3>
+<p>这个简单的动态数据备份工具提供了强大而灵活的数据备份解决方案。它的动态建表和动态插入数据功能，使得备份变得更加智能和高效。在实习期间，我不仅学到了如何设计这样的工具，还学到了如何更好地应对数据备份的挑战。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Spring-Boot/" class="category-chain-item">Spring Boot</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Spring-Boot/">#Spring Boot</a>
+      
+        <a href="/tags/PostgreSQL/">#PostgreSQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>动态数据备份工具（动态建表，动态插入数据）</div>
+      <div>http://xtwoy.github.io/Java/动态数据备份工具（动态建表，动态插入数据）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>XtwoY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 13, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/IDE/idea/IDEA%20%E6%8F%92%E4%BB%B6/" title="IDEA 插件">
+                        <span class="hidden-mobile">IDEA 插件</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Spring Boot"
+        id="heading-d2b84a7bb8d211a07fd6ecbf4db9d426" role="tab" data-toggle="collapse" href="#collapse-d2b84a7bb8d211a07fd6ecbf4db9d426"
+        aria-expanded="true"
+      >
+        Spring Boot
+        <span class="list-group-count">(8)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-d2b84a7bb8d211a07fd6ecbf4db9d426"
+           role="tabpanel" aria-labelledby="heading-d2b84a7bb8d211a07fd6ecbf4db9d426">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/Redisson%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%818%E7%A7%8D%E9%94%81%E6%A8%A1%E5%BC%8F%E5%89%96%E6%9E%90%20SpringAop%E6%95%B4%E5%90%88/" title="Redisson分布式锁8种锁模式剖析 SpringAop整合"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Redisson分布式锁8种锁模式剖析 SpringAop整合</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/SpringBoot2_%E5%B0%9A%E7%A1%85%E8%B0%B7/" title="SpringBoot2_尚硅谷"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot2_尚硅谷</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/SpringBoot%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="SpringBoot实现MySQL的主从复制"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot实现MySQL的主从复制</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/SpringBoot%E5%B0%86%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A0%B9%E8%B7%AF%E5%BE%84%E4%B8%AD%EF%BC%8C%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/" title="SpringBoot将文件上传到项目的根路径中，使用相对路径"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SpringBoot将文件上传到项目的根路径中，使用相对路径</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/Springboot%20+%20Spring%20Security%20%E5%AE%9E%E7%8E%B0%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E5%8F%8A%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/" title="Springboot + Spring Security 实现前后端分离登录认证及基于数据库动态权限控制"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Springboot + Spring Security 实现前后端分离登录认证及基于数据库动态权限控制</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Java/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%B7%A5%E5%85%B7%EF%BC%88%E5%8A%A8%E6%80%81%E5%BB%BA%E8%A1%A8%EF%BC%8C%E5%8A%A8%E6%80%81%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%89/" title="动态数据备份工具（动态建表，动态插入数据）"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">动态数据备份工具（动态建表，动态插入数据）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96%E7%AC%94%E8%AE%B0/" title="瑞吉外卖"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">瑞吉外卖</span>
+        </a>
+      
+    
+      
+      
+        <a href="/Spring%20Boot/%E8%AE%BE%E8%AE%A1%E7%AC%AC%E4%B8%89%E6%96%B9jar%E5%8C%85%E4%B8%AD%E6%9C%89bean%E5%AF%B9%E8%B1%A1%E6%97%B6%EF%BC%8C%E8%A6%81%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%88%B0%E8%A2%AB%E5%BC%95%E7%94%A8%E7%9A%84%E5%BA%94%E7%94%A8%E4%B8%AD(EnableAutoConfiguration%E3%80%81BeanDefinitionRegistryPostProcessor%E4%BD%BF%E7%94%A8)/" title="设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">设计第三方jar包中有bean对象时，要如何自动加载到被引用的应用中</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/Click_on_special_effects.js"></script>
+<script src="/js/Click_on_special_effects1.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
